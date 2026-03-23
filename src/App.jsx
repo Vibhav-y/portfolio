@@ -24,17 +24,44 @@ export default function App() {
     "ਸਤ ਸ੍ਰੀ ਅਕਾਲ", "నమస్కారం", "ನಮಸ್ಕಾರ", "नमस्ते"
   ]
 
+  // Vite resolves these the same way the components do — guaranteed same URL
+  const CRITICAL_IMAGES = [
+    new URL('./assets/hero-bg.webp', import.meta.url).href,
+    new URL('./assets/1774288544676-1-tjs99i.webp', import.meta.url).href,
+  ]
+
+  const [animDone, setAnimDone] = useState(false)
+  const [imgsDone, setImgsDone]  = useState(false)
+
+  // Preload images the moment the app mounts
   useEffect(() => {
-    // Cycle through greetings every 400ms
+    Promise.all(
+      CRITICAL_IMAGES.map(
+        src => new Promise(resolve => {
+          const img = new Image()
+          img.onload = img.onerror = resolve  // resolve even on error so we never block forever
+          img.src = src
+        })
+      )
+    ).then(() => setImgsDone(true))
+  }, [])
+
+  // Cycle through greetings every 400ms
+  useEffect(() => {
     if (greetingIndex < greetings.length - 1) {
       const t = setTimeout(() => setGreetingIndex(prev => prev + 1), 400)
       return () => clearTimeout(t)
     } else {
-      // After hitting the last greeting ("नमस्ते"), wait a beat then mount the main app
-      const t = setTimeout(() => setLoading(false), 800)
+      // After last greeting, mark animation done after a short pause
+      const t = setTimeout(() => setAnimDone(true), 800)
       return () => clearTimeout(t)
     }
   }, [greetingIndex, greetings.length])
+
+  // Dismiss loader only when both conditions are met
+  useEffect(() => {
+    if (animDone && imgsDone) setLoading(false)
+  }, [animDone, imgsDone])
 
   return (
     <>
