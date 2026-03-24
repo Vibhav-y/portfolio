@@ -33,6 +33,7 @@
 html {
   scroll-behavior: smooth;
   background-color: var(--bg-base);
+  overflow-x: hidden;
 }
 
 body {
@@ -344,12 +345,16 @@ code, pre {
 
 @media (max-width: 900px) {
   .section {
-    padding: 104px 0;
+    padding: 72px 0;
   }
 
   .lg-sheet {
-    padding: 32px;
-    border-radius: 24px;
+    padding: 24px;
+    border-radius: 20px;
+  }
+
+  .lg-card {
+    padding: 20px;
   }
 
   .hero-grid {
@@ -370,8 +375,21 @@ code, pre {
     cursor: auto;
   }
 
+  .section {
+    padding: 48px 0;
+  }
+
   .container {
-    padding: 0 22px;
+    padding: 0 16px;
+  }
+
+  .lg-card {
+    padding: 16px;
+  }
+
+  .lg-sheet {
+    padding: 18px;
+    border-radius: 16px;
   }
 
   .headline {
@@ -387,11 +405,11 @@ code, pre {
   }
 
   .hero-shell {
-    padding-top: 126px;
+    padding-top: 100px;
   }
 
   .hero-container {
-    padding: 18px;
+    padding: 14px;
   }
 
   .hero-name {

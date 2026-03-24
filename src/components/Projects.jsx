@@ -98,6 +98,7 @@ function BrowserChrome({ url, accent }) {
       {/* URL bar */}
       <div style={{
         flex: 1,
+        minWidth: 0,
         background: 'rgba(255,255,255,0.07)',
         borderRadius: '6px',
         padding: '5px 12px',
@@ -244,9 +245,10 @@ function ProjectCard({ project, index, count, containerProgress }) {
                 marginBottom: '20px',
               }} />
               <div style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr 1fr',
-                gap: '16px',
+                display: 'flex',
+                flexWrap: 'wrap',
+                rowGap: '16px',
+                columnGap: '32px',
               }}>
                 {project.stats.map(s => (
                   <div key={s.label}>
@@ -369,8 +371,6 @@ export default function Projects() {
         style={{
           height: `${projects.length * 100}vh`,
           position: 'relative',
-          width: '100vw',
-          marginLeft: 'calc(50% - 50vw)',
           paddingLeft: '5vw',
           paddingRight: '5vw',
         }}
