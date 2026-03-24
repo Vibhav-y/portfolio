@@ -81,8 +81,8 @@ export default function Contact() {
                 <div>
                   <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'rgba(255,255,255,0.4)', marginBottom: '8px' }}>SOCIAL</p>
                   <div style={{ display: 'flex', gap: '16px' }}>
-                     <a href="#" style={{ color: '#fff', textDecoration: 'none', fontSize: '16px' }}>LinkedIn</a>
-                     <a href="#" style={{ color: '#fff', textDecoration: 'none', fontSize: '16px' }}>GitHub</a>
+                     <a href="https://www.linkedin.com/in/vibhav-yadav/" target="_blank" rel="noreferrer" style={{ color: '#fff', textDecoration: 'none', fontSize: '16px' }}>LinkedIn</a>
+                     <a href="https://github.com/Vibhav-y" target="_blank" rel="noreferrer" style={{ color: '#fff', textDecoration: 'none', fontSize: '16px' }}>GitHub</a>
                   </div>
                 </div>
               </div>

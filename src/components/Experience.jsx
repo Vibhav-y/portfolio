@@ -3,26 +3,16 @@ import { motion } from 'framer-motion'
 const experience = [
   {
     id: 1,
-    role: 'Bachelor of Technology (CSE)',
-    company: 'Lovely Professional University',
-    period: '2023 — Present',
-    points: [
-      'Currently pursuing B.Tech in Computer Science and Engineering with a CGPA of 7.9',
-      'Focusing on full-stack development, cloud computing, and real-time systems',
-      'Actively participating in competitive programming, securing 5 Stars in Java and Python on HackerRank'
-    ],
-    tags: ['Java', 'C++', 'Data Structures', 'Algorithms']
-  },
-  {
-    id: 2,
-    role: 'Full-Stack Bootcamp & Training',
+    role: 'Full-Stack & DSA Training',
     company: 'W3Grads',
     period: 'Jun 2025 — Jul 2025',
     points: [
       'Intensive training program focused on modern web development paradigms.',
-      'Built end-to-end applications demonstrating proficiency in core full-stack technologies.'
+      'Built end-to-end applications demonstrating proficiency in core full-stack technologies.',
+      'Mastered data structures and algorithms, achieving 5-star ratings on HackerRank in both Java and Python.',
+      'Developed a strong foundation in computer science fundamentals, including operating systems, database management systems, and computer networks.'
     ],
-    tags: ['React', 'Node.js', 'Express', 'MongoDB']
+    tags: ['DSA','React', 'Node.js', 'Express', 'MongoDB']
   }
 ]
 
@@ -54,7 +44,7 @@ export default function Experience() {
           letterSpacing: '-0.03em',
           marginBottom: '24px'
         }}>
-          Education & Training
+          Training
         </h2>
         <p style={{ color: 'var(--text-secondary)', fontSize: '16px', maxWidth: '600px', margin: '0 auto' }}>
           Not just theory — applying learned concepts to real-world development and system design.

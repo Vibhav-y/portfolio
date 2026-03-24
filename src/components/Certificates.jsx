@@ -9,28 +9,28 @@ const certs = [
   {
     id: 'cert1',
     image: cert1,
-    title: 'Problem Solving (Basic)',
-    subtitle: 'HackerRank Certified',
-    desc: 'Certified in algorithmic problem solving and data structures via HackerRank. Demonstrated ability to optimize code for performance and write clean, maintainable logic.',
+    title: 'Cloud Computing',
+    subtitle: 'NPTEL Certified (IIT Kharagpur)',
+    desc: 'Completed an NPTEL-certified course covering cloud computing fundamentals, distributed systems, and scalable infrastructure. Achieved a consolidated score of 66% with perfect performance in online assessments.',
     accent: '#f7790f',
   },
   {
     id: 'cert2',
     image: cert2,
-    title: 'Frontend Developer (React)',
+    title: 'Python (Basic)',
     subtitle: 'HackerRank Certified',
-    desc: 'Validated proficiency in React.js, including component architecture, state management, hooks, and routing. Strong understanding of modern frontend development patterns.',
-    accent: '#6C8EFF',
+    desc: 'Validated core Python programming skills through HackerRank assessment, focusing on problem solving, data structures, and writing efficient, clean code.',
+    accent: '#4ECDC4',
   },
   {
     id: 'cert3',
     image: cert3,
-    title: 'Joy of Computing using Python',
-    subtitle: 'NPTEL Certified',
-    desc: 'Completed intensive NPTEL certification by IIT Madras covering Python programming fundamentals, data structures, and computational thinking approaches.',
-    accent: '#4ECDC4',
+    title: 'Frontend Developer (React)',
+    subtitle: 'HackerRank Certified',
+    desc: 'Demonstrated proficiency in building modern web applications using React, including component-based architecture, state management, and creating responsive, interactive user interfaces.',
+    accent: '#6C8EFF',
   },
-]
+];
 
 // Fan config tuned for the left column area
 const fanConfig = [
@@ -168,7 +168,7 @@ export default function Certificates() {
             alignItems: 'center',
           }}>
             {certs.map((cert, i) => {
-              const slot = (i - activeIndex + certs.length) % certs.length
+              const slot = (i - activeIndex + certs.length + 1) % certs.length
               const cfg = fanConfig[slot]
               const isCenter = slot === 1
               const isActive = i === activeIndex

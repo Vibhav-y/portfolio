@@ -184,7 +184,7 @@ export default function Skills() {
               Currently Exploring
             </span>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {['Next.js 14', 'Supabase', 'LLM integrations'].map(item => (
+              {['Next.js 14', 'Supabase', 'LLM integrations', 'AWS'].map(item => (
                 <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 6px #22c55e', flexShrink: 0 }} />
                   <span style={{ fontSize: '16px', fontWeight: 500, color: '#fff' }}>{item}</span>
