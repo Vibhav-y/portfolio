@@ -11,7 +11,6 @@ import Skills from './components/Skills'
 import Experience from './components/Experience'
 import Now from './components/Now'
 import Contact from './components/Contact'
-import Footer from './components/Footer'
 import resumePdf from './assets/resume.pdf'
 
 export default function App() {
@@ -24,7 +23,6 @@ export default function App() {
     "ਸਤ ਸ੍ਰੀ ਅਕਾਲ", "నమస్కారం", "ನಮಸ್ಕಾರ", "नमस्ते"
   ]
 
-  // Vite resolves these the same way the components do — guaranteed same URL
   const CRITICAL_IMAGES = [
     new URL('./assets/hero-bg.webp', import.meta.url).href,
     new URL('./assets/1774288544676-1-tjs99i.webp', import.meta.url).href,
@@ -128,8 +126,6 @@ export default function App() {
               <Now />
               <Contact />
             </main>
-            <Footer />
-            
           </motion.div>
         )}
       </AnimatePresence>
