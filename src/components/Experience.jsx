@@ -59,11 +59,10 @@ export default function Experience() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.6, delay: idx * 0.15 }}
-            className="liquid-glass"
+            className="liquid-glass exp-grid"
             style={{ 
-              padding: '40px',
+              padding: 'clamp(24px, 5vw, 40px)',
               borderRadius: '24px',
-              display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '32px'
             }}
           >
             <div>

@@ -90,11 +90,11 @@ export default function About() {
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.1 }}
-          style={{ ...card, gridArea: 'pic', position: 'relative', overflow: 'hidden', minHeight: '280px' }}
+          style={{ ...card, gridArea: 'pic', position: 'relative', overflow: 'hidden', minHeight: '420px' }}
         >
           <img
             src={profileImg} alt="Vibhav Yadav" loading="lazy"
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'contrast(1.1) saturate(1.1)' }}
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 15%', filter: 'contrast(1.1) saturate(1.1)' }}
           />
           <div style={{ position: 'absolute', inset: 0, boxShadow: 'inset 0 0 80px rgba(0,0,0,0.7)', pointerEvents: 'none' }} />
         </motion.div>

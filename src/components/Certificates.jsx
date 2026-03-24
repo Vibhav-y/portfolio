@@ -96,12 +96,10 @@ export default function Certificates() {
 
         {/* The 2-Column Split Layout */}
         <div 
+          className="cert-grid"
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'minmax(0, 1.4fr) minmax(0, 1fr)', // Give image side more space
-            gap: '80px', // More gap
             alignItems: 'center',
             marginTop: '80px',
           }}
@@ -140,9 +138,9 @@ export default function Certificates() {
                     zIndex: cfg.z,
                   }}
                   transition={{ type: 'spring', stiffness: 160, damping: 24 }}
+                  className="cert-card"
                   style={{
                     position: 'absolute',
-                    width: '480px', // Enlarged to fill the new 1400px container space
                     height: 'auto',
                     cursor: 'pointer',
                     transformOrigin: 'bottom center',

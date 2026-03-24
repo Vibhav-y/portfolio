@@ -35,7 +35,7 @@ export default function Hero() {
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
     }}>
-      <div className="container hero-container" style={{ position: 'relative', zIndex: 10, maxWidth: '1400px', width: '100%', display: 'grid', gridTemplateColumns: 'minmax(0, 1.2fr) minmax(0, 1fr)', gap: '4vw', alignItems: 'center' }}>
+      <div className="container hero-container hero-grid" style={{ position: 'relative', zIndex: 10, maxWidth: '1400px', width: '100%', gap: '4vw', alignItems: 'center' }}>
         
         {/* Left Copy */}
         <div className="hero-copy" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>

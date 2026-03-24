@@ -402,17 +402,81 @@ code, pre {
     font-size: 17px;
   }
 
-  .hero-skill-grid {
+  .hero-skill-tile {
+    padding: 16px;
+    min-height: auto;
+  }
+
+  .hero-skill-tile h3 {
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+
+  .hero-skill-desc {
+    font-size: 11px;
+    line-height: 1.4;
+  }
+}
+
+/* ── RESPONSIVE GRID & FLEX UTILITIES ── */
+.nav-links {
+  display: flex;
+}
+.project-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+}
+.cert-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 80px;
+}
+.cert-card {
+  width: 480px;
+}
+.exp-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 32px;
+}
+.contact-flex {
+  display: flex;
+  gap: 48px;
+}
+
+@media (max-width: 900px) {
+  .project-card-grid {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+  .project-card-grid > div:first-child {
+    padding: 32px 24px !important;
+  }
+  .project-card-grid > div:last-child {
+    min-height: 320px;
+  }
+  .cert-grid {
     grid-template-columns: 1fr;
+    gap: 40px;
   }
-
-  .hero-skill-tile,
-  .hero-skill-tile:nth-child(2n) {
-    border-right: 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  .exp-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
   }
+}
 
-  .hero-skill-tile:last-child {
-    border-bottom: 0;
+@media (max-width: 768px) {
+  .nav-links {
+    display: none !important;
+  }
+  .contact-flex {
+    flex-direction: column;
+    gap: 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .cert-card {
+    width: clamp(280px, 85vw, 480px);
   }
 }

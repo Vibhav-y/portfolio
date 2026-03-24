@@ -49,7 +49,7 @@ export default function Contact() {
 
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
         gap: '24px'
       }}>
 
@@ -88,7 +88,7 @@ export default function Contact() {
                 <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'rgba(255,255,255,0.4)', marginBottom: '8px' }}>EMAIL</p>
                 <a href="mailto:vibhavydm@gmail.com" style={{ color: '#fff', fontSize: '18px', textDecoration: 'none', borderBottom: '1px solid var(--accent)', paddingBottom: '4px' }}>vibhavydm@gmail.com</a>
               </div>
-              <div style={{ display: 'flex', gap: '48px' }}>
+              <div className="contact-flex">
                 <div>
                   <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'rgba(255,255,255,0.4)', marginBottom: '8px' }}>LOCATION</p>
                   <p style={{ color: '#fff', fontSize: '16px' }}>Jalandhar, Punjab, India</p>

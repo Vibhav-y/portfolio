@@ -1,5 +1,6 @@
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useState, useEffect } from 'react'
+import resumePdf from '../assets/resume.pdf'
 
 export default function Navbar() {
   const { scrollY } = useScroll()
@@ -82,7 +83,7 @@ export default function Navbar() {
       </div>
 
       {/* Center Links */}
-      <div style={{ display: 'flex', gap: '32px', alignItems: 'center' }}>
+      <div className="nav-links" style={{ gap: '32px', alignItems: 'center' }}>
         {[
           { label: 'Home', id: 'home' },
           { label: 'Projects', id: 'work' },
@@ -106,7 +107,12 @@ export default function Navbar() {
       </div>
 
       {/* Right Action */}
-      <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '24px' }}>
+        <a href={resumePdf} target="_blank" rel="noopener noreferrer" style={{
+          color: '#fff', fontSize: '13px', fontWeight: 600, textDecoration: 'none', transition: 'color 0.2s', cursor: 'none'
+        }} onMouseEnter={e => e.target.style.color = '#ff7a18'} onMouseLeave={e => e.target.style.color = '#fff'}>
+          Resume
+        </a>
         <a href="#contact" style={{
           background: 'linear-gradient(to right, #ff7a18, #ffb347)',
           borderRadius: '999px',
