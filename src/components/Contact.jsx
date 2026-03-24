@@ -1,7 +1,22 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import Magnetic from './Magnetic'
 
 export default function Contact() {
+  const [formStatus, setFormStatus] = useState('idle');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setFormStatus('sending');
+    setTimeout(() => {
+      setFormStatus('sent');
+      setTimeout(() => {
+        setFormStatus('idle');
+        e.target.reset();
+      }, 3000);
+    }, 1200);
+  };
+
   return (
     <section id="contact" className="section container" style={{ paddingTop: '80px', paddingBottom: '160px' }}>
       <motion.div
@@ -102,7 +117,7 @@ export default function Contact() {
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '32px', display: 'block' }}>
             Direct Message
           </span>
-          <form style={{ display: 'flex', flexDirection: 'column', gap: '24px', flexGrow: 1 }}>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px', flexGrow: 1 }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <label style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-secondary)' }}>NAME</label>
               <input type="text" placeholder="John Doe" style={{
@@ -126,13 +141,17 @@ export default function Contact() {
               }}></textarea>
             </div>
             <Magnetic strength={0.1}>
-              <button type="button" style={{
-                width: '100%', padding: '16px', background: '#fff', color: '#000',
+              <button type="submit" disabled={formStatus !== 'idle'} style={{
+                width: '100%', padding: '16px', background: formStatus === 'sent' ? '#10b981' : '#fff', color: formStatus === 'sent' ? '#fff' : '#000',
                 border: 'none', borderRadius: '12px', fontSize: '14px', fontWeight: 600,
-                cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px',
-                marginTop: '8px'
+                cursor: formStatus === 'idle' ? 'pointer' : 'default', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px',
+                marginTop: '8px',
+                transition: 'all 0.3s ease',
+                opacity: formStatus === 'sending' ? 0.7 : 1
               }}>
-                Send Message <span style={{ color: 'var(--accent)' }}>↗</span>
+                {formStatus === 'idle' && <>Send Message <span style={{ color: 'var(--accent)' }}>↗</span></>}
+                {formStatus === 'sending' && 'Sending...'}
+                {formStatus === 'sent' && 'Message Sent! ✓'}
               </button>
             </Magnetic>
           </form>

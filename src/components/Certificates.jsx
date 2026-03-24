@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 
 import cert1 from '../assets/Certificates/image.webp'
 import cert2 from '../assets/Certificates/image copy.webp'
@@ -38,59 +39,6 @@ const fanConfig = [
   { x: '0%',   rotate:   0, y: 0,   scale: 1.05, z: 3 },
   { x: '22%',  rotate:  12, y: 20,  scale: 0.85, z: 2 },
 ]
-
-function LightboxModal({ cert, onClose }) {
-  if (!cert) return null
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      onClick={onClose}
-      style={{
-        position: 'fixed', inset: 0, zIndex: 9999,
-        background: 'rgba(0,0,0,0.88)',
-        backdropFilter: 'blur(20px)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        padding: '32px',
-      }}
-    >
-      <motion.div
-        initial={{ scale: 0.85, opacity: 0, y: 30 }}
-        animate={{ scale: 1, opacity: 1, y: 0 }}
-        exit={{ scale: 0.88, opacity: 0 }}
-        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        onClick={e => e.stopPropagation()}
-        style={{
-          maxWidth: '900px', width: '100%',
-          background: 'rgba(12,12,16,0.97)',
-          border: '1px solid rgba(255,255,255,0.1)',
-          borderRadius: '24px', overflow: 'hidden',
-          boxShadow: '0 48px 100px rgba(0,0,0,0.7)',
-        }}
-      >
-        <img src={cert.image} alt={cert.title}
-          style={{ width: '100%', display: 'block', maxHeight: '80vh', objectFit: 'contain' }}
-        />
-        <div style={{
-          padding: '20px 28px',
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          borderTop: '1px solid rgba(255,255,255,0.07)',
-        }}>
-          <div>
-            <h3 style={{ margin: 0, fontSize: '16px', color: '#fff', fontWeight: 600 }}>{cert.title}</h3>
-            <p style={{ margin: '4px 0 0', fontSize: '13px', color: 'var(--text-secondary)' }}>{cert.subtitle}</p>
-          </div>
-          <button onClick={onClose} style={{
-            background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)',
-            borderRadius: '10px', padding: '8px 18px', color: '#fff',
-            fontSize: '13px', cursor: 'pointer', fontFamily: 'var(--font-mono)',
-          }}>Close</button>
-        </div>
-      </motion.div>
-    </motion.div>
-  )
-}
 
 export default function Certificates() {
   const [selected, setSelected] = useState(null)
@@ -346,9 +294,63 @@ export default function Certificates() {
       </section>
 
       {/* Lightbox */}
-      <AnimatePresence>
-        {selected && <LightboxModal cert={selected} onClose={() => setSelected(null)} />}
-      </AnimatePresence>
+      {typeof document !== 'undefined' && createPortal(
+        <AnimatePresence>
+          {selected && (
+            <motion.div
+              key="modal-bg"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelected(null)}
+              style={{
+                position: 'fixed', inset: 0, zIndex: 99999,
+                background: 'rgba(0,0,0,0.88)',
+                backdropFilter: 'blur(20px)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                padding: '32px',
+              }}
+            >
+              <motion.div
+                key="modal-content"
+                initial={{ scale: 0.85, opacity: 0, y: 30 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.88, opacity: 0, y: 30 }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                onClick={e => e.stopPropagation()}
+                style={{
+                  maxWidth: '900px', width: '100%',
+                  background: 'rgba(12,12,16,0.97)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: '24px', overflow: 'hidden',
+                  boxShadow: '0 48px 100px rgba(0,0,0,0.7)',
+                  position: 'relative'
+                }}
+              >
+                <img src={selected.image} alt={selected.title}
+                  style={{ width: '100%', display: 'block', maxHeight: '80vh', objectFit: 'contain' }}
+                />
+                <div style={{
+                  padding: '20px 28px',
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  borderTop: '1px solid rgba(255,255,255,0.07)',
+                }}>
+                  <div>
+                    <h3 style={{ margin: 0, fontSize: '16px', color: '#fff', fontWeight: 600 }}>{selected.title}</h3>
+                    <p style={{ margin: '4px 0 0', fontSize: '13px', color: 'var(--text-secondary)' }}>{selected.subtitle}</p>
+                  </div>
+                  <button onClick={() => setSelected(null)} style={{
+                    background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)',
+                    borderRadius: '10px', padding: '8px 18px', color: '#fff',
+                    fontSize: '13px', cursor: 'pointer', fontFamily: 'var(--font-mono)',
+                  }}>Close</button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </>
   )
 }
