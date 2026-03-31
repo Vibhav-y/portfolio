@@ -136,13 +136,17 @@ function BrowserChrome({ url, accent }) {
   )
 }
 
+/**
+ * Each card uses the *container* scroll progress (tracked on the outer ref),
+ * maps its own slice of that progress to a scale, and uses position:sticky.
+ */
 function ProjectCard({ project, index, count, containerProgress }) {
   const start = index / count
-  const end = (index + 1) / count
+  const end   = (index + 1) / count
   const targetScale = 1 - (count - 1 - index) * 0.04
 
   const rawScale = useTransform(containerProgress, [start, end], [1, targetScale])
-  const scale = useSpring(rawScale, { stiffness: 120, damping: 30, mass: 0.8 })
+  const scale    = useSpring(rawScale, { stiffness: 120, damping: 30, mass: 0.8 })
 
   const CARD_TOP = 90
 
@@ -156,14 +160,7 @@ function ProjectCard({ project, index, count, containerProgress }) {
       top: `${CARD_TOP + index * 18}px`,
       zIndex: index + 1,
     }}>
-      <motion.div
-        style={{
-          scale,
-          transformOrigin: 'top center',
-          width: '100%',
-          marginTop: '10px',
-        }}
-      >
+      <motion.div style={{ scale, transformOrigin: 'top center', width: '100%', marginTop: '10px' }}>
         <div
           className="liquid-glass project-card-grid"
           style={{
@@ -192,54 +189,31 @@ function ProjectCard({ project, index, count, containerProgress }) {
               }}>
                 {project.label}
               </span>
-
               <h3 style={{
-                fontSize: 'clamp(28px, 2.8vw, 40px)',
-                fontWeight: 600,
-                color: '#fff',
-                letterSpacing: '-0.03em',
-                lineHeight: 1.1,
+                fontSize: 'clamp(28px, 2.8vw, 40px)', fontWeight: 600,
+                color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.1,
               }}>
                 {project.tagline}
               </h3>
-
-              <p style={{
-                color: 'var(--text-secondary)',
-                fontSize: '15px', lineHeight: 1.7,
-                maxWidth: '380px',
-              }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, maxWidth: '380px' }}>
                 {project.description}
               </p>
-
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                 {project.tags.map(tag => (
                   <span key={tag} style={{
                     background: project.accent + '18',
                     border: `1px solid ${project.accent}33`,
-                    borderRadius: '6px',
-                    padding: '4px 12px',
-                    fontSize: '12px',
-                    fontFamily: 'var(--font-mono)',
-                    color: project.accent,
+                    borderRadius: '6px', padding: '4px 12px',
+                    fontSize: '12px', fontFamily: 'var(--font-mono)', color: project.accent,
                   }}>
                     {tag}
                   </span>
                 ))}
               </div>
             </div>
-
             <div>
-              <div style={{
-                height: '1px',
-                background: 'rgba(255,255,255,0.06)',
-                marginBottom: '20px',
-              }} />
-              <div style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                rowGap: '16px',
-                columnGap: '32px',
-              }}>
+              <div style={{ height: '1px', background: 'rgba(255,255,255,0.06)', marginBottom: '20px' }} />
+              <div style={{ display: 'flex', flexWrap: 'wrap', rowGap: '16px', columnGap: '32px' }}>
                 {project.stats.map(s => (
                   <div key={s.label}>
                     <p style={{
@@ -249,9 +223,7 @@ function ProjectCard({ project, index, count, containerProgress }) {
                     }}>
                       {s.label}
                     </p>
-                    <p style={{ fontSize: '14px', color: '#fff', fontWeight: 500 }}>
-                      {s.value}
-                    </p>
+                    <p style={{ fontSize: '14px', color: '#fff', fontWeight: 500 }}>{s.value}</p>
                   </div>
                 ))}
               </div>
@@ -260,45 +232,31 @@ function ProjectCard({ project, index, count, containerProgress }) {
 
           {/* ── RIGHT: Mockup pane ── */}
           <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            background: '#080810',
-            position: 'relative',
-            overflow: 'hidden',
+            display: 'flex', flexDirection: 'column',
+            background: '#080810', position: 'relative', overflow: 'hidden',
           }}>
             <div style={{
-              position: 'absolute',
-              top: '-30%', right: '-10%',
+              position: 'absolute', top: '-30%', right: '-10%',
               width: '60%', height: '60%',
-              background: project.accent,
-              filter: 'blur(80px)',
-              opacity: 0.08,
-              borderRadius: '50%',
-              pointerEvents: 'none',
+              background: project.accent, filter: 'blur(80px)',
+              opacity: 0.08, borderRadius: '50%', pointerEvents: 'none',
             }} />
-
             <BrowserChrome url={project.link} accent={project.accent} />
-
             <div style={{ flex: 1, overflow: 'hidden', position: 'relative', lineHeight: 0 }}>
               <img
                 src={project.image}
                 alt={`${project.name} interface`}
                 loading="lazy"
                 style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  objectPosition: 'top center',
-                  display: 'block',
-                  transition: 'transform 0.6s ease',
+                  width: '100%', height: '100%',
+                  objectFit: 'cover', objectPosition: 'top center',
+                  display: 'block', transition: 'transform 0.6s ease',
                 }}
                 onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.04)'}
                 onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
               />
               <div style={{
-                position: 'absolute',
-                bottom: 0, left: 0, right: 0,
-                height: '60px',
+                position: 'absolute', bottom: 0, left: 0, right: 0, height: '60px',
                 background: 'linear-gradient(to bottom, transparent, rgba(8,8,16,0.7))',
                 pointerEvents: 'none',
               }} />
@@ -313,13 +271,15 @@ function ProjectCard({ project, index, count, containerProgress }) {
 export default function Projects() {
   const containerRef = useRef(null)
 
+  // Track how the container scrolls through the viewport (window scroll)
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end end'],
   })
 
   return (
-    <section id="work" style={{ position: 'relative' }}>
+    <section id="work" style={{ position: 'relative', overflow: 'visible' }}>
+      {/* Header */}
       <div className="container" style={{ paddingTop: '80px', paddingBottom: '40px' }}>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -330,8 +290,7 @@ export default function Projects() {
         >
           <span style={{
             fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: 600,
-            color: 'rgba(255,255,255,0.4)', letterSpacing: '0.15em',
-            textTransform: 'uppercase',
+            color: 'rgba(255,255,255,0.4)', letterSpacing: '0.15em', textTransform: 'uppercase',
           }}>
             SELECTED WORK
           </span>
@@ -341,15 +300,13 @@ export default function Projects() {
           }}>
             Real-world systems,<br />not just code.
           </h2>
-          <p style={{
-            color: 'var(--text-secondary)', fontSize: '16px',
-            lineHeight: 1.7, maxWidth: '500px',
-          }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '16px', lineHeight: 1.7, maxWidth: '500px' }}>
             I build platforms that solve difficult engineering problems — from CRDT-based real-time sync to scalable full-stack apps.
           </p>
         </motion.div>
       </div>
 
+      {/* Scroll container — must have position:relative for Framer Motion */}
       <div
         ref={containerRef}
         style={{

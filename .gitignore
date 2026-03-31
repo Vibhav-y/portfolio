@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+.next
+.next/*
+.next/dev
+.next/dev/*
+.next/dev/lock
+.next/dev/lock/*
