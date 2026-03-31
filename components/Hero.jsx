@@ -43,23 +43,16 @@ export default function Hero() {
         {/* Left Copy */}
         <div className="hero-copy" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
           
-          {/* Greeting transition from Loader */}
-          <div style={{ marginBottom: '24px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', fontFamily: 'var(--font-main)', color: 'rgba(255,255,255,0.7)', fontSize: '20px', fontWeight: 500 }}>
-            {/* The hindi greeting receives the layout transition */}
-            <motion.div layoutId="namaste-greeting" style={{ zIndex: 10, originX: 0, originY: 0.5, letterSpacing: '0.05em' }}>
-              नमस्ते
-            </motion.div>
-            
-            {/* The english greeting slides up underneath it */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-              style={{ marginTop: '4px', letterSpacing: '0.1em', textTransform: 'uppercase', fontSize: '14px', color: 'rgba(255,255,255,0.4)', fontFamily: 'var(--font-mono)' }}
-            >
-              Namaste
-            </motion.div>
-          </div>
+          {/* Greeting */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            style={{ marginBottom: '24px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '4px' }}
+          >
+            <span style={{ fontFamily: 'var(--font-main)', color: 'rgba(255,255,255,0.65)', fontSize: '20px', fontWeight: 500, letterSpacing: '0.05em' }}>नमस्ते</span>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'rgba(255,255,255,0.35)', letterSpacing: '0.18em', textTransform: 'uppercase' }}>Namaste</span>
+          </motion.div>
 
           {/* Main Headline */}
           <motion.h1
