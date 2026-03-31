@@ -1,7 +1,7 @@
 'use client'
 
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
-import { useRef } from 'react'
+import { useRef, useEffect, useState } from 'react'
 
 const jottrImg = '/projects/Jottr/image.webp'
 const libraflowImg = '/projects/Libraflow/image.webp'
@@ -96,8 +96,7 @@ function BrowserChrome({ url, accent }) {
         ))}
       </div>
       <div style={{
-        flex: 1,
-        minWidth: 0,
+        flex: 1, minWidth: 0,
         background: 'rgba(255,255,255,0.07)',
         borderRadius: '6px',
         padding: '5px 12px',
@@ -111,21 +110,15 @@ function BrowserChrome({ url, accent }) {
         {url.replace('https://', '').replace('http://', '').replace(/\/$/, '')}
       </div>
       <a
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
+        href={url} target="_blank" rel="noopener noreferrer"
         onClick={e => e.stopPropagation()}
         style={{
           display: 'inline-flex', alignItems: 'center', gap: '4px',
-          background: accent + '22',
-          border: `1px solid ${accent}55`,
-          borderRadius: '6px',
-          padding: '4px 12px',
+          background: accent + '22', border: `1px solid ${accent}55`,
+          borderRadius: '6px', padding: '4px 12px',
           fontSize: '12px', fontWeight: 500,
-          color: accent,
-          textDecoration: 'none',
-          whiteSpace: 'nowrap', flexShrink: 0,
-          transition: 'background 0.2s',
+          color: accent, textDecoration: 'none',
+          whiteSpace: 'nowrap', flexShrink: 0, transition: 'background 0.2s',
         }}
         onMouseEnter={e => e.currentTarget.style.background = accent + '44'}
         onMouseLeave={e => e.currentTarget.style.background = accent + '22'}
@@ -137,9 +130,40 @@ function BrowserChrome({ url, accent }) {
 }
 
 /**
- * Each card uses the *container* scroll progress (tracked on the outer ref),
- * maps its own slice of that progress to a scale, and uses position:sticky.
+ * Tracks window scroll and derives [0,1] progress for the container
+ * using its DOM-measured offsetTop. Reliable in Next.js App Router.
  */
+function useContainerScrollProgress(containerRef) {
+  const { scrollY } = useScroll()
+  const [range, setRange] = useState([0, 1])
+
+  useEffect(() => {
+    const update = () => {
+      if (!containerRef.current) return
+      const el = containerRef.current
+      // Walk up to get cumulative offsetTop (robust across wrappers)
+      let top = 0
+      let node = el
+      while (node) {
+        top += node.offsetTop || 0
+        node = node.offsetParent
+      }
+      const height = el.offsetHeight
+      const vh = window.innerHeight
+      setRange([top, top + height - vh])
+    }
+    // Run after first paint (layout is complete)
+    const id = requestAnimationFrame(update)
+    window.addEventListener('resize', update)
+    return () => {
+      cancelAnimationFrame(id)
+      window.removeEventListener('resize', update)
+    }
+  }, [containerRef])
+
+  return useTransform(scrollY, range, [0, 1], { clamp: true })
+}
+
 function ProjectCard({ project, index, count, containerProgress }) {
   const start = index / count
   const end   = (index + 1) / count
@@ -175,17 +199,14 @@ function ProjectCard({ project, index, count, containerProgress }) {
           {/* ── LEFT: Info pane ── */}
           <div style={{
             padding: '40px 44px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '20px',
-            justifyContent: 'space-between',
+            display: 'flex', flexDirection: 'column',
+            gap: '20px', justifyContent: 'space-between',
             borderRight: '1px solid rgba(255,255,255,0.06)',
           }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               <span style={{
                 fontFamily: 'var(--font-mono)', fontSize: '10px',
-                letterSpacing: '0.18em', color: project.accent,
-                textTransform: 'uppercase',
+                letterSpacing: '0.18em', color: project.accent, textTransform: 'uppercase',
               }}>
                 {project.label}
               </span>
@@ -270,15 +291,10 @@ function ProjectCard({ project, index, count, containerProgress }) {
 
 export default function Projects() {
   const containerRef = useRef(null)
-
-  // Track how the container scrolls through the viewport (window scroll)
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end end'],
-  })
+  const containerProgress = useContainerScrollProgress(containerRef)
 
   return (
-    <section id="work" style={{ position: 'relative', overflow: 'visible' }}>
+    <section id="work" style={{ position: 'relative' }}>
       {/* Header */}
       <div className="container" style={{ paddingTop: '80px', paddingBottom: '40px' }}>
         <motion.div
@@ -306,7 +322,7 @@ export default function Projects() {
         </motion.div>
       </div>
 
-      {/* Scroll container — must have position:relative for Framer Motion */}
+      {/* Scroll container */}
       <div
         ref={containerRef}
         style={{
@@ -322,7 +338,7 @@ export default function Projects() {
             project={project}
             index={i}
             count={projects.length}
-            containerProgress={scrollYProgress}
+            containerProgress={containerProgress}
           />
         ))}
       </div>
