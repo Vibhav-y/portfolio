@@ -1,7 +1,7 @@
 'use client'
 
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
-import { useRef, useEffect, useState } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
+import { useRef } from 'react'
 
 const jottrImg = '/projects/Jottr/image.webp'
 const libraflowImg = '/projects/Libraflow/image.webp'
@@ -85,10 +85,7 @@ function BrowserChrome({ url, accent }) {
       background: 'rgba(0,0,0,0.5)',
       borderBottom: '1px solid rgba(255,255,255,0.08)',
       padding: '10px 16px',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '10px',
-      flexShrink: 0,
+      display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0,
     }}>
       <div style={{ display: 'flex', gap: '6px', flexShrink: 0 }}>
         {['#ff5f57', '#ffbd2e', '#28c840'].map((c, i) => (
@@ -97,15 +94,10 @@ function BrowserChrome({ url, accent }) {
       </div>
       <div style={{
         flex: 1, minWidth: 0,
-        background: 'rgba(255,255,255,0.07)',
-        borderRadius: '6px',
-        padding: '5px 12px',
-        fontSize: '12px',
-        color: 'rgba(255,255,255,0.45)',
-        fontFamily: 'var(--font-mono)',
-        overflow: 'hidden',
-        whiteSpace: 'nowrap',
-        textOverflow: 'ellipsis',
+        background: 'rgba(255,255,255,0.07)', borderRadius: '6px',
+        padding: '5px 12px', fontSize: '12px',
+        color: 'rgba(255,255,255,0.45)', fontFamily: 'var(--font-mono)',
+        overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis',
       }}>
         {url.replace('https://', '').replace('http://', '').replace(/\/$/, '')}
       </div>
@@ -116,9 +108,9 @@ function BrowserChrome({ url, accent }) {
           display: 'inline-flex', alignItems: 'center', gap: '4px',
           background: accent + '22', border: `1px solid ${accent}55`,
           borderRadius: '6px', padding: '4px 12px',
-          fontSize: '12px', fontWeight: 500,
-          color: accent, textDecoration: 'none',
-          whiteSpace: 'nowrap', flexShrink: 0, transition: 'background 0.2s',
+          fontSize: '12px', fontWeight: 500, color: accent,
+          textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0,
+          transition: 'background 0.2s',
         }}
         onMouseEnter={e => e.currentTarget.style.background = accent + '44'}
         onMouseLeave={e => e.currentTarget.style.background = accent + '22'}
@@ -129,77 +121,40 @@ function BrowserChrome({ url, accent }) {
   )
 }
 
-/**
- * Tracks window scroll and derives [0,1] progress for the container
- * using its DOM-measured offsetTop. Reliable in Next.js App Router.
- */
-function useContainerScrollProgress(containerRef) {
-  const { scrollY } = useScroll()
-  const [range, setRange] = useState([0, 1])
-
-  useEffect(() => {
-    const update = () => {
-      if (!containerRef.current) return
-      const el = containerRef.current
-      // Walk up to get cumulative offsetTop (robust across wrappers)
-      let top = 0
-      let node = el
-      while (node) {
-        top += node.offsetTop || 0
-        node = node.offsetParent
-      }
-      const height = el.offsetHeight
-      const vh = window.innerHeight
-      setRange([top, top + height - vh])
-    }
-    // Run after first paint (layout is complete)
-    const id = requestAnimationFrame(update)
-    window.addEventListener('resize', update)
-    return () => {
-      cancelAnimationFrame(id)
-      window.removeEventListener('resize', update)
-    }
-  }, [containerRef])
-
-  return useTransform(scrollY, range, [0, 1], { clamp: true })
-}
-
 function ProjectCard({ project, index, count, containerProgress }) {
   const start = index / count
-  const end   = (index + 1) / count
+  const end = (index + 1) / count
   const targetScale = 1 - (count - 1 - index) * 0.04
 
-  const rawScale = useTransform(containerProgress, [start, end], [1, targetScale])
-  const scale    = useSpring(rawScale, { stiffness: 120, damping: 30, mass: 0.8 })
+  // useTransform only — no spring, no re-renders, runs entirely off-thread
+  const scale = useTransform(containerProgress, [start, end], [1, targetScale])
 
   const CARD_TOP = 90
 
   return (
     <div style={{
       height: '100vh',
-      display: 'flex',
-      alignItems: 'flex-start',
-      justifyContent: 'center',
+      display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
       position: 'sticky',
       top: `${CARD_TOP + index * 18}px`,
       zIndex: index + 1,
     }}>
-      <motion.div style={{ scale, transformOrigin: 'top center', width: '100%', marginTop: '10px' }}>
+      {/* will-change promotes each card to its own compositor layer */}
+      <motion.div style={{ scale, transformOrigin: 'top center', width: '100%', marginTop: '10px', willChange: 'transform' }}>
         <div
-          className="liquid-glass project-card-grid"
+          className="project-card-grid"
           style={{
             borderRadius: '20px',
             overflow: 'hidden',
             boxShadow: `0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06)`,
-            background: 'rgba(10,10,12,0.85)',
-            backdropFilter: 'blur(24px)',
+            background: 'rgba(10,10,12,0.92)',
+            border: '1px solid rgba(255,255,255,0.07)',
             minHeight: '72vh',
           }}
         >
           {/* ── LEFT: Info pane ── */}
           <div style={{
-            padding: '40px 44px',
-            display: 'flex', flexDirection: 'column',
+            padding: '40px 44px', display: 'flex', flexDirection: 'column',
             gap: '20px', justifyContent: 'space-between',
             borderRight: '1px solid rgba(255,255,255,0.06)',
           }}>
@@ -291,11 +246,14 @@ function ProjectCard({ project, index, count, containerProgress }) {
 
 export default function Projects() {
   const containerRef = useRef(null)
-  const containerProgress = useContainerScrollProgress(containerRef)
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end end'],
+  })
 
   return (
     <section id="work" style={{ position: 'relative' }}>
-      {/* Header */}
       <div className="container" style={{ paddingTop: '80px', paddingBottom: '40px' }}>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -322,7 +280,6 @@ export default function Projects() {
         </motion.div>
       </div>
 
-      {/* Scroll container */}
       <div
         ref={containerRef}
         style={{
@@ -338,7 +295,7 @@ export default function Projects() {
             project={project}
             index={i}
             count={projects.length}
-            containerProgress={containerProgress}
+            containerProgress={scrollYProgress}
           />
         ))}
       </div>
