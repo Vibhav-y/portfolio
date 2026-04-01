@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
-import MacbookReveal from '../components/MacbookReveal'
+// import MacbookReveal from '../components/MacbookReveal'
 import Navbar from '../components/Navbar'
 import Hero from '../components/Hero'
 import About from '../components/About'
@@ -93,7 +93,7 @@ export default function Home() {
             transition={{ duration: 0.8 }}
           >
             {/* MacBook reveal scene — before portfolio */}
-            <MacbookReveal />
+            {/* <MacbookReveal /> */}
 
             {/* Full portfolio */}
             <Navbar />
