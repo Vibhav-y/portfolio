@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import Magnetic from './Magnetic'
+import SectionHeader from './ui/section-header'
 
 const heroBg = '/hero-bg.webp'
 
@@ -31,64 +32,27 @@ export default function Hero() {
       display: 'flex', 
       flexDirection: 'column', 
       justifyContent: 'flex-end', 
-      paddingTop: '160px',
-      paddingBottom: '80px',
+      paddingTop: '120px',
+      paddingBottom: '64px',
       backgroundImage: `url(${heroBg})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
     }}>
-      <div className="container hero-container hero-grid" style={{ position: 'relative', zIndex: 10, maxWidth: '1400px', width: '100%', gap: '4vw', alignItems: 'center' }}>
+      <div className="container hero-container hero-grid" style={{ position: 'relative', zIndex: 10, width: '100%', gap: '4vw', alignItems: 'center' }}>
         
         {/* Left Copy */}
         <div className="hero-copy" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-          
-          {/* Greeting transition from Loader */}
-          <div style={{ marginBottom: '24px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', fontFamily: 'var(--font-main)', color: 'rgba(255,255,255,0.7)', fontSize: '20px', fontWeight: 500 }}>
-            {/* The hindi greeting receives the layout transition */}
-            <motion.div layoutId="namaste-greeting" style={{ zIndex: 10, originX: 0, originY: 0.5, letterSpacing: '0.05em' }}>
-              नमस्ते
-            </motion.div>
-            
-            {/* The english greeting slides up underneath it */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-              style={{ marginTop: '4px', letterSpacing: '0.1em', textTransform: 'uppercase', fontSize: '14px', color: 'rgba(255,255,255,0.4)', fontFamily: 'var(--font-mono)' }}
-            >
-              Namaste
-            </motion.div>
-          </div>
-
-          {/* Main Headline */}
-          <motion.h1
-            className="headline hero-name"
-            initial={{ opacity: 0, y: 26 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            style={{ fontSize: 'clamp(56px, 8vw, 96px)', lineHeight: 1.05, fontWeight: 700, letterSpacing: '-0.03em', color: '#fff', marginBottom: '24px' }}
-          >
-            I'm Vibhav{' '}
-            <span style={{ 
-              background: 'linear-gradient(to right, #ff7a18, #ffb347)', 
-              WebkitBackgroundClip: 'text', 
-              WebkitTextFillColor: 'transparent',
-              textShadow: '0 0 40px rgba(255,122,24,0.3)'
-            }}>
-              Yadav.
-            </span>
-          </motion.h1>
-
-          <motion.p
-            className="hero-short"
-            initial={{ opacity: 0, y: 22 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.4 }}
-            style={{ fontSize: 'clamp(18px, 2vw, 22px)', color: 'rgba(255,255,255,0.6)', lineHeight: 1.5, maxWidth: '600px', fontWeight: 400 }}
-          >
-            Full-stack developer crafting performant products with stunning UI &amp; real-world impact.
-          </motion.p>
+          <SectionHeader
+            eyebrow="नमस्ते"
+            title={<>I'm Vibhav{' '}<span style={{ background: 'linear-gradient(to right, #ff7a18, #ffb347)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', textShadow: '0 0 40px rgba(255,122,24,0.3)' }}>Yadav.</span></>}
+            description="Full-stack developer crafting performant products with stunning UI & real-world impact."
+            marginBottom={0}
+            eyebrowClassName="hero-eyebrow"
+            titleTag="h1"
+            titleClassName="headline hero-name"
+            descriptionClassName="hero-short"
+          />
 
           <motion.div
             initial={{ opacity: 0, y: 18 }}

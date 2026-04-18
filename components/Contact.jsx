@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import Magnetic from './Magnetic'
+import GlassCard from './ui/glass-card'
+import SectionHeader from './ui/section-header'
 
 export default function Contact() {
   const [formStatus, setFormStatus] = useState('idle');
@@ -20,34 +22,11 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="section container" style={{ paddingTop: '80px', paddingBottom: '160px' }}>
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.8 }}
-        style={{ marginBottom: '64px' }}
-      >
-        <span style={{
-          fontFamily: 'var(--font-mono)',
-          fontSize: '11px',
-          fontWeight: 600,
-          color: 'rgba(255,255,255,0.4)',
-          letterSpacing: '0.15em',
-          textTransform: 'uppercase',
-          display: 'block',
-          marginBottom: '16px'
-        }}>Contact</span>
-
-        <h2 style={{
-          fontSize: 'clamp(32px, 4vw, 42px)',
-          color: '#f9fafc',
-          lineHeight: 1.1,
-          letterSpacing: '-0.03em',
-        }}>
-          Let's build something.
-        </h2>
-      </motion.div>
+    <section id="contact" className="section container">
+      <SectionHeader
+        eyebrow="Contact"
+        title="Let's build something."
+      />
 
       <div style={{
         display: 'grid',
@@ -64,7 +43,7 @@ export default function Contact() {
           style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}
         >
           {/* Status Box */}
-          <div className="liquid-glass" style={{ padding: '32px', borderRadius: '24px' }}>
+          <GlassCard style={{ padding: '32px', borderRadius: '24px' }}>
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '24px', display: 'block' }}>
               Status
             </span>
@@ -78,10 +57,10 @@ export default function Contact() {
             <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginTop: '12px', lineHeight: 1.5 }}>
               Currently seeking full-time roles in software engineering, backend systems, and full-stack development.
             </p>
-          </div>
+          </GlassCard>
 
           {/* Contact Details Box */}
-          <div className="liquid-glass" style={{ padding: '32px', borderRadius: '24px', flexGrow: 1 }}>
+          <GlassCard style={{ padding: '32px', borderRadius: '24px', flexGrow: 1 }}>
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '32px', display: 'block' }}>
               Details
             </span>
@@ -104,16 +83,16 @@ export default function Contact() {
                 </div>
               </div>
             </div>
-          </div>
+          </GlassCard>
         </motion.div>
 
         {/* Right Column Bento: Form */}
-        <motion.div
+        <GlassCard
           initial={{ opacity: 0, x: 30 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.1 }}
-          className="liquid-glass"
+          as={motion.div}
           style={{ padding: '40px', borderRadius: '24px', display: 'flex', flexDirection: 'column' }}
         >
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '32px', display: 'block' }}>
@@ -157,7 +136,7 @@ export default function Contact() {
               </button>
             </Magnetic>
           </form>
-        </motion.div>
+        </GlassCard>
 
       </div>
 

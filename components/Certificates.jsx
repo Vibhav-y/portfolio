@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
+import SectionHeader from './ui/section-header'
 
 const cert1 = '/Certificates/image.webp'
 const cert2 = '/Certificates/image copy.webp'
@@ -36,9 +37,9 @@ const certs = [
 ];
 
 const fanConfig = [
-  { x: '-22%', rotate: -12, y: 20,  scale: 0.85, z: 1 },
-  { x: '0%',   rotate:   0, y: 0,   scale: 1.05, z: 3 },
-  { x: '22%',  rotate:  12, y: 20,  scale: 0.85, z: 2 },
+  { x: '-18%', rotate: -10, y: 16,  scale: 0.85, z: 1 },
+  { x: '0%',   rotate:   0, y: 0,   scale: 1.0,  z: 3 },
+  { x: '18%',  rotate:  10, y: 16,  scale: 0.85, z: 2 },
 ]
 
 export default function Certificates() {
@@ -69,36 +70,16 @@ export default function Certificates() {
 
   return (
     <>
-      <section id="certificates" className="section" style={{ paddingTop: '80px', paddingBottom: '120px' }}>
-        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 5vw' }}>
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.8 }}
-          style={{ marginBottom: '60px', textAlign: 'center' }}
-        >
-          <span style={{
-            fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: 600,
-            color: 'var(--accent)', letterSpacing: '0.2em',
-            textTransform: 'uppercase', display: 'block', marginBottom: '16px',
-          }}>
-            CREDENTIALS
-          </span>
-          <h2 style={{
-            fontSize: 'clamp(32px, 4vw, 52px)', color: '#f9fafc',
-            lineHeight: 1.05, letterSpacing: '-0.03em', maxWidth: '600px', margin: '0 auto',
-          }}>
-            Certified &amp; always learning.
-          </h2>
-          <p style={{
-            color: 'var(--text-secondary)', fontSize: '16px', lineHeight: 1.7,
-            maxWidth: '500px', marginTop: '16px', margin: '16px auto 0',
-          }}>
-            A collection of credentials earned across engineering, algorithms, and software design.
-          </p>
-        </motion.div>
+      <section id="certificates" className="section">
+        <div className="container">
+        <SectionHeader
+          eyebrow="CREDENTIALS"
+          title="Certified & always learning."
+          description="A collection of credentials earned across engineering, algorithms, and software design."
+          align="center"
+          marginBottom={60}
+          eyebrowClassName="cert-eyebrow"
+        />
 
         {/* The 2-Column Split Layout */}
         <div 
@@ -112,12 +93,12 @@ export default function Certificates() {
         >
           
           {/* LEFT: Fanned Images Pure Animation */}
-          <div style={{
+          <div className="cert-fan-area" style={{
             position: 'relative',
-            height: '640px',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
+            overflow: 'hidden',
           }}>
             {certs.map((cert, i) => {
               const slot = (i - activeIndex + certs.length + 1) % certs.length
@@ -203,7 +184,7 @@ export default function Certificates() {
 
           {/* RIGHT: Text Content & Navigation */}
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <div style={{ position: 'relative', minHeight: '180px' }}>
+            <div style={{ position: 'relative', minHeight: '280px' }}>
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeCert.id}
