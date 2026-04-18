@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useRef } from 'react'
+import SectionHeader from './ui/section-header'
 
 const jottrImg = '/projects/Jottr/image.webp'
 const libraflowImg = '/projects/Libraflow/image.webp'
@@ -254,30 +255,12 @@ export default function Projects() {
 
   return (
     <section id="work" style={{ position: 'relative' }}>
-      <div className="container" style={{ paddingTop: '80px', paddingBottom: '40px' }}>
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}
-        >
-          <span style={{
-            fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: 600,
-            color: 'rgba(255,255,255,0.4)', letterSpacing: '0.15em', textTransform: 'uppercase',
-          }}>
-            SELECTED WORK
-          </span>
-          <h2 style={{
-            fontSize: 'clamp(32px, 4vw, 52px)', color: '#f9fafc',
-            lineHeight: 1.05, letterSpacing: '-0.03em', maxWidth: '620px',
-          }}>
-            Real-world systems,<br />not just code.
-          </h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '16px', lineHeight: 1.7, maxWidth: '500px' }}>
-            I build platforms that solve difficult engineering problems — from CRDT-based real-time sync to scalable full-stack apps.
-          </p>
-        </motion.div>
+      <div className="container">
+        <SectionHeader
+          eyebrow="SELECTED WORK"
+          title={<>Real-world systems,<br />not just code.</>}
+          description="I build platforms that solve difficult engineering problems — from CRDT-based real-time sync to scalable full-stack apps."
+        />
       </div>
 
       <div
@@ -285,6 +268,8 @@ export default function Projects() {
         style={{
           height: `${projects.length * 100}vh`,
           position: 'relative',
+          maxWidth: '1400px',
+          margin: '0 auto',
           paddingLeft: '5vw',
           paddingRight: '5vw',
         }}

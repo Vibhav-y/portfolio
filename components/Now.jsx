@@ -1,25 +1,21 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import GlassCard from './ui/glass-card'
+import SectionHeader from './ui/section-header'
 
 export default function Now() {
   return (
     <section id="now" className="section container">
-       <motion.div 
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.8 }}
-        style={{ marginBottom: '64px' }}
-      >
-        <span style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-tertiary)', letterSpacing: '0.05em', textTransform: 'uppercase' }}>now</span>
-        <h2 className="section-title" style={{ marginTop: '16px', marginBottom: '16px' }}>Current focus.</h2>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '18px', maxWidth: '600px' }}>
-          A living snapshot of what I'm spending mental energy on. Inspired by Derek Sivers' /now page.
-        </p>
-      </motion.div>
+         <SectionHeader
+            eyebrow="now"
+            title="Current focus."
+            description="A living snapshot of what I'm spending mental energy on. Inspired by Derek Sivers' /now page."
+            eyebrowClassName="now-eyebrow"
+            titleClassName="section-title"
+            descriptionClassName="now-description"
+         />
 
-      <div className="liquid-glass lg-sheet" style={{ padding: '64px' }}>
+         <GlassCard className="lg-sheet" style={{ padding: '64px' }}>
          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '48px', paddingBottom: '24px', borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
             <span style={{ width: '12px', height: '12px', borderRadius: '50%', border: '2px solid var(--accent)', display: 'inline-block' }}></span>
             <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Updated 2026-03-17</span>
@@ -51,7 +47,7 @@ export default function Now() {
             </div>
 
          </div>
-      </div>
+         </GlassCard>
     </section>
   )
 }

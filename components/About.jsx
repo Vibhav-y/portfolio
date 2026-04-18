@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import SectionHeader from './ui/section-header'
 
 const profileImg = '/1774288544676-1-tjs99i.webp'
 const resumePdf = '/resume.pdf'
@@ -23,25 +24,13 @@ const card = {
 
 export default function About() {
   return (
-    <section id="about" className="section container" style={{ paddingTop: '80px', paddingBottom: '120px' }}>
-
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: 0.8 }}
-        style={{ marginBottom: '48px' }}
-      >
-        <span style={{
-          fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: 600,
-          color: 'var(--accent)', letterSpacing: '0.2em', textTransform: 'uppercase',
-          display: 'block', marginBottom: '16px'
-        }}>About</span>
-        <h2 style={{ fontSize: 'clamp(32px, 4vw, 42px)', color: '#f9fafc', lineHeight: 1.1, letterSpacing: '-0.03em' }}>
-          Who I am.
-        </h2>
-      </motion.div>
+    <section id="about" className="section container">
+      <SectionHeader
+        eyebrow="About"
+        title="Who I am."
+        marginBottom={48}
+        eyebrowClassName="about-eyebrow"
+      />
 
       {/* ── GLOBAL GRID STYLES ── */}
       <style>{`

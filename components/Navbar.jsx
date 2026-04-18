@@ -19,10 +19,6 @@ export default function Navbar() {
         position: 'fixed',
         top: 0, left: 0, right: 0,
         zIndex: 1000,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '24px 8vw',
         background: yBg,
         backdropFilter: blur,
         borderBottom: borderB
@@ -78,6 +74,7 @@ export default function Navbar() {
       `}} />
 
       {/* Left Logo */}
+      <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '24px', paddingBottom: '24px' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
         <a href="#home" className="glitch-logo">
            VY.
@@ -140,6 +137,7 @@ export default function Navbar() {
           Let's talk
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
+      </div>
       </div>
     </motion.nav>
   )

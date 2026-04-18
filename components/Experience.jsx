@@ -1,6 +1,8 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import GlassCard from './ui/glass-card'
+import SectionHeader from './ui/section-header'
 
 const experience = [
   {
@@ -20,48 +22,24 @@ const experience = [
 
 export default function Experience() {
   return (
-    <section id="experience" className="section container" style={{ paddingTop: '80px' }}>
-      <motion.div 
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.8 }}
-        style={{ marginBottom: '64px', textAlign: 'center' }}
-      >
-        <span style={{ 
-          fontFamily: 'var(--font-mono)', 
-          fontSize: '11px', 
-          fontWeight: 600, 
-          color: 'rgba(255,255,255,0.4)', 
-          letterSpacing: '0.15em', 
-          textTransform: 'uppercase',
-          display: 'block',
-          marginBottom: '16px'
-        }}>experience</span>
-        
-        <h2 style={{ 
-          fontSize: 'clamp(32px, 4vw, 42px)', 
-          color: '#f9fafc', 
-          lineHeight: 1.1, 
-          letterSpacing: '-0.03em',
-          marginBottom: '24px'
-        }}>
-          Training
-        </h2>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '16px', maxWidth: '600px', margin: '0 auto' }}>
-          Not just theory — applying learned concepts to real-world development and system design.
-        </p>
-      </motion.div>
+    <section id="experience" className="section container">
+      <SectionHeader
+        eyebrow="experience"
+        title="Training"
+        description="Not just theory — applying learned concepts to real-world development and system design."
+        align="center"
+      />
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: '24px', maxWidth: '800px', margin: '0 auto' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: '24px' }}>
         {experience.map((exp, idx) => (
-          <motion.div
+          <GlassCard
             key={exp.id}
+            as={motion.div}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.6, delay: idx * 0.15 }}
-            className="liquid-glass exp-grid"
+            className="exp-grid"
             style={{ 
               padding: 'clamp(24px, 5vw, 40px)',
               borderRadius: '24px',
@@ -102,7 +80,7 @@ export default function Experience() {
                 ))}
               </div>
             </div>
-          </motion.div>
+          </GlassCard>
         ))}
       </div>
     </section>
