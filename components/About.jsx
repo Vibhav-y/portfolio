@@ -67,7 +67,7 @@ export default function About() {
         <motion.div
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }} transition={{ duration: 0.7 }}
-          style={{ ...card, gridArea: 'desc', padding: '40px', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }}
+          style={{ ...card, gridArea: 'desc', padding: 'clamp(20px, 2.8vw, 40px)', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }}
         >
           <div style={{ position: 'absolute', top: '-50%', left: '-50%', width: '100%', height: '100%', background: 'radial-gradient(circle, var(--accent) 0%, transparent 70%)', opacity: 0.05, pointerEvents: 'none' }} />
           <h3 style={{ fontSize: '28px', lineHeight: 1.2, color: '#fff', fontWeight: 600, letterSpacing: '-0.02em', marginBottom: '20px' }}>
@@ -95,7 +95,7 @@ export default function About() {
         <motion.div
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }}
-          style={{ ...card, gridArea: 'heur', padding: '40px', display: 'flex', flexDirection: 'column' }}
+          style={{ ...card, gridArea: 'heur', padding: 'clamp(20px, 2.8vw, 40px)', display: 'flex', flexDirection: 'column' }}
         >
           <h3 style={{ fontSize: '20px', color: '#fff', fontWeight: 600, letterSpacing: '-0.01em', marginBottom: '8px' }}>
             Developer heuristics
@@ -121,7 +121,7 @@ export default function About() {
         <motion.div
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.3 }}
-          style={{ ...card, gridArea: 'edu', padding: '48px', display: 'flex', flexDirection: 'column' }}
+          style={{ ...card, gridArea: 'edu', padding: 'clamp(24px, 3.2vw, 48px)', display: 'flex', flexDirection: 'column' }}
         >
           <h3 style={{ fontSize: '24px', color: '#fff', fontWeight: 600, letterSpacing: '-0.02em', marginBottom: '40px' }}>
             Education
@@ -163,7 +163,7 @@ export default function About() {
         <motion.div
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.4 }}
-          style={{ ...card, gridArea: 'cont', padding: '48px', display: 'flex', flexDirection: 'column' }}
+          style={{ ...card, gridArea: 'cont', padding: 'clamp(24px, 3.2vw, 48px)', display: 'flex', flexDirection: 'column' }}
         >
           <h3 style={{ fontSize: '24px', color: '#fff', fontWeight: 600, letterSpacing: '-0.02em', marginBottom: '12px' }}>
             Connect &amp; Explore
