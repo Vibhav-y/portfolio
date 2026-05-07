@@ -150,12 +150,12 @@ function ProjectCard({ project, index, count, containerProgress }) {
             boxShadow: `0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06)`,
             background: 'rgba(10,10,12,0.92)',
             border: '1px solid rgba(255,255,255,0.07)',
-            minHeight: '72vh',
+            minHeight: 'clamp(500px, 72vh, 900px)',
           }}
         >
           {/* ── LEFT: Info pane ── */}
           <div style={{
-            padding: '40px 44px', display: 'flex', flexDirection: 'column',
+            padding: 'clamp(24px, 3vw, 40px) clamp(24px, 3.2vw, 44px)', display: 'flex', flexDirection: 'column',
             gap: '20px', justifyContent: 'space-between',
             borderRight: '1px solid rgba(255,255,255,0.06)',
           }}>

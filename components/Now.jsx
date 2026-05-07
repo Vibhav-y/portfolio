@@ -15,13 +15,13 @@ export default function Now() {
             descriptionClassName="now-description"
          />
 
-         <GlassCard className="lg-sheet" style={{ padding: '64px' }}>
-         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '48px', paddingBottom: '24px', borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
+         <GlassCard className="lg-sheet" style={{ padding: 'clamp(28px, 4vw, 64px)' }}>
+         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: 'clamp(24px, 3vw, 48px)', paddingBottom: '24px', borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
             <span style={{ width: '12px', height: '12px', borderRadius: '50%', border: '2px solid var(--accent)', display: 'inline-block' }}></span>
             <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Updated 2026-03-17</span>
          </div>
          
-         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '64px' }}>
+         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 'clamp(28px, 4vw, 64px)' }}>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                <h3 style={{ fontSize: '18px', color: 'var(--text-primary)', fontFamily: 'monospace', fontWeight: 600 }}>## currently building</h3>
