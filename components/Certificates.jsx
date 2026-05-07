@@ -5,9 +5,9 @@ import { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import SectionHeader from './ui/section-header'
 
-const cert1 = '/Certificates/image.webp'
-const cert2 = '/Certificates/image copy.webp'
-const cert3 = '/Certificates/image copy 2.webp'
+const cert1 = '/Certificates/cloud-computing.webp'
+const cert2 = '/Certificates/python-basic.webp'
+const cert3 = '/Certificates/frontend-react.webp'
 
 const certs = [
   {

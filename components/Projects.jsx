@@ -4,10 +4,10 @@ import { motion, useScroll, useTransform } from 'framer-motion'
 import { useRef } from 'react'
 import SectionHeader from './ui/section-header'
 
-const jottrImg = '/projects/Jottr/image.webp'
-const libraflowImg = '/projects/Libraflow/image.webp'
-const streamixImg = '/projects/Streamix/image.webp'
-const gittoolImg = '/projects/Gittool/image.webp'
+const jottrImg = '/projects/Jottr/jottr.webp'
+const libraflowImg = '/projects/Libraflow/libraflow.webp'
+const streamixImg = '/projects/Streamix/streamix.webp'
+const gittoolImg = '/projects/Gittool/gittool.webp'
 
 const projects = [
   {
