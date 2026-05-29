@@ -1,5 +1,25 @@
+# Dependencies
+node_modules/
+
+# Build output
+.next/
+out/
+dist/
+dist-ssr/
+build/
+
+# Coverage and caches
+coverage/
+.turbo/
+
+# Local environment files
+.env
+.env.local
+.env.*.local
+*.local
+
 # Logs
-logs
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -7,15 +27,13 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Hosting
+.vercel/
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
@@ -23,16 +41,5 @@ dist-ssr
 *.sln
 *.sw?
 
-.next
-.next/*
-.next/dev
-.next/dev/*
-.next/dev/lock
-.next/dev/lock/*
-
-.venv
-.claude
-.vscode
-
-out
-out/
+# TypeScript incremental build info
+*.tsbuildinfo
