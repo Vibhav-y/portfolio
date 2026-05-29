@@ -1,143 +1,294 @@
 'use client'
 
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion } from 'framer-motion'
+import { useState, useEffect } from 'react'
 
-const resumePdf = '/resume.pdf'
+const resumes = [
+  { label: 'General CV',    url: '/resume/general%20cv.pdf', sub: 'Full overview' },
+  { label: 'Specialized CV', url: '/resume/specialized_cv.pdf', sub: 'Backend / Full-stack focus' },
+]
+
+const navLinks = [
+  { label: 'Home', id: 'home' },
+  { label: 'Projects', id: 'work' },
+  { label: 'Stack', id: 'stack' },
+  { label: 'About', id: 'about' },
+]
 
 export default function Navbar() {
-  const { scrollY } = useScroll()
-  const yBg = useTransform(scrollY, [0, 50], ["rgba(0,0,0,0)", "rgba(10,10,10,0.8)"])
-  const blur = useTransform(scrollY, [0, 50], ["blur(0px)", "blur(12px)"])
-  const borderB = useTransform(scrollY, [0, 50], ["1px solid rgba(255,255,255,0)", "1px solid rgba(255,255,255,0.05)"])
+  const [scrolled, setScrolled] = useState(false)
+  const [island, setIsland] = useState(false)
+  const [resumeOpen, setResumeOpen] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY
+      setScrolled(y > 50)
+      // morph into the bottom island once we've scrolled past (most of) the hero
+      setIsland(y > window.innerHeight - 90)
+    }
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+    }
+  }, [])
+
+  const ease = 'cubic-bezier(.22,1,.36,1)'
 
   return (
-    <motion.nav 
+    <motion.nav
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
       style={{
         position: 'fixed',
-        top: 0, left: 0, right: 0,
         zIndex: 1000,
-        background: yBg,
-        backdropFilter: blur,
-        borderBottom: borderB
+        left: 0,
+        right: 0,
+        display: 'flex',
+        justifyContent: 'center',
+        pointerEvents: 'none',
+        top: island ? 'auto' : 0,
+        bottom: island ? 'clamp(4px, 0.6vw, 8px)' : 'auto',
+        // full-bleed hairline bar in top mode once scrolled
+        background: island ? 'transparent' : (scrolled ? 'rgba(6,6,8,0.85)' : 'rgba(0,0,0,0)'),
+        backdropFilter: island ? 'none' : (scrolled ? 'blur(12px)' : 'blur(0px)'),
+        WebkitBackdropFilter: island ? 'none' : (scrolled ? 'blur(12px)' : 'blur(0px)'),
+        borderBottom: island
+          ? '1px solid transparent'
+          : (scrolled ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(255,255,255,0)'),
+        transition: `background .4s ${ease}, backdrop-filter .4s ${ease}, border-color .4s ${ease}`,
       }}
     >
-      {/* CSS for the Glitch Effect (Scoped loosely) */}
-      <style dangerouslySetInnerHTML={{__html: `
-        .glitch-logo {
-          position: relative;
-          color: #fff;
-          font-weight: 800;
-          font-size: 24px;
-          letter-spacing: -0.05em;
-          text-decoration: none;
-          display: inline-block;
-        }
-        .glitch-logo::before,
-        .glitch-logo::after {
-          content: "VY.";
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          opacity: 0.8;
-        }
-        .glitch-logo::before {
-          color: #0ff;
-          z-index: -1;
-          animation: glitch-anim-1 2.5s infinite linear alternate-reverse;
-        }
-        .glitch-logo::after {
-          color: #f0f;
-          z-index: -2;
-          animation: glitch-anim-2 3s infinite linear alternate-reverse;
-        }
-        @keyframes glitch-anim-1 {
-          0% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, 1px); }
-          20% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -1px); }
-          40% { clip-path: inset(40% 0 50% 0); transform: translate(-2px, 2px); }
-          60% { clip-path: inset(80% 0 5% 0); transform: translate(2px, -2px); }
-          80% { clip-path: inset(10% 0 70% 0); transform: translate(-1px, 1px); }
-          100% { clip-path: inset(30% 0 50% 0); transform: translate(1px, -1px); }
-        }
-        @keyframes glitch-anim-2 {
-          0% { clip-path: inset(10% 0 60% 0); transform: translate(2px, -1px); }
-          20% { clip-path: inset(30% 0 20% 0); transform: translate(-2px, 2px); }
-          40% { clip-path: inset(70% 0 10% 0); transform: translate(2px, -2px); }
-          60% { clip-path: inset(20% 0 50% 0); transform: translate(-1px, 1px); }
-          80% { clip-path: inset(50% 0 30% 0); transform: translate(1px, -1px); }
-          100% { clip-path: inset(5% 0 80% 0); transform: translate(-2px, 1px); }
-        }
-      `}} />
-
-      {/* Left Logo */}
-      <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '24px', paddingBottom: '24px' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <a href="#home" className="glitch-logo">
-           VY.
-        </a>
-      </div>
-
-      {/* Center Links */}
-      <div className="nav-links" style={{ gap: '32px', alignItems: 'center' }}>
-        {[
-          { label: 'Home', id: 'home' },
-          { label: 'Projects', id: 'work' },
-          { label: 'Stack', id: 'stack' },
-          { label: 'About', id: 'about' }
-        ].map((link) => (
-          <a key={link.label} href={`#${link.id}`} style={{
-            color: 'rgba(255,255,255,0.7)',
-            textDecoration: 'none',
-            fontWeight: 500,
-            fontSize: '14px',
-            transition: 'color 0.2s',
-          }}
-          onMouseEnter={(e) => e.target.style.color = '#fff'}
-          onMouseLeave={(e) => e.target.style.color = 'rgba(255,255,255,0.7)'}
-          >
-            {link.label}
-          </a>
-        ))}
-      </div>
-
-      {/* Right Action */}
-      <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '24px' }}>
-        <a href={resumePdf} target="_blank" rel="noopener noreferrer" style={{
-          color: '#fff', fontSize: '13px', fontWeight: 600, textDecoration: 'none', transition: 'color 0.2s'
-        }} onMouseEnter={e => e.target.style.color = '#ff7a18'} onMouseLeave={e => e.target.style.color = '#fff'}>
-          Resume
-        </a>
-        <a href="#contact" style={{
-          background: 'linear-gradient(to right, #ff7a18, #ffb347)',
-          borderRadius: '999px',
-          padding: '10px 24px',
-          color: '#000',
-          textDecoration: 'none',
-          fontSize: '13px',
-          fontWeight: 600,
-          transition: 'all 0.3s ease',
-          boxShadow: '0 4px 14px rgba(255,122,24,0.3)',
+      {/* Bar / island */}
+      <div
+        style={{
+          pointerEvents: 'auto',
           display: 'flex',
           alignItems: 'center',
-          gap: '8px'
+          transition: `gap .5s ${ease}, padding .5s ${ease}, background .4s ${ease}, box-shadow .4s ${ease}, border-color .4s ${ease}, max-width .5s ${ease}`,
+          ...(island
+            ? {
+                gap: 'clamp(14px, 1.6vw, 26px)',
+                maxWidth: 'calc(100vw - 24px)',
+                padding: '10px 14px 10px 20px',
+                borderRadius: 0,
+                background: 'rgba(6,6,8,0.94)',
+                border: '1px solid rgba(255,255,255,0.12)',
+                boxShadow: '0 12px 36px rgba(0,0,0,0.55)',
+              }
+            : {
+                width: '100%',
+                maxWidth: '1300px',
+                justifyContent: 'space-between',
+                gap: '0px',
+                padding: '22px 5vw',
+                borderRadius: 0,
+                background: 'transparent',
+                border: '1px solid transparent',
+                boxShadow: 'none',
+              }),
         }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = 'scale(1.05)';
-          e.currentTarget.style.boxShadow = '0 6px 20px rgba(255,122,24,0.5)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = 'scale(1)';
-          e.currentTarget.style.boxShadow = '0 4px 14px rgba(255,122,24,0.3)';
-        }}
+      >
+        {/* Logo */}
+        <div style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+          <a
+            href="#home"
+            style={{
+              color: '#fff',
+              fontWeight: 800,
+              fontSize: '20px',
+              letterSpacing: '-0.05em',
+              fontFamily: 'var(--font-main)',
+              textDecoration: 'none',
+            }}
+          >
+            VY.
+          </a>
+        </div>
+
+        {/* Center Links */}
+        <div className="nav-links" style={{ gap: island ? 'clamp(14px, 1.8vw, 26px)' : '32px', alignItems: 'center' }}>
+          {navLinks.map((link) => (
+            <a
+              key={link.label}
+              href={`#${link.id}`}
+              style={{
+                color: 'rgba(255,255,255,0.7)',
+                textDecoration: 'none',
+                fontWeight: 500,
+                fontSize: '12px',
+                fontFamily: 'var(--font-mono)',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                transition: 'color 0.2s',
+              }}
+              onMouseEnter={(e) => (e.target.style.color = '#fff')}
+              onMouseLeave={(e) => (e.target.style.color = 'rgba(255,255,255,0.7)')}
+            >
+              {link.label}
+            </a>
+          ))}
+        </div>
+
+        {/* Right Action */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            gap: island ? '14px' : '22px',
+            flexShrink: 0,
+          }}
         >
-          Let's talk
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-      </div>
+          <div
+            onMouseEnter={() => setResumeOpen(true)}
+            onMouseLeave={() => setResumeOpen(false)}
+            style={{ position: 'relative' }}
+          >
+            <button
+              type="button"
+              onClick={() => setResumeOpen((v) => !v)}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                background: 'transparent',
+                border: 'none',
+                padding: 0,
+                color: resumeOpen ? 'var(--accent)' : 'rgba(255,255,255,0.85)',
+                fontSize: '12px',
+                fontWeight: 600,
+                fontFamily: 'var(--font-mono)',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                cursor: 'pointer',
+                transition: 'color 0.2s',
+              }}
+            >
+              Resume
+              <svg
+                width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                style={{ transform: resumeOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.25s ease' }}
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+
+            <div
+              // Wrapper with transparent padding acts as a hover bridge between
+              // the button and the visible dropdown so the mouse never leaves
+              // the hoverable region while traveling across the gap.
+              style={{
+                position: 'absolute',
+                right: 0,
+                [island ? 'bottom' : 'top']: '100%',
+                paddingTop: island ? 0 : '10px',
+                paddingBottom: island ? '10px' : 0,
+                opacity: resumeOpen ? 1 : 0,
+                visibility: resumeOpen ? 'visible' : 'hidden',
+                transform: resumeOpen
+                  ? 'translateY(0)'
+                  : `translateY(${island ? '8px' : '-8px'})`,
+                transition: 'opacity .2s ease, transform .25s cubic-bezier(.22,1,.36,1), visibility .2s',
+                pointerEvents: resumeOpen ? 'auto' : 'none',
+              }}
+            >
+              <div
+                style={{
+                  minWidth: '230px',
+                  background: 'rgba(6,6,8,0.96)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  boxShadow: '0 16px 40px rgba(0,0,0,0.55)',
+                }}
+              >
+              {resumes.map((r, i) => (
+                <a
+                  key={r.url}
+                  href={r.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'block',
+                    padding: '14px 16px',
+                    color: 'rgba(255,255,255,0.85)',
+                    textDecoration: 'none',
+                    borderTop: i > 0 ? '1px solid rgba(255,255,255,0.06)' : 'none',
+                    transition: 'background 0.18s ease, color 0.18s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.04)'
+                    e.currentTarget.style.color = 'var(--accent)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'transparent'
+                    e.currentTarget.style.color = 'rgba(255,255,255,0.85)'
+                  }}
+                >
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '12px',
+                      fontWeight: 700,
+                      letterSpacing: '0.08em',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    {r.label}
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '10px',
+                      color: 'rgba(255,255,255,0.4)',
+                      letterSpacing: '0.08em',
+                      marginTop: '4px',
+                    }}
+                  >
+                    {r.sub}
+                  </div>
+                </a>
+              ))}
+              </div>
+            </div>
+          </div>
+          <a
+            href="#contact"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '10px 18px',
+              border: '1px solid var(--accent)',
+              color: 'var(--accent)',
+              background: 'transparent',
+              fontSize: '12px',
+              fontWeight: 700,
+              fontFamily: 'var(--font-mono)',
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              textDecoration: 'none',
+              whiteSpace: 'nowrap',
+              transition: 'background 0.25s ease, color 0.25s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'var(--accent)'
+              e.currentTarget.style.color = '#000'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'transparent'
+              e.currentTarget.style.color = 'var(--accent)'
+            }}
+          >
+            Let&apos;s talk
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
       </div>
     </motion.nav>
   )

@@ -10,6 +10,8 @@ import Skills from '../components/Skills'
 import Experience from '../components/Experience'
 import Now from '../components/Now'
 import Contact from '../components/Contact'
+import Footer from '../components/Footer'
+import CornerPlus from '../components/ui/corner-plus'
 
 export default function Home() {
   const [loading, setLoading] = useState(true)
@@ -96,17 +98,27 @@ export default function Home() {
           </div>
         </div>
       ) : (
-        <div>
+        <div className="site-content">
           <Navbar />
           <main>
             <Hero />
+            <div aria-hidden="true" style={{ height: 'clamp(44px, 4.5vw, 68px)' }} />
             <About />
+            <div className="grid-gutter" aria-hidden="true"><CornerPlus /></div>
             <Experience />
+            <div className="grid-gutter" aria-hidden="true"><CornerPlus /></div>
             <Projects />
+            <div className="grid-gutter" aria-hidden="true"><CornerPlus /></div>
             <Certificates />
+            <div className="grid-gutter" aria-hidden="true"><CornerPlus /></div>
             <Skills />
+            <div className="grid-gutter" aria-hidden="true"><CornerPlus /></div>
             <Now />
+            <div className="grid-gutter" aria-hidden="true"><CornerPlus /></div>
             <Contact />
+            <div className="grid-gutter" aria-hidden="true"><CornerPlus /></div>
+            <Footer />
+            <div aria-hidden="true" style={{ height: 'clamp(32px, 4vw, 56px)' }} />
           </main>
         </div>
       )}

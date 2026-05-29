@@ -29,3 +29,10 @@ dist-ssr
 .next/dev/*
 .next/dev/lock
 .next/dev/lock/*
+
+.venv
+.claude
+.vscode
+
+out
+out/
