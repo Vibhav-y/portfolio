@@ -4,12 +4,22 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import SectionHeader from './ui/section-header'
+import CornerPlus from './ui/corner-plus'
 
-const cert1 = '/Certificates/cloud-computing.webp'
-const cert2 = '/Certificates/python-basic.webp'
-const cert3 = '/Certificates/frontend-react.webp'
+const cert1 = '/Certificates/image.webp'
+const cert2 = '/Certificates/image copy.webp'
+const cert3 = '/Certificates/image copy 2.webp'
+const cert4 = '/Certificates/image copy 3.webp'
 
 const certs = [
+  {
+    id: 'cert4',
+    image: cert4,
+    title: 'Oracle Data Platform Foundations',
+    subtitle: 'Oracle Certified',
+    desc: 'Oracle Certified Foundations Associate for the Oracle Data Platform 2025 program. Validates core understanding of Oracle data infrastructure, services, and platform fundamentals.',
+    accent: '#C74634',
+  },
   {
     id: 'cert1',
     image: cert1,
@@ -36,10 +46,15 @@ const certs = [
   },
 ];
 
+// 4-card diamond stack:
+//   top    : |     (active, centered, in front, highest on screen)
+//   middle : / \   (left & right, angled outward)
+//   bottom : |     (inactive, centered behind, peeks out below active)
 const fanConfig = [
-  { x: '-18%', rotate: -10, y: 16,  scale: 0.85, z: 1 },
-  { x: '0%',   rotate:   0, y: 0,   scale: 1.0,  z: 3 },
-  { x: '18%',  rotate:  10, y: 16,  scale: 0.85, z: 2 },
+  { x: '-22%', rotate: -14, y:  6,  scale: 0.85, z: 1, opacity: 1 }, // slot 0 — middle left  /
+  { x: '0%',   rotate:   0, y: -28, scale: 1.0,  z: 4, opacity: 1 }, // slot 1 — top front |   (active)
+  { x: '22%',  rotate:  14, y:  6,  scale: 0.85, z: 2, opacity: 1 }, // slot 2 — middle right \
+  { x: '0%',   rotate:   0, y:  64, scale: 0.78, z: 0, opacity: 1 }, // slot 3 — bottom peek |  (inactive)
 ]
 
 export default function Certificates() {
@@ -71,13 +86,14 @@ export default function Certificates() {
   return (
     <>
       <section id="certificates" className="section">
-        <div className="container">
+        <div className="container grid-box" style={{ paddingBlock: 'clamp(36px, 4vw, 56px)' }}>
+        <CornerPlus />
         <SectionHeader
           eyebrow="CREDENTIALS"
           title="Certified & always learning."
           description="A collection of credentials earned across engineering, algorithms, and software design."
-          align="center"
-          marginBottom={60}
+          align="left"
+          marginBottom={32}
           eyebrowClassName="cert-eyebrow"
         />
 
@@ -88,7 +104,7 @@ export default function Certificates() {
           onMouseLeave={() => setPaused(false)}
           style={{
             alignItems: 'center',
-            marginTop: '80px',
+            marginTop: '48px',
           }}
         >
           
@@ -123,19 +139,20 @@ export default function Certificates() {
                     y: isActive ? cfg.y - 12 : cfg.y,
                     scale: cfg.scale,
                     zIndex: cfg.z,
+                    opacity: cfg.opacity ?? 1,
                   }}
-                  transition={{ type: 'spring', stiffness: 160, damping: 24 }}
+                  transition={{ type: 'spring', stiffness: 160, damping: 24, opacity: { duration: 0.1 } }}
                   className="cert-card"
                   style={{
                     position: 'absolute',
                     height: 'auto',
                     cursor: 'pointer',
                     transformOrigin: 'bottom center',
-                    borderRadius: '20px',
+                    borderRadius: '0px',
                     overflow: 'hidden',
-                    border: `2px solid ${isActive ? cert.accent : 'rgba(255,255,255,0.06)'}`,
-                    boxShadow: isActive 
-                      ? `0 40px 80px rgba(0,0,0,0.6), 0 0 40px ${cert.accent}33`
+                    border: `1px solid ${isActive ? cert.accent : 'rgba(255,255,255,0.1)'}`,
+                    boxShadow: isActive
+                      ? `0 40px 80px rgba(0,0,0,0.6)`
                       : '0 20px 40px rgba(0,0,0,0.5)',
                   }}
                 >
@@ -168,7 +185,7 @@ export default function Certificates() {
                       style={{
                         position: 'absolute', top: '12px', right: '12px',
                         background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)',
-                        borderRadius: '6px', padding: '4px 10px',
+                        borderRadius: '0px', padding: '5px 11px',
                         fontSize: '10px', fontFamily: 'var(--font-mono)',
                         color: '#fff', textTransform: 'uppercase', letterSpacing: '0.1em',
                         border: '1px solid rgba(255,255,255,0.2)',
@@ -195,25 +212,27 @@ export default function Certificates() {
                   style={{ position: 'absolute', inset: 0 }}
                 >
                   <span style={{
-                    display: 'inline-block',
-                    padding: '6px 14px',
-                    borderRadius: '8px',
-                    background: activeCert.accent + '22',
-                    border: `1px solid ${activeCert.accent}44`,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '10px',
                     color: activeCert.accent,
-                    fontSize: '12px',
+                    fontSize: '11px',
                     fontFamily: 'var(--font-mono)',
-                    marginBottom: '20px',
+                    letterSpacing: '0.14em',
+                    textTransform: 'uppercase',
+                    marginBottom: '18px',
                   }}>
+                    <span style={{ width: '20px', height: '1px', background: activeCert.accent }} />
                     {activeCert.subtitle}
                   </span>
-                  
+
                   <h3 style={{
-                    fontSize: '36px',
+                    fontSize: 'clamp(28px, 3vw, 38px)',
                     fontWeight: 700,
                     color: '#fff',
                     letterSpacing: '-0.02em',
-                    lineHeight: 1.2,
+                    lineHeight: 1.15,
+                    textTransform: 'uppercase',
                     marginBottom: '16px',
                   }}>
                     {activeCert.title}
@@ -249,24 +268,34 @@ export default function Certificates() {
                       startCycle()
                     }}
                     style={{
-                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                      display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px',
                       background: 'none', border: 'none',
-                      padding: '14px 18px', borderRadius: '12px', cursor: 'pointer',
+                      borderTop: i > 0 ? '1px solid rgba(255,255,255,0.08)' : 'none',
+                      padding: '15px 2px', borderRadius: '0px', cursor: 'pointer',
                       textAlign: 'left', transition: 'all 0.2s',
-                      backgroundColor: isActive ? 'rgba(255,255,255,0.04)' : 'transparent',
                     }}
                   >
-                    <span style={{ 
-                      fontSize: '16px', 
-                      fontWeight: isActive ? 600 : 500,
-                      color: isActive ? '#fff' : 'rgba(255,255,255,0.4)',
-                    }}>
-                      {cert.title}
+                    <span style={{ display: 'flex', alignItems: 'baseline', gap: '14px' }}>
+                      <span style={{
+                        fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '0.1em',
+                        color: isActive ? cert.accent : 'rgba(255,255,255,0.3)',
+                      }}>
+                        0{i + 1}
+                      </span>
+                      <span style={{
+                        fontSize: '15px',
+                        fontWeight: isActive ? 600 : 500,
+                        textTransform: 'uppercase', letterSpacing: '-0.01em',
+                        color: isActive ? '#fff' : 'rgba(255,255,255,0.4)',
+                      }}>
+                        {cert.title}
+                      </span>
                     </span>
-                    
-                    <div style={{
-                      width: '8px', height: '8px', borderRadius: '50%',
-                      background: isActive ? cert.accent : 'transparent',
+
+                    <span style={{
+                      width: isActive ? '26px' : '10px', height: '1px',
+                      background: isActive ? cert.accent : 'rgba(255,255,255,0.2)',
+                      transition: 'all 0.3s ease', flexShrink: 0,
                     }} />
                   </button>
                 )
@@ -307,7 +336,7 @@ export default function Certificates() {
                   maxWidth: '900px', width: '100%',
                   background: 'rgba(12,12,16,0.97)',
                   border: '1px solid rgba(255,255,255,0.1)',
-                  borderRadius: '24px', overflow: 'hidden',
+                  borderRadius: '0px', overflow: 'hidden',
                   boxShadow: '0 48px 100px rgba(0,0,0,0.7)',
                   position: 'relative'
                 }}
@@ -326,8 +355,9 @@ export default function Certificates() {
                   </div>
                   <button onClick={() => setSelected(null)} style={{
                     background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)',
-                    borderRadius: '10px', padding: '8px 18px', color: '#fff',
+                    borderRadius: '0px', padding: '8px 18px', color: '#fff',
                     fontSize: '13px', cursor: 'pointer', fontFamily: 'var(--font-mono)',
+                    textTransform: 'uppercase', letterSpacing: '0.1em',
                   }}>Close</button>
                 </div>
               </motion.div>

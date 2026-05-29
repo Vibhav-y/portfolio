@@ -1,152 +1,198 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'framer-motion'
-import Magnetic from './Magnetic'
-import GlassCard from './ui/glass-card'
 import SectionHeader from './ui/section-header'
+import CornerPlus from './ui/corner-plus'
+
+const labelStyle = {
+  fontFamily: 'var(--font-mono)',
+  fontSize: '10px',
+  color: 'rgba(255,255,255,0.4)',
+  textTransform: 'uppercase',
+  letterSpacing: '0.16em',
+  display: 'block',
+  marginBottom: '8px',
+}
+
+const valueStyle = {
+  color: '#fff',
+  fontSize: '16px',
+  fontWeight: 500,
+  textDecoration: 'none',
+}
+
+const fieldLabel = {
+  fontFamily: 'var(--font-mono)',
+  fontSize: '10px',
+  color: 'rgba(255,255,255,0.45)',
+  letterSpacing: '0.14em',
+  textTransform: 'uppercase',
+  marginBottom: '6px',
+  display: 'block',
+}
+
+const inputStyle = {
+  width: '100%',
+  background: 'rgba(255,255,255,0.03)',
+  border: '1px solid rgba(255,255,255,0.1)',
+  padding: '12px 14px',
+  color: '#fff',
+  fontSize: '14px',
+  fontFamily: 'var(--font-main)',
+  outline: 'none',
+  borderRadius: 0,
+}
+
+const blockDivider = {
+  height: '1px',
+  background: 'rgba(255,255,255,0.08)',
+  margin: '20px 0',
+}
+
+const socials = [
+  { name: 'LinkedIn', url: 'https://www.linkedin.com/in/vibhav-yadav/' },
+  { name: 'GitHub', url: 'https://github.com/Vibhav-y' },
+  { name: 'HackerRank', url: 'https://www.hackerrank.com/profile/vibhavydm' },
+  { name: 'LeetCode', url: 'https://leetcode.com/u/vibhav-y/' },
+]
 
 export default function Contact() {
-  const [formStatus, setFormStatus] = useState('idle');
+  const [sent, setSent] = useState(false)
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    setFormStatus('sending');
-    setTimeout(() => {
-      setFormStatus('sent');
-      setTimeout(() => {
-        setFormStatus('idle');
-        e.target.reset();
-      }, 3000);
-    }, 1200);
-  };
+    e.preventDefault()
+    const data = new FormData(e.target)
+    const name = (data.get('name') || '').toString().trim()
+    const email = (data.get('email') || '').toString().trim()
+    const message = (data.get('message') || '').toString().trim()
+    const subject = name ? `Portfolio inquiry from ${name}` : 'Portfolio inquiry'
+    const body = `${message}\n\n— ${name}${email ? ` <${email}>` : ''}`
+    window.location.href = `mailto:vibhavydm@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+    setSent(true)
+    setTimeout(() => setSent(false), 4000)
+  }
 
   return (
-    <section id="contact" className="section container">
+    <section id="contact" className="section container grid-box">
+      <CornerPlus />
       <SectionHeader
         eyebrow="Contact"
         title="Let's build something."
+        marginBottom={24}
       />
 
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-        gap: '24px'
-      }}>
+      <div className="edi-sheet">
+        <div className="edi-row edi-row-split">
 
-        {/* Left Column Bento */}
-        <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}
-        >
-          {/* Status Box */}
-          <GlassCard style={{ padding: '32px', borderRadius: '24px' }}>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '24px', display: 'block' }}>
-              Status
-            </span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{ position: 'relative', width: '12px', height: '12px' }}>
-                <div style={{ position: 'absolute', inset: 0, background: '#10b981', borderRadius: '50%', animation: 'pulse 2s infinite' }}></div>
-                <div style={{ position: 'absolute', inset: '2px', background: '#10b981', borderRadius: '50%' }}></div>
-              </div>
-              <span style={{ fontSize: '18px', color: '#fff', fontWeight: 500 }}>Open for Opportunities</span>
+          {/* LEFT — Info stack */}
+          <div className="edi-cell" style={{ display: 'flex', flexDirection: 'column' }}>
+            {/* Status banner */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+              <span style={{ width: '10px', height: '10px', background: '#10b981', flexShrink: 0 }} />
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', letterSpacing: '0.14em', textTransform: 'uppercase', color: '#fff', fontWeight: 600 }}>
+                Open for Opportunities
+              </span>
             </div>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginTop: '12px', lineHeight: 1.5 }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.55, marginTop: '10px' }}>
               Currently seeking full-time roles in software engineering, backend systems, and full-stack development.
             </p>
-          </GlassCard>
 
-          {/* Contact Details Box */}
-          <GlassCard style={{ padding: '32px', borderRadius: '24px', flexGrow: 1 }}>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '32px', display: 'block' }}>
-              Details
-            </span>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+            <div style={blockDivider} />
+
+            {/* Email */}
+            <div>
+              <span style={labelStyle}>Email</span>
+              <a href="mailto:vibhavydm@gmail.com" style={{ ...valueStyle, borderBottom: '1px solid var(--accent)', paddingBottom: '3px' }}>
+                vibhavydm@gmail.com
+              </a>
+            </div>
+
+            <div style={blockDivider} />
+
+            {/* Location */}
+            <div>
+              <span style={labelStyle}>Location</span>
+              <p style={valueStyle}>Jalandhar, Punjab, India</p>
+            </div>
+
+            <div style={blockDivider} />
+
+            {/* Social */}
+            <div>
+              <span style={labelStyle}>Social</span>
+              <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
+                {socials.map((s) => (
+                  <a
+                    key={s.name}
+                    href={s.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ ...valueStyle, fontSize: '15px', transition: 'color .2s' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--accent)' }}
+                    onMouseLeave={(e) => { e.currentTarget.style.color = '#fff' }}
+                  >
+                    {s.name}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT — Direct message form */}
+          <div className="edi-cell" style={{ display: 'flex', flexDirection: 'column' }}>
+            <span style={{ ...labelStyle, marginBottom: '16px' }}>Direct Message</span>
+            <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '14px', flex: 1 }}>
               <div>
-                <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'rgba(255,255,255,0.4)', marginBottom: '8px' }}>EMAIL</p>
-                <a href="mailto:vibhavydm@gmail.com" style={{ color: '#fff', fontSize: '18px', textDecoration: 'none', borderBottom: '1px solid var(--accent)', paddingBottom: '4px' }}>vibhavydm@gmail.com</a>
+                <label style={fieldLabel}>Name</label>
+                <input name="name" type="text" placeholder="John Doe" required style={inputStyle} />
               </div>
-              <div className="contact-flex">
-                <div>
-                  <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'rgba(255,255,255,0.4)', marginBottom: '8px' }}>LOCATION</p>
-                  <p style={{ color: '#fff', fontSize: '16px' }}>Jalandhar, Punjab, India</p>
-                </div>
-                <div>
-                  <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'rgba(255,255,255,0.4)', marginBottom: '8px' }}>SOCIAL</p>
-                  <div style={{ display: 'flex', gap: '16px' }}>
-                    <a href="https://www.linkedin.com/in/vibhav-yadav/" target="_blank" rel="noreferrer" style={{ color: '#fff', textDecoration: 'none', fontSize: '16px' }}>LinkedIn</a>
-                    <a href="https://github.com/Vibhav-y" target="_blank" rel="noreferrer" style={{ color: '#fff', textDecoration: 'none', fontSize: '16px' }}>GitHub</a>
-                  </div>
-                </div>
+              <div>
+                <label style={fieldLabel}>Email</label>
+                <input name="email" type="email" placeholder="john@company.com" required style={inputStyle} />
               </div>
-            </div>
-          </GlassCard>
-        </motion.div>
-
-        {/* Right Column Bento: Form */}
-        <GlassCard
-          initial={{ opacity: 0, x: 30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.1 }}
-          as={motion.div}
-          style={{ padding: '40px', borderRadius: '24px', display: 'flex', flexDirection: 'column' }}
-        >
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '32px', display: 'block' }}>
-            Direct Message
-          </span>
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px', flexGrow: 1 }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <label style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-secondary)' }}>NAME</label>
-              <input type="text" placeholder="John Doe" style={{
-                background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)',
-                padding: '16px', borderRadius: '12px', color: '#fff', fontSize: '15px', outline: 'none'
-              }} />
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <label style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-secondary)' }}>EMAIL</label>
-              <input type="email" placeholder="john@company.com" style={{
-                background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)',
-                padding: '16px', borderRadius: '12px', color: '#fff', fontSize: '15px', outline: 'none'
-              }} />
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flexGrow: 1 }}>
-              <label style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-secondary)' }}>MESSAGE</label>
-              <textarea rows="4" placeholder="Tell me about your project..." style={{
-                background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)',
-                padding: '16px', borderRadius: '12px', color: '#fff', fontSize: '15px', outline: 'none',
-                resize: 'none', flexGrow: 1
-              }}></textarea>
-            </div>
-            <Magnetic strength={0.1}>
-              <button type="submit" disabled={formStatus !== 'idle'} style={{
-                width: '100%', padding: '16px', background: formStatus === 'sent' ? '#10b981' : '#fff', color: formStatus === 'sent' ? '#fff' : '#000',
-                border: 'none', borderRadius: '12px', fontSize: '14px', fontWeight: 600,
-                cursor: formStatus === 'idle' ? 'pointer' : 'default', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px',
-                marginTop: '8px',
-                transition: 'all 0.3s ease',
-                opacity: formStatus === 'sending' ? 0.7 : 1
-              }}>
-                {formStatus === 'idle' && <><span>Send Message</span> <span style={{ color: 'var(--accent)' }}>↗</span></>}
-                {formStatus === 'sending' && 'Sending...'}
-                {formStatus === 'sent' && 'Message Sent! ✓'}
+              <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+                <label style={fieldLabel}>Message</label>
+                <textarea
+                  name="message"
+                  rows="4"
+                  placeholder="Tell me about your project…"
+                  required
+                  style={{ ...inputStyle, resize: 'vertical', flex: 1, minHeight: '110px' }}
+                />
+              </div>
+              <button
+                type="submit"
+                style={{
+                  justifySelf: 'start',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  padding: '12px 22px',
+                  background: 'transparent',
+                  border: '1px solid var(--accent)',
+                  color: 'var(--accent)',
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  cursor: 'pointer',
+                  transition: 'background .25s ease, color .25s ease',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--accent)'; e.currentTarget.style.color = '#000' }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--accent)' }}
+              >
+                {sent ? 'Opened in your mail client ✓' : 'Send message'}
+                {!sent && <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>}
               </button>
-            </Magnetic>
-          </form>
-        </GlassCard>
-
+            </form>
+          </div>
+        </div>
       </div>
 
       <style>{`
-        @keyframes pulse {
-          0% { transform: scale(1); opacity: 0.5; }
-          50% { transform: scale(2); opacity: 0; }
-          100% { transform: scale(1); opacity: 0; }
-        }
-        input:focus, textarea:focus { border-color: rgba(255,255,255,0.3) !important; }
+        #contact input:focus, #contact textarea:focus { border-color: var(--accent) !important; }
+        #contact input::placeholder, #contact textarea::placeholder { color: rgba(255,255,255,0.3); }
       `}</style>
     </section>
   )

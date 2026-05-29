@@ -2,125 +2,116 @@
 
 import { motion } from 'framer-motion'
 import Magnetic from './Magnetic'
-import SectionHeader from './ui/section-header'
 
 const heroBg = '/hero-bg.webp'
 
-const skillTiles = [
-  {
-    title: 'Problem Solving',
-    desc: 'Turning complex ideas into simple, usable, and efficient solutions.'
-  },
-  {
-    title: 'Frontend Experience',
-    desc: 'Creating smooth, interactive, and visually engaging user interfaces.'
-  },
-  {
-    title: 'Backend Systems',
-    desc: 'Building scalable APIs and reliable server-side architectures.'
-  },
-  {
-    title: 'Performance',
-    desc: 'Optimized for speed, scalability, and real-world usage.'
-  }
+const capabilities = [
+  { n: '01', title: 'Problem Solving', desc: 'Turning complex ideas into simple, usable, and efficient solutions.' },
+  { n: '02', title: 'Frontend Experience', desc: 'Smooth, interactive, and visually engaging user interfaces.' },
+  { n: '03', title: 'Backend Systems', desc: 'Scalable APIs and reliable server-side architectures.' },
+  { n: '04', title: 'Performance', desc: 'Optimized for speed, scalability, and real-world usage.' },
 ]
 
 export default function Hero() {
   return (
-    <section id="home" className="section hero-shell" style={{ 
-      minHeight: '100vh', 
-      display: 'flex', 
-      flexDirection: 'column', 
-      justifyContent: 'flex-end', 
-      paddingTop: '120px',
-      paddingBottom: '64px',
-      backgroundImage: `url(${heroBg})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
-    }}>
-      <div className="container hero-container hero-grid" style={{ position: 'relative', zIndex: 10, width: '100%', gap: '4vw', alignItems: 'center' }}>
-        
-        {/* Left Copy */}
-        <div className="hero-copy" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-          <SectionHeader
-            eyebrow="नमस्ते"
-            title={<>I'm Vibhav{' '}<span style={{ background: 'linear-gradient(to right, #ff7a18, #ffb347)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', textShadow: '0 0 40px rgba(255,122,24,0.3)' }}>Yadav.</span></>}
-            description="Full-stack developer crafting performant products with stunning UI & real-world impact."
-            marginBottom={0}
-            eyebrowClassName="hero-eyebrow"
-            titleTag="h1"
-            titleClassName="headline hero-name"
-            descriptionClassName="hero-short"
-          />
+    <section
+      id="home"
+      className="section hero-shell"
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-end',
+        paddingTop: '120px',
+        paddingBottom: '56px',
+        backgroundColor: 'var(--bg-base)',
+        backgroundImage: `url(${heroBg})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}
+    >
+      <div className="container" style={{ position: 'relative', zIndex: 10, width: '100%' }}>
 
-          <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.85, delay: 0.5 }}
-            style={{ marginTop: '40px' }}
-          >
-            <Magnetic strength={0.2}>
-              <a 
-                href="#work" 
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  background: 'linear-gradient(to right, #ff7a18, #ffb347)',
-                  color: '#000',
-                  fontWeight: 600,
-                  fontSize: '16px',
-                  padding: '16px 32px',
-                  borderRadius: '100px',
-                  textDecoration: 'none',
-                  boxShadow: '0 10px 30px rgba(255,122,24,0.3)',
-                  transition: 'all 0.3s ease',
-                  letterSpacing: '-0.01em'
-                }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.transform = 'scale(1.05)';
-                  e.currentTarget.style.boxShadow = '0 15px 40px rgba(255,122,24,0.5)';
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.transform = 'scale(1)';
-                  e.currentTarget.style.boxShadow = '0 10px 30px rgba(255,122,24,0.3)';
-                }}
-              >
-                View Projects
-              </a>
-            </Magnetic>
-          </motion.div>
-        </div>
-
-        {/* Right 2x2 Feature Grid */}
-        <motion.div
-          className="hero-tiles-wrap"
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.95, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          style={{ width: '100%' }}
+        {/* Eyebrow */}
+        <motion.span
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          style={{
+            fontFamily: 'var(--font-mono)', fontSize: '12px', letterSpacing: '0.22em',
+            textTransform: 'uppercase', color: 'var(--accent)', display: 'block',
+          }}
         >
-          <div className="hero-skill-grid" style={{ zIndex: 10 }}>
-            {skillTiles.map((tile, i) => (
-              <motion.div 
-                key={tile.title} 
-                className="hero-skill-tile"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.5 + (i * 0.1) }}
-                whileHover={{ y: -5 }}
-                style={{ 
-                  aspectRatio: '1 / 1', 
-                  display: 'flex', 
-                  flexDirection: 'column', 
-                  justifyContent: 'center' 
-                }}
-              >
-                <h3>{tile.title}</h3>
-                <p className="hero-skill-desc">{tile.desc}</p>
-              </motion.div>
-            ))}
-          </div>
+          नमस्ते — Full-Stack Developer
+        </motion.span>
+
+        {/* Name */}
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.85, delay: 0.1 }}
+          className="headline"
+          style={{ marginTop: '22px', textTransform: 'uppercase', letterSpacing: '-0.045em' }}
+        >
+          I&apos;m Vibhav <span style={{ color: 'var(--accent)' }}>Yadav.</span>
+        </motion.h1>
+
+        {/* Description */}
+        <motion.p
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.25 }}
+          style={{ marginTop: '24px', color: 'var(--text-secondary)', fontSize: '18px', maxWidth: '540px', lineHeight: 1.6 }}
+        >
+          Full-stack developer crafting performant products with stunning UI &amp; real-world impact.
+        </motion.p>
+
+        {/* CTA — sharp bordered link */}
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          style={{ marginTop: '36px' }}
+        >
+          <Magnetic strength={0.2}>
+            <a
+              href="#work"
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '12px',
+                padding: '16px 28px',
+                border: '1px solid var(--accent)',
+                color: 'var(--accent)',
+                fontFamily: 'var(--font-mono)', fontSize: '13px', fontWeight: 600,
+                letterSpacing: '0.08em', textTransform: 'uppercase', textDecoration: 'none',
+                transition: 'background 0.25s ease, color 0.25s ease',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--accent)'; e.currentTarget.style.color = '#000' }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--accent)' }}
+            >
+              View Projects
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+            </a>
+          </Magnetic>
+        </motion.div>
+
+        {/* Capability strip — hairline grid, sharp */}
+        <motion.div
+          className="edi-cap-grid"
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.5 }}
+          style={{ marginTop: '56px' }}
+        >
+          {capabilities.map((c) => (
+            <div key={c.n} className="edi-cap-cell">
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--accent)', letterSpacing: '0.1em' }}>{c.n}</span>
+              <h3 style={{ fontSize: 'clamp(16px, 1.3vw, 19px)', fontWeight: 600, color: '#fff', margin: '14px 0 8px', letterSpacing: '-0.01em' }}>
+                {c.title}
+              </h3>
+              <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '13px', lineHeight: 1.55 }}>{c.desc}</p>
+            </div>
+          ))}
         </motion.div>
       </div>
     </section>
