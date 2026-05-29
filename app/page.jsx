@@ -11,6 +11,8 @@ import Experience from '../components/Experience'
 import Now from '../components/Now'
 import Contact from '../components/Contact'
 import Footer from '../components/Footer'
+// import Footer from '../components/FooterAscii'   // interactive ASCII version (kept for fallback)
+// import Footer from '../components/FooterGrid'    // grid + crosshair version (kept for fallback)
 import CornerPlus from '../components/ui/corner-plus'
 
 export default function Home() {
