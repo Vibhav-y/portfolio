@@ -355,45 +355,102 @@ export default function Footer() {
     let field = []           // background drifters: { x, y, vx, vy }
     let sphere = []          // unit-sphere points: { x, y, z, hue }
     let sphereR = 0
-    let lasers = []          // { ang, t0, hue }
-    let lastLaserAt = 0
+    let lasers = []          // full radiating beams: { ang, t0, hue, life, width }
+    let flashT0 = -1e9       // centre-flash timestamp (on kicks)
+    let step = 0             // current sequencer step
+    let nextStepAt = 0       // perf.now() time of the next step
 
     const FIELD_COUNT = 2800
     const SPHERE_COUNT = 1400
-    const LASER_SPEED = 2600 // px/s
-    const LASER_TRAIL = 240
-    const LASER_EVERY = 260  // ms between shots
+    const BPM = 124
+    const STEP_MS = 60000 / BPM / 4   // 16th-note grid
 
-    // ── Web Audio synthesized SFX (no files; works offline) ──
+    // ── Web Audio: a synthesized looping track + beat-synced laser hits ──
     let audioCtx = null
+    let master = null
+    let noiseBuf = null
     const ensureAudio = () => {
       try {
         if (!audioCtx) {
           const AC = window.AudioContext || window.webkitAudioContext
           if (!AC) return null
           audioCtx = new AC()
+          master = audioCtx.createGain()
+          master.gain.value = 0.5
+          master.connect(audioCtx.destination)
+          // one second of white noise for drums
+          noiseBuf = audioCtx.createBuffer(1, audioCtx.sampleRate, audioCtx.sampleRate)
+          const ch = noiseBuf.getChannelData(0)
+          for (let i = 0; i < ch.length; i++) ch[i] = Math.random() * 2 - 1
         }
         if (audioCtx.state === 'suspended') audioCtx.resume()
         return audioCtx
       } catch { return null }
     }
-    const blip = (type, f0, f1, dur, peak) => {
-      const ac = ensureAudio()
-      if (!ac) return
-      const o = ac.createOscillator()
-      const g = ac.createGain()
-      const t = ac.currentTime
+    // ── Instruments ──
+    const kick = (t) => {
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain()
+      o.type = 'sine'
+      o.frequency.setValueAtTime(165, t)
+      o.frequency.exponentialRampToValueAtTime(48, t + 0.12)
+      g.gain.setValueAtTime(0.9, t)
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.26)
+      o.connect(g); g.connect(master); o.start(t); o.stop(t + 0.28)
+    }
+    const noiseHit = (t, hp, dur, peak) => {
+      const s = audioCtx.createBufferSource(); s.buffer = noiseBuf
+      const f = audioCtx.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = hp
+      const g = audioCtx.createGain()
+      g.gain.setValueAtTime(peak, t)
+      g.gain.exponentialRampToValueAtTime(0.001, t + dur)
+      s.connect(f); f.connect(g); g.connect(master); s.start(t); s.stop(t + dur + 0.02)
+    }
+    const clap = (t) => noiseHit(t, 1400, 0.14, 0.5)
+    const hat = (t) => noiseHit(t, 8000, 0.045, 0.25)
+    const synth = (t, freq, type, peak, dur, cutoff) => {
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain()
       o.type = type
-      o.frequency.setValueAtTime(f0, t)
-      o.frequency.exponentialRampToValueAtTime(Math.max(20, f1), t + dur)
+      o.frequency.value = freq
+      let node = o
+      if (cutoff) {
+        const lp = audioCtx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = cutoff
+        o.connect(lp); node = lp
+      }
       g.gain.setValueAtTime(0.0001, t)
       g.gain.exponentialRampToValueAtTime(peak, t + 0.012)
-      g.gain.exponentialRampToValueAtTime(0.0001, t + dur)
-      o.connect(g); g.connect(ac.destination)
-      o.start(t); o.stop(t + dur + 0.02)
+      g.gain.exponentialRampToValueAtTime(0.001, t + dur)
+      node.connect(g); g.connect(master); o.start(t); o.stop(t + dur + 0.02)
     }
-    const playLaser = () => blip('square', 1300, 170, 0.18, 0.10)
-    const playWhoosh = () => blip('sawtooth', 110, 880, 0.55, 0.07)
+    const bass = (t, f) => synth(t, f, 'sawtooth', 0.32, 0.24, 500)
+    const lead = (t, f) => synth(t, f, 'square', 0.16, 0.2, 4000)
+
+    // ── Song: 16-step loop over Am – F – C – G ──
+    const N = { _: 0, A1: 55, C2: 65.41, F1: 43.65, G1: 49, A4: 440, C5: 523.25, D5: 587.33, E5: 659.25, G5: 783.99 }
+    const SONG = {
+      kick: [1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0],
+      clap: [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+      hat:  [0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0],
+      bass: ['A1', 0, 0, 0, 'F1', 0, 0, 0, 'C2', 0, 0, 0, 'G1', 0, 0, 0],
+      lead: ['A4', 0, 0, 'C5', 'E5', 0, 'D5', 0, 'C5', 0, 'A4', 0, 0, 'D5', 'E5', 0],
+    }
+    // Which steps fire lasers, and how: returns {count,hue,wide} or null.
+    const LEAD_HUE = { A4: 280, C5: 200, D5: 150, E5: 50, G5: 330 }
+
+    // Deep rising power-up when the party launches.
+    const playWhoosh = () => {
+      const ac = ensureAudio()
+      if (!ac) return
+      const t = ac.currentTime
+      const o = ac.createOscillator()
+      const g = ac.createGain()
+      o.type = 'sawtooth'
+      o.frequency.setValueAtTime(70, t)
+      o.frequency.exponentialRampToValueAtTime(700, t + 0.7)
+      g.gain.setValueAtTime(0.0001, t)
+      g.gain.exponentialRampToValueAtTime(0.12, t + 0.25)
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.8)
+      o.connect(g); g.connect(master); o.start(t); o.stop(t + 0.85)
+    }
 
     const buildParty = () => {
       ocw = window.innerWidth
@@ -404,7 +461,9 @@ export default function Footer() {
       octx.setTransform(odpr, 0, 0, odpr, 0, 0)
 
       lasers = []
-      lastLaserAt = 0
+      flashT0 = -1e9
+      step = 0
+      nextStepAt = 0
 
       // Background field — particles everywhere, slow random drift.
       field = []
@@ -443,12 +502,16 @@ export default function Footer() {
 
       const cx = ocw / 2
       const cy = och / 2
-      octx.globalAlpha = Math.max(0, Math.min(1, Math.min(elapsed / 400, remain / 700)))
+      const baseAlpha = Math.max(0, Math.min(1, Math.min(elapsed / 400, remain / 700)))
+
+      // ── Black backdrop — fades in so the lasers pop like a real show ──
+      octx.globalAlpha = baseAlpha
+      octx.fillStyle = '#000'
+      octx.fillRect(0, 0, ocw, och)
 
       // ── Background field — drift + wrap, gentle hue-cycling, one fill ──
       // A clear circular void around the centre keeps the sphere clean (no
       // particles behind / around it).
-      const baseAlpha = Math.max(0, Math.min(1, Math.min(elapsed / 400, remain / 700)))
       const fdot = Math.max(1.4, Math.min(ocw, och) * 0.0026)
       const clearR = sphereR * 1.45
       const clearR2 = clearR * clearR
@@ -498,37 +561,75 @@ export default function Footer() {
       }
       octx.globalAlpha = 1
 
-      // ── Lasers — beams fire from the sphere outward, with a "pew" ──
-      // Stop firing during the fade-out so it ends cleanly.
-      if (remain > 800 && now - lastLaserAt > LASER_EVERY) {
-        lastLaserAt = now
-        const shots = 1 + (Math.random() < 0.4 ? 1 : 0)
-        for (let k = 0; k < shots; k++) {
-          lasers.push({ ang: Math.random() * Math.PI * 2, t0: now, hue: (t * 80 + Math.random() * 60) % 360 })
+      // ── Sequencer: play the song + fire lasers on the beat ──
+      const ac = ensureAudio()
+      const fireBeams = (count, hue, width, life) => {
+        for (let k = 0; k < count; k++) {
+          lasers.push({
+            ang: Math.random() * Math.PI * 2,
+            t0: now,
+            hue: (hue + Math.random() * 24 - 12 + 360) % 360,
+            life,
+            width,
+          })
         }
-        playLaser()
       }
+      if (remain > 700) {
+        if (nextStepAt === 0) nextStepAt = now
+        while (now >= nextStepAt) {
+          const s16 = step % 16
+          const at = ac ? ac.currentTime : 0
+          if (ac) {
+            if (SONG.kick[s16]) kick(at)
+            if (SONG.clap[s16]) clap(at)
+            if (SONG.hat[s16]) hat(at)
+            if (SONG.bass[s16]) bass(at, N[SONG.bass[s16]])
+            if (SONG.lead[s16]) lead(at, N[SONG.lead[s16]])
+          }
+          // Lasers locked to the music
+          if (SONG.kick[s16]) { fireBeams(3, (t * 40) % 360, 3.2, 320); flashT0 = now }
+          if (SONG.clap[s16]) fireBeams(2, 0, 2.4, 280) // white-ish backbeat
+          if (SONG.lead[s16]) fireBeams(1, LEAD_HUE[SONG.lead[s16]] ?? 200, 2.2, 260)
+          step++
+          nextStepAt += STEP_MS
+        }
+      }
+
+      // ── Render beams — full radiating lines from the sphere, fading ──
       const diag = Math.hypot(ocw, och)
       octx.save()
       octx.globalCompositeOperation = 'lighter'
-      octx.globalAlpha = baseAlpha
       octx.lineCap = 'round'
       for (let li = lasers.length - 1; li >= 0; li--) {
         const L = lasers[li]
-        const dist = sphereR + ((now - L.t0) / 1000) * LASER_SPEED
-        if (dist - LASER_TRAIL > diag) { lasers.splice(li, 1); continue }
-        const tail = Math.max(sphereR * 0.9, dist - LASER_TRAIL)
+        const age = (now - L.t0) / L.life
+        if (age >= 1) { lasers.splice(li, 1); continue }
+        const env = age < 0.12 ? age / 0.12 : 1 - (age - 0.12) / 0.88 // snap on, fall off
+        const a = Math.max(0, env) * baseAlpha
         const c = Math.cos(L.ang), s = Math.sin(L.ang)
-        const x1 = cx + c * tail, y1 = cy + s * tail
-        const x2 = cx + c * dist, y2 = cy + s * dist
-        const grad = octx.createLinearGradient(x1, y1, x2, y2)
-        grad.addColorStop(0, `hsla(${L.hue}, 100%, 65%, 0)`)
-        grad.addColorStop(1, `hsla(${L.hue}, 100%, 72%, 0.95)`)
-        octx.strokeStyle = grad
-        octx.lineWidth = 3
+        const x1 = cx + c * sphereR * 1.05, y1 = cy + s * sphereR * 1.05
+        const x2 = cx + c * diag, y2 = cy + s * diag
+        // soft outer glow
+        octx.globalAlpha = a * 0.3
+        octx.strokeStyle = `hsl(${L.hue}, 100%, 58%)`
+        octx.lineWidth = L.width * 4
         octx.beginPath(); octx.moveTo(x1, y1); octx.lineTo(x2, y2); octx.stroke()
-        octx.fillStyle = `hsla(${L.hue}, 100%, 88%, 0.95)`
-        octx.beginPath(); octx.arc(x2, y2, 4.5, 0, Math.PI * 2); octx.fill()
+        // bright near-white core
+        octx.globalAlpha = a
+        octx.strokeStyle = `hsl(${L.hue}, 100%, 86%)`
+        octx.lineWidth = L.width
+        octx.beginPath(); octx.moveTo(x1, y1); octx.lineTo(x2, y2); octx.stroke()
+      }
+      // centre flash on kicks
+      const fAge = (now - flashT0) / 260
+      if (fAge >= 0 && fAge < 1) {
+        const fr = sphereR * (1.1 + fAge * 0.6)
+        const fg = octx.createRadialGradient(cx, cy, 0, cx, cy, fr)
+        fg.addColorStop(0, `hsla(45, 100%, 90%, ${(1 - fAge) * 0.8 * baseAlpha})`)
+        fg.addColorStop(1, 'hsla(45, 100%, 60%, 0)')
+        octx.globalAlpha = 1
+        octx.fillStyle = fg
+        octx.beginPath(); octx.arc(cx, cy, fr, 0, Math.PI * 2); octx.fill()
       }
       octx.restore()
       octx.globalAlpha = 1

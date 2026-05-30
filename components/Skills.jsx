@@ -163,16 +163,17 @@ export default function Skills() {
           >
             <div style={{ position: 'relative', zIndex: 1 }}>
               <span style={{ ...labelStyle, marginBottom: '18px' }}>Currently Exploring</span>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '10px' }}>
                 {exploring.map(item => (
                   <div key={item} style={{
                     display: 'flex', alignItems: 'center', gap: '10px',
                     background: 'rgba(34,197,94,0.06)',
                     border: '1px solid rgba(34,197,94,0.22)',
                     padding: '10px 14px', borderRadius: '0px',
+                    minWidth: 0,
                   }}>
                     <div style={{ width: '6px', height: '6px', background: '#22c55e', flexShrink: 0 }} />
-                    <span style={{ fontSize: '14px', fontWeight: 500, color: '#fff', whiteSpace: 'nowrap' }}>{item}</span>
+                    <span style={{ fontSize: '14px', fontWeight: 500, color: '#fff' }}>{item}</span>
                   </div>
                 ))}
               </div>

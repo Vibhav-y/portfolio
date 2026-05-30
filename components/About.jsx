@@ -68,7 +68,7 @@ export default function About() {
             <div>
               {/* separator between Profile and the lower blocks */}
               <div style={{ height: '1px', background: 'rgba(255,255,255,0.12)', marginBottom: '28px' }} />
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '28px' }}>
+              <div className="about-inner-grid">
                 {/* Developer Heuristics */}
                 <div>
                   <span style={{ ...labelStyle, marginBottom: '14px' }}>Developer Heuristics</span>
@@ -81,7 +81,7 @@ export default function About() {
                   </pre>
                 </div>
                 {/* Mantras */}
-                <div style={{ borderLeft: '1px solid rgba(255,255,255,0.1)', paddingLeft: '28px' }}>
+                <div className="about-mantras">
                   <span style={{ ...labelStyle, marginBottom: '18px' }}>Mantras</span>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
                     {mantras.map((q, i) => (
@@ -94,7 +94,7 @@ export default function About() {
               </div>
             </div>
           </div>
-          <div className="edi-cell edi-cell--flush" style={{ position: 'relative', overflow: 'hidden', aspectRatio: '3 / 4', alignSelf: 'stretch' }}>
+          <div className="edi-cell edi-cell--flush about-photo-cell" style={{ position: 'relative', overflow: 'hidden', aspectRatio: '3 / 4', alignSelf: 'stretch' }}>
             <img
               src={profileImg} alt="Vibhav Yadav" loading="lazy"
               style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 15%', filter: 'grayscale(0.15) contrast(1.05)' }}
@@ -110,7 +110,7 @@ export default function About() {
           <div>
             {education.map((e, i) => (
               <div key={e.degree} style={{
-                display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '20px',
+                display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap',
                 padding: '11px 0',
                 borderTop: i > 0 ? '1px solid rgba(255,255,255,0.08)' : 'none',
               }}>
