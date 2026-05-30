@@ -22,8 +22,8 @@ export default function Hero() {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'flex-end',
-        paddingTop: '120px',
-        paddingBottom: '56px',
+        paddingTop: 'clamp(88px, 12vw, 120px)',
+        paddingBottom: 'clamp(32px, 5vw, 56px)',
         backgroundColor: 'var(--bg-base)',
         backgroundImage: `url(${heroBg})`,
         backgroundSize: 'cover',
@@ -101,7 +101,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.5 }}
-          style={{ marginTop: '56px' }}
+          style={{ marginTop: 'clamp(36px, 5vw, 56px)' }}
         >
           {capabilities.map((c) => (
             <div key={c.n} className="edi-cap-cell">

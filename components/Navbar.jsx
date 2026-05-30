@@ -19,6 +19,12 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [island, setIsland] = useState(false)
   const [resumeOpen, setResumeOpen] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
+
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [mobileOpen])
 
   useEffect(() => {
     const onScroll = () => {
@@ -39,6 +45,7 @@ export default function Navbar() {
   const ease = 'cubic-bezier(.22,1,.36,1)'
 
   return (
+    <>
     <motion.nav
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -134,8 +141,45 @@ export default function Navbar() {
           ))}
         </div>
 
+        {/* Mobile hamburger — visible <=768px */}
+        <button
+          type="button"
+          aria-label="Open menu"
+          aria-expanded={mobileOpen}
+          onClick={() => setMobileOpen((v) => !v)}
+          className="nav-mobile-toggle"
+          style={{
+            display: 'none',
+            background: 'transparent',
+            border: '1px solid rgba(255,255,255,0.18)',
+            color: '#fff',
+            width: 42,
+            height: 42,
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            padding: 0,
+          }}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            {mobileOpen ? (
+              <>
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </>
+            ) : (
+              <>
+                <line x1="3" y1="7" x2="21" y2="7" />
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="17" x2="21" y2="17" />
+              </>
+            )}
+          </svg>
+        </button>
+
         {/* Right Action */}
         <div
+          className="nav-right-actions"
           style={{
             display: 'flex',
             justifyContent: 'flex-end',
@@ -291,5 +335,141 @@ export default function Navbar() {
         </div>
       </div>
     </motion.nav>
+
+      {/* Mobile drawer — sibling of nav so it isn't trapped in nav's stacking/pointer-events */}
+      <div
+        className="nav-mobile-drawer"
+        {...(!mobileOpen ? { inert: true } : {})}
+        style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'rgba(6,6,8,0.98)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          zIndex: 1500,
+          display: 'none',
+          flexDirection: 'column',
+          padding: '96px 24px 32px',
+          pointerEvents: mobileOpen ? 'auto' : 'none',
+          opacity: mobileOpen ? 1 : 0,
+          transform: mobileOpen ? 'translateY(0)' : 'translateY(-8px)',
+          transition: `opacity .3s ${ease}, transform .3s ${ease}`,
+          overflowY: 'auto',
+        }}
+      >
+        {/* Close button — top right of drawer */}
+        <button
+          type="button"
+          aria-label="Close menu"
+          onClick={() => setMobileOpen(false)}
+          style={{
+            position: 'absolute',
+            top: 22,
+            right: 24,
+            width: 42,
+            height: 42,
+            background: 'transparent',
+            border: '1px solid rgba(255,255,255,0.18)',
+            color: '#fff',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            padding: 0,
+          }}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          {navLinks.map((link) => (
+            <a
+              key={link.label}
+              href={`#${link.id}`}
+              onClick={() => setMobileOpen(false)}
+              style={{
+                color: '#fff',
+                textDecoration: 'none',
+                fontFamily: 'var(--font-main)',
+                fontSize: '28px',
+                fontWeight: 600,
+                letterSpacing: '-0.02em',
+                padding: '14px 0',
+                borderBottom: '1px solid rgba(255,255,255,0.08)',
+              }}
+            >
+              {link.label}
+            </a>
+          ))}
+        </div>
+
+        <div style={{ marginTop: '32px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <span style={{
+            fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '0.18em',
+            textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', marginBottom: '4px',
+          }}>
+            Resume
+          </span>
+          {resumes.map((r) => (
+            <a
+              key={r.url}
+              href={r.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMobileOpen(false)}
+              style={{
+                display: 'block',
+                padding: '12px 14px',
+                border: '1px solid rgba(255,255,255,0.12)',
+                color: '#fff',
+                textDecoration: 'none',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '12px',
+                fontWeight: 700,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+              }}
+            >
+              {r.label}
+              <div style={{
+                fontSize: '10px', color: 'rgba(255,255,255,0.4)',
+                fontWeight: 500, marginTop: '4px', letterSpacing: '0.06em',
+              }}>
+                {r.sub}
+              </div>
+            </a>
+          ))}
+        </div>
+
+        <a
+          href="#contact"
+          onClick={() => setMobileOpen(false)}
+          style={{
+            marginTop: '20px',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            padding: '14px 18px',
+            border: '1px solid var(--accent)',
+            color: 'var(--accent)',
+            background: 'transparent',
+            fontFamily: 'var(--font-mono)',
+            fontSize: '13px',
+            fontWeight: 700,
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            textDecoration: 'none',
+          }}
+        >
+          Let&apos;s talk
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+    </>
   )
 }

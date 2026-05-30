@@ -20,6 +20,7 @@ const ACCENT = '#ff7a18'
 
 export default function Footer() {
   const canvasRef = useRef(null)
+  const overlayRef = useRef(null)
   const mouseRef = useRef({ x: -1e4, y: -1e4 })
 
   // Easter egg #1 — an interactive console for anyone who opens DevTools.
@@ -29,6 +30,8 @@ export default function Footer() {
 
     const EMAIL = 'vibhavydm@gmail.com'
     const GITHUB = 'https://github.com/Vibhav-y'
+    const LINKEDIN = 'https://www.linkedin.com/in/vibhav-yadav/'
+    const LEETCODE = 'https://leetcode.com/u/vibhav-y/'
     const RESUME = '/resume/general%20cv.pdf'
 
     // shared styles
@@ -37,35 +40,89 @@ export default function Footer() {
     const cmd = 'color:#ff7a18;font:700 13px/1.8 monospace'
     const arrow = 'color:#666;font:13px/1.8 monospace'
     const ok = 'color:#10b981;font:600 13px monospace'
+    const dim = 'color:#555;font:12px monospace'
+
+    const COMMANDS = [
+      ['vibhav.help()       ', 'show this menu'],
+      ['vibhav.about()      ', 'who I am, in 3 lines'],
+      ['vibhav.projects()   ', 'what I’ve shipped'],
+      ['vibhav.skills()     ', 'my stack, by layer'],
+      ['vibhav.now()        ', 'what I’m working on'],
+      ['vibhav.contact()    ', 'every way to reach me'],
+      ['vibhav.hire()       ', 'start a conversation'],
+      ['vibhav.resume()     ', 'open my CV'],
+      ['vibhav.source()     ', 'this portfolio on GitHub'],
+      ['vibhav.say("hi")    ', 'make the footer spell anything'],
+      ['vibhav.party()      ', 'launch the particle show'],
+    ]
+    const row = (c, d) => console.log(`%c${c}%c  → ${d}`, cmd, arrow)
 
     console.log('%c  नमस्ते — VIBHAV YADAV  ', banner)
     console.log(
       '%cFull-stack developer · building real systems, not just features.\n' +
-      '%cThis console is live. Type a command:\n',
+      '%cThis console is live — try a command:\n',
       sub, sub
     )
-    const row = (c, d) => console.log(`%c${c}%c  ${d}`, cmd, arrow)
-    row('vibhav.hire()    ', '→ start a conversation')
-    row('vibhav.resume()  ', '→ open my CV')
-    row('vibhav.projects()', '→ what I’ve shipped')
-    row('vibhav.source()  ', '→ this portfolio on GitHub')
-    row('vibhav.help()    ', '→ show this menu again')
-    console.log(
-      '\n%cp.s. there’s a Konami code hidden on the page → ↑ ↑ ↓ ↓ ← → ← → B A',
-      'color:#555;font:12px monospace'
-    )
+    COMMANDS.forEach(([c, d]) => row(c, d))
+    console.log('\n%cp.s. there’s a Konami code on the page → ↑ ↑ ↓ ↓ ← → ← → B A', dim)
 
-    const help = () => {
-      console.log('%c  VIBHAV — console commands  ', banner)
-      row('vibhav.hire()    ', '→ start a conversation')
-      row('vibhav.resume()  ', '→ open my CV')
-      row('vibhav.projects()', '→ what I’ve shipped')
-      row('vibhav.source()  ', '→ this portfolio on GitHub')
-      return '↑ pick one'
-    }
+    const morphAvailable = () => typeof window.__vyMorph === 'function'
 
-    window.vibhav = {
-      help,
+    const api = {
+      help() {
+        console.log('%c  VIBHAV — console commands  ', banner)
+        COMMANDS.forEach(([c, d]) => row(c, d))
+        return '↑ pick one'
+      },
+      about() {
+        console.log(
+          '%cVibhav Yadav%c — CSE @ Lovely Professional University.\n' +
+          '%cI build full-stack products end-to-end: CRDT-based realtime sync,\n' +
+          'scalable APIs, and interfaces that feel fast. Currently shipping GitTool.',
+          'color:#fff;font:700 14px monospace', sub, sub
+        )
+        return 'vibhav.projects() to see the work →'
+      },
+      projects() {
+        console.table([
+          { project: 'Jottr Workspace', stack: 'Next.js · Yjs · Supabase', link: 'jottr.dev' },
+          { project: 'LibraFlow', stack: 'React · Node · MongoDB', link: 'libraflow.cc' },
+          { project: 'Streamix', stack: 'HLS · React · Redis', link: 'streamix…vercel.app' },
+          { project: 'GitTool', stack: 'Electron · TypeScript', link: 'gittool.dev' },
+        ])
+        return 'Click any project on the page for the full story.'
+      },
+      skills() {
+        console.table({
+          Frontend: 'React · Next.js · Tailwind · Framer Motion',
+          Backend: 'Node · Express · Python · Java · Socket.io',
+          Data: 'PostgreSQL · MongoDB · Redis · Yjs / CRDT',
+          'Tools & DevOps': 'Git · Docker · Vercel · Supabase',
+        })
+        return 'vibhav.now() for what I’m exploring →'
+      },
+      now() {
+        console.log(
+          '%c◉ NOW%c\n' +
+          '%c· Building   %cGitTool — AI-assisted Git workflows\n' +
+          '%c· Exploring  %cElixir / LiveView, LLM tooling, AWS\n' +
+          '%c· Focused on %cclean architecture & algorithmic efficiency',
+          'color:#10b981;font:700 13px monospace', '',
+          arrow, 'color:#fff;font:13px monospace',
+          arrow, 'color:#fff;font:13px monospace',
+          arrow, 'color:#fff;font:13px monospace'
+        )
+        return 'Inspired by Derek Sivers’ /now page.'
+      },
+      contact() {
+        console.table({
+          Email: EMAIL,
+          GitHub: GITHUB,
+          LinkedIn: LINKEDIN,
+          LeetCode: LEETCODE,
+        })
+        return 'vibhav.hire() opens a pre-filled email →'
+      },
       hire() {
         console.log('%c✉  Opening your mail client… talk soon!', ok)
         window.open(`mailto:${EMAIL}?subject=${encodeURIComponent('Let’s build something')}`, '_blank')
@@ -81,22 +138,39 @@ export default function Footer() {
         window.open(GITHUB, '_blank')
         return GITHUB
       },
-      projects() {
-        console.table([
-          { project: 'Jottr Workspace', stack: 'Next.js · Yjs · Supabase', link: 'jottr.dev' },
-          { project: 'LibraFlow', stack: 'React · Node · MongoDB', link: 'libraflow.cc' },
-          { project: 'Streamix', stack: 'HLS · React · Redis', link: 'streamix…vercel.app' },
-          { project: 'GitTool', stack: 'Electron · TypeScript', link: 'gittool.dev' },
-        ])
-        return 'Click any project on the page for the full story.'
+      say(text) {
+        const t = String(text == null ? '' : text).slice(0, 20).toUpperCase()
+        if (!t.trim()) return 'Usage: vibhav.say("your text")'
+        if (!morphAvailable()) return 'Scroll to the footer first, then try again.'
+        window.__vyMorph([t], 2200)
+        console.log(`%c✦  Spelling “${t}” in the footer…`, ok)
+        return 'Look down ↓'
+      },
+      party(seconds) {
+        if (typeof window.__vyParty !== 'function') return 'Scroll to the footer first, then try again.'
+        window.__vyParty(seconds)
+        console.log('%c🎉  PARTY MODE — particles incoming!', 'color:#ff7a18;font:700 14px monospace')
+        return 'Look down ↓ (try vibhav.party(10) for a longer one)'
+      },
+      sudo(...args) {
+        console.log('%cNice try. %cPermission denied (you’re not root here 😉).', 'color:#ff5f57;font:700 13px monospace', sub)
+        return 'But vibhav.hire() always works.'
+      },
+      coffee() {
+        console.log('%c☕  Brewing… 418 I’m a teapot.', 'color:#E5C07B;font:700 13px monospace')
+        return 'Fueled by caffeine & curiosity.'
       },
       toString() { return 'Type vibhav.help() for commands' },
     }
+
+    window.vibhav = api
+    window.vy = api // short alias
   }, [])
 
   useEffect(() => {
     const canvas = canvasRef.current
-    if (!canvas) return
+    const overlay = overlayRef.current
+    if (!canvas || !overlay) return
 
     const ctx = canvas.getContext('2d', { alpha: true })
     let dots = []
@@ -110,6 +184,7 @@ export default function Footer() {
     let scenes = []          // array of point-arrays to morph through
     let sceneIdx = 0
     let nextSceneAt = 0
+    let sceneHold = SCENE_HOLD
     let targets = null       // current target point-array, or null = home
     let colorMix = 0         // 0 = white, 1 = accent (eased for a smooth tint)
 
@@ -193,7 +268,7 @@ export default function Footer() {
         sceneIdx++
         if (sceneIdx < scenes.length) {
           targets = scenes[sceneIdx]
-          nextSceneAt = now + SCENE_HOLD
+          nextSceneAt = now + sceneHold
         } else {
           // sequence done — flow home, drop the tint
           egg = false
@@ -247,24 +322,342 @@ export default function Footer() {
       raf = requestAnimationFrame(draw)
     }
 
-    // Konami: morph the name through the egg phrases, then reassemble.
-    const triggerEgg = () => {
-      if (egg) return
-      scenes = EGG_PHRASES.map(sampleText)
+    // Morph the particle field through a list of phrases, then reassemble.
+    const morph = (phrases, hold = SCENE_HOLD) => {
+      const list = (Array.isArray(phrases) ? phrases : [phrases]).filter(Boolean).map(String)
+      if (!list.length) return
+      scenes = list.map(sampleText)
       // Grow the particle pool so even the longest phrase is fully formed
       // (otherwise the modulo mapping leaves the tail of wide words empty).
       const need = scenes.reduce((m, s) => Math.max(m, s.length), dots.length)
       const homeCount = dots.length
       while (dots.length < need) {
         const src = dots[(Math.random() * homeCount) | 0]
-        // Extra dots melt back into a real VIBHAV point when the egg ends.
+        // Extra dots melt back into a real VIBHAV point when the morph ends.
         dots.push({ hx: src.hx, hy: src.hy, x: src.x, y: src.y })
       }
       sceneIdx = 0
       targets = scenes[0]
       egg = true
-      nextSceneAt = performance.now() + SCENE_HOLD
+      sceneHold = hold
+      nextSceneAt = performance.now() + hold
     }
+    const triggerEgg = () => { if (!egg) morph(EGG_PHRASES) }
+
+    // ── PARTY: a full-screen choreographed particle dance ──
+    // A drifting particle field across the whole screen + a rotating 3D
+    // particle sphere in the centre.
+    const octx = overlay.getContext('2d', { alpha: true })
+    let partyRaf = 0
+    let partyStart = 0
+    let partyDur = 0
+    let ocw = 0, och = 0, odpr = 1
+    let field = []           // background drifters: { x, y, vx, vy }
+    let sphere = []          // unit-sphere points: { x, y, z, hue }
+    let sphereR = 0
+    let lasers = []          // full radiating beams: { ang, t0, hue, life, width }
+    let flashT0 = -1e9       // centre-flash timestamp (on kicks)
+    let step = 0             // current sequencer step
+    let nextStepAt = 0       // perf.now() time of the next step
+
+    const FIELD_COUNT = 2800
+    const SPHERE_COUNT = 1400
+    const BPM = 124
+    const STEP_MS = 60000 / BPM / 4   // 16th-note grid
+
+    // ── Web Audio: a synthesized looping track + beat-synced laser hits ──
+    let audioCtx = null
+    let master = null
+    let noiseBuf = null
+    const ensureAudio = () => {
+      try {
+        if (!audioCtx) {
+          const AC = window.AudioContext || window.webkitAudioContext
+          if (!AC) return null
+          audioCtx = new AC()
+          master = audioCtx.createGain()
+          master.gain.value = 0.5
+          master.connect(audioCtx.destination)
+          // one second of white noise for drums
+          noiseBuf = audioCtx.createBuffer(1, audioCtx.sampleRate, audioCtx.sampleRate)
+          const ch = noiseBuf.getChannelData(0)
+          for (let i = 0; i < ch.length; i++) ch[i] = Math.random() * 2 - 1
+        }
+        if (audioCtx.state === 'suspended') audioCtx.resume()
+        return audioCtx
+      } catch { return null }
+    }
+    // ── Instruments ──
+    const kick = (t) => {
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain()
+      o.type = 'sine'
+      o.frequency.setValueAtTime(165, t)
+      o.frequency.exponentialRampToValueAtTime(48, t + 0.12)
+      g.gain.setValueAtTime(0.9, t)
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.26)
+      o.connect(g); g.connect(master); o.start(t); o.stop(t + 0.28)
+    }
+    const noiseHit = (t, hp, dur, peak) => {
+      const s = audioCtx.createBufferSource(); s.buffer = noiseBuf
+      const f = audioCtx.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = hp
+      const g = audioCtx.createGain()
+      g.gain.setValueAtTime(peak, t)
+      g.gain.exponentialRampToValueAtTime(0.001, t + dur)
+      s.connect(f); f.connect(g); g.connect(master); s.start(t); s.stop(t + dur + 0.02)
+    }
+    const clap = (t) => noiseHit(t, 1400, 0.14, 0.5)
+    const hat = (t) => noiseHit(t, 8000, 0.045, 0.25)
+    const synth = (t, freq, type, peak, dur, cutoff) => {
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain()
+      o.type = type
+      o.frequency.value = freq
+      let node = o
+      if (cutoff) {
+        const lp = audioCtx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = cutoff
+        o.connect(lp); node = lp
+      }
+      g.gain.setValueAtTime(0.0001, t)
+      g.gain.exponentialRampToValueAtTime(peak, t + 0.012)
+      g.gain.exponentialRampToValueAtTime(0.001, t + dur)
+      node.connect(g); g.connect(master); o.start(t); o.stop(t + dur + 0.02)
+    }
+    const bass = (t, f) => synth(t, f, 'sawtooth', 0.32, 0.24, 500)
+    const lead = (t, f) => synth(t, f, 'square', 0.16, 0.2, 4000)
+
+    // ── Song: 16-step loop over Am – F – C – G ──
+    const N = { _: 0, A1: 55, C2: 65.41, F1: 43.65, G1: 49, A4: 440, C5: 523.25, D5: 587.33, E5: 659.25, G5: 783.99 }
+    const SONG = {
+      kick: [1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0],
+      clap: [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+      hat:  [0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0],
+      bass: ['A1', 0, 0, 0, 'F1', 0, 0, 0, 'C2', 0, 0, 0, 'G1', 0, 0, 0],
+      lead: ['A4', 0, 0, 'C5', 'E5', 0, 'D5', 0, 'C5', 0, 'A4', 0, 0, 'D5', 'E5', 0],
+    }
+    // Which steps fire lasers, and how: returns {count,hue,wide} or null.
+    const LEAD_HUE = { A4: 280, C5: 200, D5: 150, E5: 50, G5: 330 }
+
+    // Deep rising power-up when the party launches.
+    const playWhoosh = () => {
+      const ac = ensureAudio()
+      if (!ac) return
+      const t = ac.currentTime
+      const o = ac.createOscillator()
+      const g = ac.createGain()
+      o.type = 'sawtooth'
+      o.frequency.setValueAtTime(70, t)
+      o.frequency.exponentialRampToValueAtTime(700, t + 0.7)
+      g.gain.setValueAtTime(0.0001, t)
+      g.gain.exponentialRampToValueAtTime(0.12, t + 0.25)
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.8)
+      o.connect(g); g.connect(master); o.start(t); o.stop(t + 0.85)
+    }
+
+    const buildParty = () => {
+      ocw = window.innerWidth
+      och = window.innerHeight
+      odpr = Math.min(window.devicePixelRatio || 1, 2)
+      overlay.width = Math.round(ocw * odpr)
+      overlay.height = Math.round(och * odpr)
+      octx.setTransform(odpr, 0, 0, odpr, 0, 0)
+
+      lasers = []
+      flashT0 = -1e9
+      step = 0
+      nextStepAt = 0
+
+      // Background field — particles everywhere, slow random drift.
+      field = []
+      for (let i = 0; i < FIELD_COUNT; i++) {
+        field.push({
+          x: Math.random() * ocw,
+          y: Math.random() * och,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5,
+        })
+      }
+
+      // Sphere — evenly spread points via the Fibonacci sphere.
+      sphereR = Math.min(ocw, och) * 0.22
+      sphere = []
+      const golden = Math.PI * (3 - Math.sqrt(5))
+      for (let i = 0; i < SPHERE_COUNT; i++) {
+        const y = 1 - (i / (SPHERE_COUNT - 1)) * 2
+        const rr = Math.sqrt(Math.max(0, 1 - y * y))
+        const theta = golden * i
+        sphere.push({
+          x: Math.cos(theta) * rr,
+          y,
+          z: Math.sin(theta) * rr,
+          hue: ((Math.atan2(Math.sin(theta) * rr, Math.cos(theta) * rr) / Math.PI) * 180 + 180),
+        })
+      }
+    }
+
+    const partyLoop = () => {
+      const now = performance.now()
+      const elapsed = now - partyStart
+      const remain = partyDur - elapsed
+      const t = elapsed / 1000
+      octx.clearRect(0, 0, ocw, och)
+
+      const cx = ocw / 2
+      const cy = och / 2
+      const baseAlpha = Math.max(0, Math.min(1, Math.min(elapsed / 400, remain / 700)))
+
+      // ── Black backdrop — fades in so the lasers pop like a real show ──
+      octx.globalAlpha = baseAlpha
+      octx.fillStyle = '#000'
+      octx.fillRect(0, 0, ocw, och)
+
+      // ── Background field — drift + wrap, gentle hue-cycling, one fill ──
+      // A clear circular void around the centre keeps the sphere clean (no
+      // particles behind / around it).
+      const fdot = Math.max(1.4, Math.min(ocw, och) * 0.0026)
+      const clearR = sphereR * 1.45
+      const clearR2 = clearR * clearR
+      octx.fillStyle = `hsl(${(t * 30) % 360}, 80%, 65%)`
+      octx.globalAlpha = baseAlpha * 0.8
+      octx.beginPath()
+      for (let i = 0; i < field.length; i++) {
+        const p = field[i]
+        p.x += p.vx
+        p.y += p.vy
+        if (p.x < 0) p.x += ocw; else if (p.x > ocw) p.x -= ocw
+        if (p.y < 0) p.y += och; else if (p.y > och) p.y -= och
+        const dx = p.x - cx, dy = p.y - cy
+        if (dx * dx + dy * dy < clearR2) continue // skip the sphere's zone
+        octx.moveTo(p.x + fdot, p.y)
+        octx.arc(p.x, p.y, fdot, 0, Math.PI * 2)
+      }
+      octx.fill()
+      octx.globalAlpha = baseAlpha
+
+      // ── Centre sphere — rotate Y + fixed tilt, perspective projection ──
+      const ay = t * 0.6              // spin around Y
+      const cosY = Math.cos(ay), sinY = Math.sin(ay)
+      const tilt = 0.5
+      const cosT = Math.cos(tilt), sinT = Math.sin(tilt)
+      const focal = 2.2               // perspective strength
+      for (let i = 0; i < sphere.length; i++) {
+        const s = sphere[i]
+        // rotate around Y
+        let x = s.x * cosY - s.z * sinY
+        let z = s.x * sinY + s.z * cosY
+        const y0 = s.y
+        // tilt around X
+        const y = y0 * cosT - z * sinT
+        z = y0 * sinT + z * cosT
+        // perspective: depth in [-1,1] → scale
+        const persp = focal / (focal + z)
+        const sx = cx + x * sphereR * persp
+        const sy = cy + y * sphereR * persp
+        const depth = (z + 1) / 2     // 0 = back, 1 = front
+        const r = Math.max(0.6, (0.9 + 2.2 * persp) * (0.5 + depth))
+        octx.fillStyle = `hsl(${(s.hue + t * 50) % 360}, 95%, ${Math.round(35 + depth * 35)}%)`
+        octx.globalAlpha = (remain / 700 < 1 ? Math.max(0, remain / 700) : 1) * (0.35 + depth * 0.65)
+        octx.beginPath()
+        octx.arc(sx, sy, r, 0, Math.PI * 2)
+        octx.fill()
+      }
+      octx.globalAlpha = 1
+
+      // ── Sequencer: play the song + fire lasers on the beat ──
+      const ac = ensureAudio()
+      const fireBeams = (count, hue, width, life) => {
+        for (let k = 0; k < count; k++) {
+          lasers.push({
+            ang: Math.random() * Math.PI * 2,
+            t0: now,
+            hue: (hue + Math.random() * 24 - 12 + 360) % 360,
+            life,
+            width,
+          })
+        }
+      }
+      if (remain > 700) {
+        if (nextStepAt === 0) nextStepAt = now
+        while (now >= nextStepAt) {
+          const s16 = step % 16
+          const at = ac ? ac.currentTime : 0
+          if (ac) {
+            if (SONG.kick[s16]) kick(at)
+            if (SONG.clap[s16]) clap(at)
+            if (SONG.hat[s16]) hat(at)
+            if (SONG.bass[s16]) bass(at, N[SONG.bass[s16]])
+            if (SONG.lead[s16]) lead(at, N[SONG.lead[s16]])
+          }
+          // Lasers locked to the music
+          if (SONG.kick[s16]) { fireBeams(3, (t * 40) % 360, 3.2, 320); flashT0 = now }
+          if (SONG.clap[s16]) fireBeams(2, 0, 2.4, 280) // white-ish backbeat
+          if (SONG.lead[s16]) fireBeams(1, LEAD_HUE[SONG.lead[s16]] ?? 200, 2.2, 260)
+          step++
+          nextStepAt += STEP_MS
+        }
+      }
+
+      // ── Render beams — full radiating lines from the sphere, fading ──
+      const diag = Math.hypot(ocw, och)
+      octx.save()
+      octx.globalCompositeOperation = 'lighter'
+      octx.lineCap = 'round'
+      for (let li = lasers.length - 1; li >= 0; li--) {
+        const L = lasers[li]
+        const age = (now - L.t0) / L.life
+        if (age >= 1) { lasers.splice(li, 1); continue }
+        const env = age < 0.12 ? age / 0.12 : 1 - (age - 0.12) / 0.88 // snap on, fall off
+        const a = Math.max(0, env) * baseAlpha
+        const c = Math.cos(L.ang), s = Math.sin(L.ang)
+        const x1 = cx + c * sphereR * 1.05, y1 = cy + s * sphereR * 1.05
+        const x2 = cx + c * diag, y2 = cy + s * diag
+        // soft outer glow
+        octx.globalAlpha = a * 0.3
+        octx.strokeStyle = `hsl(${L.hue}, 100%, 58%)`
+        octx.lineWidth = L.width * 4
+        octx.beginPath(); octx.moveTo(x1, y1); octx.lineTo(x2, y2); octx.stroke()
+        // bright near-white core
+        octx.globalAlpha = a
+        octx.strokeStyle = `hsl(${L.hue}, 100%, 86%)`
+        octx.lineWidth = L.width
+        octx.beginPath(); octx.moveTo(x1, y1); octx.lineTo(x2, y2); octx.stroke()
+      }
+      // centre flash on kicks
+      const fAge = (now - flashT0) / 260
+      if (fAge >= 0 && fAge < 1) {
+        const fr = sphereR * (1.1 + fAge * 0.6)
+        const fg = octx.createRadialGradient(cx, cy, 0, cx, cy, fr)
+        fg.addColorStop(0, `hsla(45, 100%, 90%, ${(1 - fAge) * 0.8 * baseAlpha})`)
+        fg.addColorStop(1, 'hsla(45, 100%, 60%, 0)')
+        octx.globalAlpha = 1
+        octx.fillStyle = fg
+        octx.beginPath(); octx.arc(cx, cy, fr, 0, Math.PI * 2); octx.fill()
+      }
+      octx.restore()
+      octx.globalAlpha = 1
+
+      if (remain <= 0) {
+        overlay.style.display = 'none'
+        octx.clearRect(0, 0, ocw, och)
+        return
+      }
+      partyRaf = requestAnimationFrame(partyLoop)
+    }
+
+    const startParty = (seconds) => {
+      partyDur = Math.min(10000, Math.max(5000, (Number(seconds) || 7) * 1000))
+      buildParty()
+      overlay.style.display = 'block'
+      partyStart = performance.now()
+      playWhoosh()
+      cancelAnimationFrame(partyRaf)
+      partyLoop()
+    }
+
+    // Expose hooks so the DevTools console egg can drive the particles.
+    window.__vyMorph = (phrases, hold) => {
+      canvas.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      morph(phrases, hold)
+    }
+    window.__vyParty = (seconds) => { startParty(seconds) }
 
     sampleDots()
     draw()
@@ -303,11 +696,16 @@ export default function Footer() {
     window.addEventListener('keydown', onKey)
     return () => {
       cancelAnimationFrame(raf)
+      cancelAnimationFrame(partyRaf)
       clearTimeout(resizeT)
+      overlay.style.display = 'none'
       canvas.removeEventListener('pointermove', onMove)
       canvas.removeEventListener('pointerleave', onLeave)
       window.removeEventListener('resize', onResize)
       window.removeEventListener('keydown', onKey)
+      if (window.__vyMorph) window.__vyMorph = null
+      if (window.__vyParty) window.__vyParty = null
+      if (audioCtx) { try { audioCtx.close() } catch {} audioCtx = null }
     }
   }, [])
 
@@ -349,6 +747,21 @@ export default function Footer() {
       >
         © {new Date().getFullYear()} · Vibhav Yadav · Built with Next.js
       </p>
+
+      {/* Full-screen overlay for the party dance (hidden until launched). */}
+      <canvas
+        ref={overlayRef}
+        aria-hidden="true"
+        style={{
+          position: 'fixed',
+          inset: 0,
+          width: '100vw',
+          height: '100vh',
+          display: 'none',
+          zIndex: 9998,
+          pointerEvents: 'none',
+        }}
+      />
     </footer>
   )
 }
