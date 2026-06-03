@@ -523,6 +523,19 @@ code, pre {
 .edi-cell + .edi-cell { border-left: 1px solid rgba(255, 255, 255, 0.12); }
 .edi-cell pre, .edi-cell code { white-space: pre-wrap; word-break: break-word; max-width: 100%; }
 
+/* About: intro text + photo.
+   Desktop → photo is a tall side column on the right (original layout).
+   Mobile  → photo floats right; text wraps around it. */
+.about-row {
+  display: grid;
+  grid-template-columns: 1.7fr 0.8fr;
+}
+.about-row .about-text-cell { order: 1; border-left: none; border-top: none; }
+.about-row .about-photo-cell {
+  order: 2;
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+}
+
 /* About: inner Heuristics + Mantras two-up */
 .about-inner-grid {
   display: grid;
@@ -569,7 +582,22 @@ code, pre {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     padding-top: 24px;
   }
-  .about-photo-cell { aspect-ratio: 4 / 3 !important; max-height: 360px; }
+  /* Mobile: float the photo so the profile text wraps around it (photo stays 3:4) */
+  .about-row { display: block; }
+  .about-row::after { content: ''; display: block; clear: both; }
+  .about-row .about-photo-cell {
+    float: right;
+    width: 46%;
+    margin: 0 0 14px 18px;
+    border-left: none;
+    aspect-ratio: 3 / 4;
+  }
+  .about-row .about-text-cell { display: block !important; }
+  /* let the lower heuristics/mantras clear the photo and span full width */
+  .about-row .about-lower { clear: both; }
+}
+@media (max-width: 420px) {
+  .about-row .about-photo-cell { width: 52%; margin-left: 14px; }
 }
 @media (max-width: 540px) {
   .edi-cap-grid { grid-template-columns: 1fr; }
