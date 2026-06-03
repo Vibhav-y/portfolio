@@ -53,9 +53,20 @@ export default function About() {
         transition={{ duration: 0.7 }}
       >
 
-        {/* Row 1: Intro + Photo */}
-        <div className="edi-row edi-row-2">
-          <div className="edi-cell" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '32px' }}>
+        {/* Row 1: Intro + Photo.
+            Desktop → photo is a tall side column (original layout).
+            Mobile  → photo floats right and the text wraps around it.
+            Photo is first in the DOM so the float-wrap works on mobile;
+            on desktop it's re-ordered to the right via grid `order`. */}
+        <div className="edi-row about-row">
+          <div className="edi-cell edi-cell--flush about-photo-cell" style={{ position: 'relative', overflow: 'hidden', aspectRatio: '3 / 4', alignSelf: 'stretch' }}>
+            <img
+              src={profileImg} alt="Vibhav Yadav" loading="lazy"
+              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 15%', filter: 'grayscale(0.15) contrast(1.05)' }}
+            />
+            <div style={{ position: 'absolute', inset: 0, boxShadow: 'inset 0 0 90px rgba(0,0,0,0.6)', pointerEvents: 'none' }} />
+          </div>
+          <div className="edi-cell about-text-cell" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '32px' }}>
             <div>
               <span style={{ ...labelStyle, marginBottom: '14px' }}>Profile</span>
               <h3 style={{ fontSize: 'clamp(24px, 2.3vw, 32px)', lineHeight: 1.12, color: '#fff', fontWeight: 700, letterSpacing: '-0.02em', textTransform: 'uppercase', marginBottom: '16px' }}>
@@ -65,7 +76,7 @@ export default function About() {
                 Computer Science Engineering student at Lovely Professional University. I specialize in robust backend architectures, interactive frontends, and writing optimized scale-ready code.
               </p>
             </div>
-            <div>
+            <div className="about-lower">
               {/* separator between Profile and the lower blocks */}
               <div style={{ height: '1px', background: 'rgba(255,255,255,0.12)', marginBottom: '28px' }} />
               <div className="about-inner-grid">
@@ -93,13 +104,6 @@ export default function About() {
                 </div>
               </div>
             </div>
-          </div>
-          <div className="edi-cell edi-cell--flush about-photo-cell" style={{ position: 'relative', overflow: 'hidden', aspectRatio: '3 / 4', alignSelf: 'stretch' }}>
-            <img
-              src={profileImg} alt="Vibhav Yadav" loading="lazy"
-              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 15%', filter: 'grayscale(0.15) contrast(1.05)' }}
-            />
-            <div style={{ position: 'absolute', inset: 0, boxShadow: 'inset 0 0 90px rgba(0,0,0,0.6)', pointerEvents: 'none' }} />
           </div>
         </div>
 

@@ -2,6 +2,7 @@ import { Geist } from 'next/font/google'
 import './globals.css'
 
 const SITE_URL = 'https://vibhavy.dev'
+const CANONICAL_URL = 'https://vibhavy.dev/'
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),
@@ -13,7 +14,7 @@ export const metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: SITE_URL,
+    url: CANONICAL_URL,
     siteName: 'Vibhav Yadav',
     title: 'Vibhav Yadav — Full-Stack Developer',
     description: 'Full-stack developer crafting performant products with stunning UI & real-world impact.',
@@ -24,7 +25,7 @@ export const metadata = {
     description: 'Full-stack developer crafting performant products with stunning UI & real-world impact.',
   },
   alternates: {
-    canonical: SITE_URL,
+    canonical: CANONICAL_URL,
   },
 }
 
