@@ -30,8 +30,8 @@ const mantras = [
 ]
 
 const labelStyle = {
-  fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'rgba(255,255,255,0.4)',
-  textTransform: 'uppercase', letterSpacing: '0.16em', display: 'block',
+  fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: 600, color: 'var(--text-tertiary)',
+  textTransform: 'uppercase', letterSpacing: '0.14em', display: 'block',
 }
 
 export default function About() {
@@ -64,12 +64,12 @@ export default function About() {
               src={profileImg} alt="Vibhav Yadav" loading="lazy"
               style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 15%', filter: 'grayscale(0.15) contrast(1.05)' }}
             />
-            <div style={{ position: 'absolute', inset: 0, boxShadow: 'inset 0 0 90px rgba(0,0,0,0.6)', pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', inset: 0, boxShadow: 'inset 0 0 60px rgba(15,23,42,0.25)', pointerEvents: 'none' }} />
           </div>
           <div className="edi-cell about-text-cell" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '32px' }}>
             <div>
               <span style={{ ...labelStyle, marginBottom: '14px' }}>Profile</span>
-              <h3 style={{ fontSize: 'clamp(24px, 2.3vw, 32px)', lineHeight: 1.12, color: '#fff', fontWeight: 700, letterSpacing: '-0.02em', textTransform: 'uppercase', marginBottom: '16px' }}>
+              <h3 style={{ fontSize: 'clamp(24px, 2.3vw, 32px)', lineHeight: 1.12, color: 'var(--text-primary)', fontWeight: 700, letterSpacing: '-0.02em', textTransform: 'uppercase', marginBottom: '16px' }}>
                 I build systems,<br />not just features.
               </h3>
               <p style={{ fontSize: '15px', color: 'var(--text-secondary)', lineHeight: 1.7, maxWidth: '560px' }}>
@@ -78,7 +78,7 @@ export default function About() {
             </div>
             <div className="about-lower">
               {/* separator between Profile and the lower blocks */}
-              <div style={{ height: '1px', background: 'rgba(255,255,255,0.12)', marginBottom: '28px' }} />
+              <div style={{ height: '1px', background: 'rgba(15,23,42,0.12)', marginBottom: '28px' }} />
               <div className="about-inner-grid">
                 {/* Developer Heuristics */}
                 <div>
@@ -96,7 +96,7 @@ export default function About() {
                   <span style={{ ...labelStyle, marginBottom: '18px' }}>Mantras</span>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
                     {mantras.map((q, i) => (
-                      <p key={i} style={{ borderLeft: '2px solid var(--accent)', paddingLeft: '14px', fontSize: '15px', fontWeight: 600, color: '#fff', lineHeight: 1.45, letterSpacing: '-0.01em' }}>
+                      <p key={i} style={{ borderLeft: '2px solid var(--accent)', paddingLeft: '14px', fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)', lineHeight: 1.45, letterSpacing: '-0.01em' }}>
                         {q}
                       </p>
                     ))}
@@ -116,16 +116,16 @@ export default function About() {
               <div key={e.degree} style={{
                 display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap',
                 padding: '11px 0',
-                borderTop: i > 0 ? '1px solid rgba(255,255,255,0.08)' : 'none',
+                borderTop: i > 0 ? '1px solid rgba(15,23,42,0.08)' : 'none',
               }}>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: '20px', flexWrap: 'wrap' }}>
                   <span style={{
                     fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '0.1em', textTransform: 'uppercase',
-                    color: e.current ? 'var(--accent)' : 'rgba(255,255,255,0.4)', minWidth: '90px',
+                    color: e.current ? 'var(--accent)' : 'rgba(15,23,42,0.4)', minWidth: '90px',
                   }}>
                     {e.year}
                   </span>
-                  <h4 style={{ fontSize: '18px', fontWeight: 700, color: e.current ? '#fff' : 'rgba(255,255,255,0.85)', letterSpacing: '-0.01em' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: 700, color: e.current ? 'var(--text-primary)' : 'rgba(15,23,42,0.85)', letterSpacing: '-0.01em' }}>
                     {e.degree}
                   </h4>
                 </div>
@@ -150,15 +150,15 @@ export default function About() {
                     display: 'flex', alignItems: 'center', gap: '12px',
                     padding: '11px 4px',
                     textDecoration: 'none',
-                    color: 'rgba(255,255,255,0.85)',
+                    color: 'rgba(15,23,42,0.85)',
                     fontSize: '14px', fontWeight: 500,
-                    borderTop: i >= 2 ? '1px solid rgba(255,255,255,0.08)' : 'none',
-                    borderLeft: i % 2 === 1 ? '1px solid rgba(255,255,255,0.08)' : 'none',
+                    borderTop: i >= 2 ? '1px solid rgba(15,23,42,0.08)' : 'none',
+                    borderLeft: i % 2 === 1 ? '1px solid rgba(15,23,42,0.08)' : 'none',
                     paddingLeft: i % 2 === 1 ? '18px' : '4px',
                     transition: 'color 0.2s ease',
                   }}
                   onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--accent)' }}
-                  onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.85)' }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(15,23,42,0.85)' }}
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ flexShrink: 0 }}>
                     <path d={link.icon} />

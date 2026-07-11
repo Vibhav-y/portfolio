@@ -29,7 +29,7 @@ const driverCategories = [
     ],
   },
   {
-    label: 'Databases', color: '#22c55e',
+    label: 'Databases', color: '#10b981',
     skills: [
       { name: 'MongoDB', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg' },
       { name: 'PostgreSQL', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg' },
@@ -58,7 +58,7 @@ const architecture = [
 const exploring = ['Next.js 14', 'Supabase', 'LLM integrations', 'AWS']
 
 const labelStyle = {
-  fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'rgba(255,255,255,0.4)',
+  fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'rgba(15,23,42,0.4)',
   textTransform: 'uppercase', letterSpacing: '0.15em', display: 'block',
 }
 
@@ -66,7 +66,7 @@ function CategoryBlock({ cat }) {
   return (
     <div className="skills-driver-cell">
       <div className="skills-driver-label">
-        <div style={{ width: '6px', height: '6px', background: cat.color, flexShrink: 0 }} />
+        <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: cat.color, flexShrink: 0 }} />
         <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', fontWeight: 700, color: cat.color, letterSpacing: '0.15em', textTransform: 'uppercase' }}>
           {cat.label}
         </span>
@@ -75,10 +75,10 @@ function CategoryBlock({ cat }) {
         {cat.skills.map(skill => (
           <div key={skill.name} style={{
             display: 'flex', alignItems: 'center', gap: '8px',
-            background: 'rgba(255,255,255,0.03)',
-            border: '1px solid rgba(255,255,255,0.08)',
+            background: 'rgba(15,23,42,0.03)',
+            border: '1px solid rgba(15,23,42,0.08)',
             padding: '6px 12px', borderRadius: '0px',
-            fontSize: '14px', fontWeight: 500, color: '#fff',
+            fontSize: '14px', fontWeight: 500, color: 'var(--text-primary)',
           }}>
             <img src={skill.icon} alt={skill.name} width={16} height={16} loading="lazy" style={{ objectFit: 'contain', flexShrink: 0 }} />
             {skill.name}
@@ -110,7 +110,7 @@ export default function Skills() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
           as={motion.div} liquid={false}
-          style={{ padding: 'clamp(24px, 2.6vw, 36px)', borderRadius: '0px', border: '1px solid rgba(255,255,255,0.1)' }}
+          style={{ padding: 'clamp(24px, 2.6vw, 36px)', borderRadius: '0px', border: '1px solid rgba(15,23,42,0.1)' }}
         >
           <span style={{ ...labelStyle, marginBottom: '28px' }}>Daily Drivers</span>
           <div className="skills-drivers-grid">
@@ -130,13 +130,13 @@ export default function Skills() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
             as={motion.div} liquid={false}
-            style={{ padding: 'clamp(22px, 2.2vw, 30px)', borderRadius: '0px', border: '1px solid rgba(255,255,255,0.1)', position: 'relative', overflow: 'hidden', flex: 1 }}
+            style={{ padding: 'clamp(22px, 2.2vw, 30px)', borderRadius: '0px', border: '1px solid rgba(15,23,42,0.1)', position: 'relative', overflow: 'hidden', flex: 1 }}
           >
             <div style={{ position: 'relative', zIndex: 1 }}>
               <span style={{ ...labelStyle, marginBottom: '18px' }}>Algorithms</span>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                 <div>
-                  <h3 style={{ fontSize: '30px', color: '#fff', fontWeight: 600, letterSpacing: '-0.02em', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <h3 style={{ fontSize: '30px', color: 'var(--text-primary)', fontWeight: 600, letterSpacing: '-0.02em', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '4px' }}>
                     5<span style={{ color: '#E5C07B' }}>★</span>
                   </h3>
                   <p style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>HackerRank</p>
@@ -159,7 +159,7 @@ export default function Skills() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
             as={motion.div} liquid={false}
-            style={{ padding: 'clamp(22px, 2.2vw, 30px)', borderRadius: '0px', border: '1px solid rgba(255,255,255,0.1)', position: 'relative', overflow: 'hidden', flex: 1 }}
+            style={{ padding: 'clamp(22px, 2.2vw, 30px)', borderRadius: '0px', border: '1px solid rgba(15,23,42,0.1)', position: 'relative', overflow: 'hidden', flex: 1 }}
           >
             <div style={{ position: 'relative', zIndex: 1 }}>
               <span style={{ ...labelStyle, marginBottom: '18px' }}>Currently Exploring</span>
@@ -172,8 +172,8 @@ export default function Skills() {
                     padding: '10px 14px', borderRadius: '0px',
                     minWidth: 0,
                   }}>
-                    <div style={{ width: '6px', height: '6px', background: '#22c55e', flexShrink: 0 }} />
-                    <span style={{ fontSize: '14px', fontWeight: 500, color: '#fff' }}>{item}</span>
+                    <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--status-live)', flexShrink: 0 }} />
+                    <span style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-primary)' }}>{item}</span>
                   </div>
                 ))}
               </div>
@@ -189,13 +189,13 @@ export default function Skills() {
         viewport={{ once: true }}
         transition={{ duration: 0.6, delay: 0.15 }}
         as={motion.div} liquid={false}
-        style={{ padding: 'clamp(16px, 1.6vw, 22px)', borderRadius: '0px', border: '1px solid rgba(255,255,255,0.1)', marginTop: '16px' }}
+        style={{ padding: 'clamp(16px, 1.6vw, 22px)', borderRadius: '0px', border: '1px solid rgba(15,23,42,0.1)', marginTop: '16px' }}
       >
         <span style={{ ...labelStyle, marginBottom: '14px' }}>Architecture &amp; Systems</span>
         <div className="skills-arch-grid">
           {architecture.map(sys => (
             <div key={sys.name} className="skills-arch-cell">
-              <strong style={{ color: '#fff', fontSize: '16px', display: 'block', marginBottom: '6px' }}>{sys.name}</strong>
+              <strong style={{ color: 'var(--text-primary)', fontSize: '16px', display: 'block', marginBottom: '6px' }}>{sys.name}</strong>
               <span style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>{sys.desc}</span>
             </div>
           ))}

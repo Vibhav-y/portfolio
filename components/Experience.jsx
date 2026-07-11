@@ -21,7 +21,7 @@ const experience = [
 ]
 
 const labelStyle = {
-  fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'rgba(255,255,255,0.4)',
+  fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'rgba(15,23,42,0.4)',
   textTransform: 'uppercase', letterSpacing: '0.16em', display: 'block',
 }
 
@@ -51,11 +51,11 @@ export default function Experience() {
             <div className="edi-cell" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
               <div>
                 <span style={{ ...labelStyle, marginBottom: '16px' }}>Role</span>
-                <h3 style={{ fontSize: 'clamp(22px, 2.1vw, 28px)', fontWeight: 700, color: '#fff', textTransform: 'uppercase', letterSpacing: '-0.02em', lineHeight: 1.15, marginBottom: '12px' }}>
+                <h3 style={{ fontSize: 'clamp(22px, 2.1vw, 28px)', fontWeight: 700, color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '-0.02em', lineHeight: 1.15, marginBottom: '12px' }}>
                   {exp.role}
                 </h3>
                 <p style={{ color: 'var(--accent)', fontSize: '15px', fontWeight: 600 }}>@ {exp.company}</p>
-                <p style={{ fontFamily: 'var(--font-mono)', color: 'rgba(255,255,255,0.5)', fontSize: '13px', marginTop: '10px' }}>{exp.period}</p>
+                <p style={{ fontFamily: 'var(--font-mono)', color: 'rgba(15,23,42,0.5)', fontSize: '13px', marginTop: '10px' }}>{exp.period}</p>
               </div>
 
               {/* Tags — square */}
@@ -63,8 +63,8 @@ export default function Experience() {
                 {exp.tags.map((tag) => (
                   <span key={tag} style={{
                     fontFamily: 'var(--font-mono)', fontSize: '11px',
-                    border: '1px solid rgba(255,255,255,0.14)',
-                    padding: '6px 12px', color: 'rgba(255,255,255,0.8)',
+                    border: '1px solid rgba(15,23,42,0.14)',
+                    padding: '6px 12px', color: 'rgba(15,23,42,0.8)',
                   }}>
                     {tag}
                   </span>

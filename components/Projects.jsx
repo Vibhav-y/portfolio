@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import SectionHeader from './ui/section-header'
 import CornerPlus from './ui/corner-plus'
+import ModalShader from './ui/modal-shader'
 
 const PROJECTS = [
   {
@@ -111,169 +112,19 @@ const PROJECTS = [
 
 const GITHUB_ICON = 'M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z'
 
-/* ── Filmstrip: alternating image pills + name text, auto-scrolls ── */
-function FilmStrip({ project, speed }) {
-  const reps = [...Array(10), ...Array(10)]
-  return (
-    <div style={{ display: 'flex', gap: '18px', alignItems: 'center', animation: `marquee ${speed}s linear infinite`, width: 'max-content' }}>
-      {reps.map((_, i) => (
-        <div key={i} style={{ display: 'flex', gap: '18px', alignItems: 'center' }}>
-          <div style={{
-            width: 'clamp(160px,16vw,240px)',
-            height: '78px',
-            borderRadius: '999px',
-            overflow: 'hidden',
-            flexShrink: 0,
-            background: '#0a0a12',
-            border: `1px solid ${project.accent}22`,
-          }}>
-            <img
-              src={project.image}
-              alt={project.name}
-              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }}
-            />
-          </div>
-          <span style={{
-            fontSize: 'clamp(22px,2.4vw,34px)',
-            fontWeight: 700,
-            letterSpacing: '-.035em',
-            textTransform: 'uppercase',
-            color: project.accent,
-            flexShrink: 0,
-            padding: '0 24px',
-            whiteSpace: 'nowrap',
-            opacity: .85,
-          }}>
-            {project.name}
-          </span>
-        </div>
-      ))}
-    </div>
-  )
-}
-
-/* ── Single project row ── */
-function ProjectRow({ project, index, isBold, onOpen }) {
-  const [hov, setHov] = useState(false)
-  const titleSize = isBold
-    ? 'clamp(36px,5.5vw,72px)'
-    : 'clamp(32px,4.8vw,64px)'
-  const collapsedH = isBold ? 100 : 90
-  const expandedH = isBold ? 270 : 248
-  const stripSpeed = 26
-
-  return (
-    <div
-      role="button"
-      tabIndex={0}
-      onClick={() => onOpen(project)}
-      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpen(project) } }}
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
-      style={{
-        display: 'block',
-        cursor: 'pointer',
-        color: 'inherit',
-        borderBottom: '1px solid rgba(255,255,255,.08)',
-        overflow: 'hidden',
-        height: hov ? expandedH : collapsedH,
-        transition: 'height .55s cubic-bezier(.22,1,.36,1), background .3s',
-        background: hov ? `${project.accent}08` : 'transparent',
-        position: 'relative',
-        outline: 'none',
-      }}
-    >
-      {/* ── Title bar ── */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: 0,
-        height: `${collapsedH}px`,
-        position: 'relative',
-        zIndex: 2,
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'rgba(255,255,255,.22)', minWidth: '28px', flexShrink: 0 }}>
-            0{index + 1}
-          </span>
-          <h3 style={{
-            fontSize: titleSize,
-            fontWeight: 700,
-            letterSpacing: '-.04em',
-            textTransform: 'uppercase',
-            color: hov ? project.accent : 'var(--text-primary)',
-            transition: 'color .3s ease',
-            lineHeight: 1,
-          }}>
-            {project.name}
-          </h3>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <span style={{
-            fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '.14em',
-            textTransform: 'uppercase', color: project.accent,
-            opacity: hov ? 1 : 0, transition: 'opacity .3s',
-          }}>
-            {project.label}
-          </span>
-          <div style={{
-            width: 36, height: 36, flexShrink: 0,
-            border: `1px solid ${hov ? project.accent : 'rgba(255,255,255,.18)'}`,
-            borderRadius: '50%',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: hov ? project.accent : 'rgba(255,255,255,.35)',
-            transform: hov ? 'rotate(45deg)' : 'rotate(0deg)',
-            transition: 'all .32s cubic-bezier(.22,1,.36,1)',
-          }}>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Filmstrip preview on hover ── */}
-      <div
-        style={{
-          position: 'absolute', left: 0, right: 0, bottom: 0,
-          height: `${expandedH - collapsedH}px`,
-          overflow: 'hidden',
-          opacity: hov ? 1 : 0,
-          transition: 'opacity .35s ease .1s',
-          display: 'flex',
-          alignItems: 'center',
-          pointerEvents: 'none',
-        }}
-      >
-        <FilmStrip project={project} speed={stripSpeed} />
-      </div>
-
-      {/* Accent left border on hover */}
-      <div style={{
-        position: 'absolute', left: 0, top: 0, bottom: 0, width: '3px',
-        background: project.accent,
-        opacity: hov ? 1 : 0,
-        transition: 'opacity .3s ease',
-      }} />
-    </div>
-  )
-}
-
 // Section label inside the modal body — mono uppercase with a short accent rule.
 function ModalSectionLabel({ children, color }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
       <span style={{ width: '18px', height: '1px', background: color }} />
-      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '0.18em', textTransform: 'uppercase', color }}>
+      <span className="mono-label" style={{ color }}>
         {children}
       </span>
     </div>
   )
 }
 
-/* ── Project detail modal ── */
+/* ── Project detail modal — image left, story right, shader behind ── */
 function ProjectModal({ project, onClose }) {
   // Esc to close + lock body scroll while open.
   useEffect(() => {
@@ -296,144 +147,105 @@ function ProjectModal({ project, onClose }) {
       onClick={onClose}
       style={{
         position: 'fixed', inset: 0, zIndex: 99999,
-        background: 'rgba(0,0,0,0.82)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
+        background: 'rgba(238,240,244,0.7)',
+        backdropFilter: 'blur(20px) saturate(140%)',
+        WebkitBackdropFilter: 'blur(20px) saturate(140%)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        padding: '24px',
-        overflowY: 'auto',
+        padding: 'clamp(14px, 2.5vw, 40px)',
       }}
     >
       <motion.div
-        initial={{ y: 24, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        exit={{ y: 24, opacity: 0 }}
-        transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+        initial={{ y: 28, opacity: 0, scale: 0.97 }}
+        animate={{ y: 0, opacity: 1, scale: 1 }}
+        exit={{ y: 24, opacity: 0, scale: 0.97 }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
         onClick={(e) => e.stopPropagation()}
-        style={{
-          width: '100%',
-          maxWidth: '900px',
-          background: 'var(--bg-base)',
-          border: `1px solid ${project.accent}55`,
-          boxShadow: `0 30px 90px rgba(0,0,0,0.65), 0 0 0 1px ${project.accent}18`,
-          position: 'relative',
-          maxHeight: 'calc(100vh - 48px)',
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden',
-        }}
+        className="pmodal"
       >
-        {/* Header */}
-        <div style={{
-          padding: 'clamp(20px, 2.2vw, 28px) clamp(24px, 2.6vw, 36px)',
-          borderBottom: '1px solid rgba(255,255,255,0.08)',
-          display: 'flex',
-          alignItems: 'flex-start',
-          justifyContent: 'space-between',
-          gap: '16px',
-        }}>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <span style={{
-              fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '0.18em',
-              textTransform: 'uppercase', color: project.accent, display: 'block', marginBottom: '8px',
-            }}>
-              {project.label}
-            </span>
-            <h3 style={{
-              fontSize: 'clamp(24px, 2.6vw, 34px)',
-              fontWeight: 700,
-              color: '#fff',
-              letterSpacing: '-0.025em',
-              textTransform: 'uppercase',
-              lineHeight: 1.1,
-              marginBottom: project.year ? '10px' : 0,
-            }}>
-              {project.name}
-            </h3>
+        {/* live silk backdrop, tinted to the project accent */}
+        <ModalShader accent={project.accent} />
+
+        {/* Close */}
+        <motion.button
+          aria-label="Close"
+          onClick={onClose}
+          whileHover={{ scale: 1.08, rotate: 90 }}
+          whileTap={{ scale: 0.92 }}
+          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          style={{
+            position: 'absolute', top: 16, right: 16, zIndex: 3,
+            width: 40, height: 40, borderRadius: '999px',
+            background: 'rgba(255,255,255,0.85)',
+            backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
+            border: '1px solid var(--hairline)',
+            color: 'var(--text-primary)', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 10px 24px rgba(15,23,42,0.14)',
+          }}
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" /></svg>
+        </motion.button>
+
+        {/* LEFT — screenshot floating on the shader */}
+        <div className="pmodal-visual">
+          <motion.img
+            src={project.image}
+            alt={project.name}
+            initial={{ y: 18, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+          />
+          <div className="pmodal-meta">
             {(project.year || project.status) && (
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', alignItems: 'center', fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }}>
-                {project.year && <span>{project.year}</span>}
-                {project.year && project.status && <span style={{ width: '4px', height: '4px', background: 'rgba(255,255,255,0.3)' }} />}
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.9)' }}>
+                {project.year}
                 {project.status && (
                   <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{
-                      width: '6px', height: '6px',
-                      background: project.status === 'Live' ? '#10b981' : project.accent,
-                    }} />
+                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: project.status === 'Live' ? 'var(--status-live)' : '#fff' }} />
                     {project.status}
                   </span>
                 )}
-              </div>
+              </span>
             )}
           </div>
-          <button
-            aria-label="Close"
-            onClick={onClose}
-            style={{
-              flexShrink: 0,
-              width: 36, height: 36,
-              background: 'transparent',
-              border: '1px solid rgba(255,255,255,0.18)',
-              color: 'rgba(255,255,255,0.7)',
-              cursor: 'pointer',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              transition: 'background 0.2s, color 0.2s, border-color 0.2s',
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.4)' }}
-            onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.7)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.18)' }}
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" /></svg>
-          </button>
         </div>
 
-        {/* Scrollable body */}
-        <div style={{ overflowY: 'auto', flex: 1 }}>
-          {/* Image */}
-          <div style={{
-            position: 'relative',
-            borderBottom: '1px solid rgba(255,255,255,0.08)',
-            background: '#080810',
-            overflow: 'hidden',
-          }}>
-            <div style={{
-              position: 'absolute', inset: 0,
-              background: `radial-gradient(circle at 50% 0%, ${project.accent}22, transparent 60%)`,
-              pointerEvents: 'none',
-            }} />
-            <img
-              src={project.image}
-              alt={project.name}
-              style={{ width: '100%', display: 'block', objectFit: 'cover', maxHeight: '400px' }}
-            />
-          </div>
+        {/* RIGHT — the story, on a glass panel */}
+        <div className="pmodal-panel">
+          <div className="pmodal-scroll">
+            <span className="mono-label" style={{ color: project.accent, display: 'block', marginBottom: '10px' }}>
+              {project.label}
+            </span>
+            <h3 style={{
+              fontSize: 'clamp(24px, 2.4vw, 32px)', fontWeight: 700,
+              color: 'var(--text-primary)', letterSpacing: '-0.025em', lineHeight: 1.1,
+              marginBottom: '12px',
+            }}>
+              {project.name}
+            </h3>
 
-          {/* Body content */}
-          <div style={{ padding: 'clamp(20px, 2.4vw, 32px) clamp(24px, 2.6vw, 36px)', display: 'flex', flexDirection: 'column', gap: '28px' }}>
-            {/* Summary tagline */}
             {project.summary && (
-              <p style={{ fontSize: 'clamp(15px, 1.4vw, 17px)', color: '#fff', fontWeight: 500, lineHeight: 1.5, margin: 0, letterSpacing: '-0.005em' }}>
+              <p style={{ fontSize: '15px', color: 'var(--text-primary)', fontWeight: 500, lineHeight: 1.55, margin: '0 0 22px' }}>
                 {project.summary}
               </p>
             )}
 
-            {/* Description */}
             {project.description && (
-              <div>
+              <div style={{ marginBottom: '24px' }}>
                 <ModalSectionLabel color={project.accent}>Overview</ModalSectionLabel>
-                <p style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.75, margin: 0 }}>
+                <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', lineHeight: 1.7, margin: 0 }}>
                   {project.description}
                 </p>
               </div>
             )}
 
-            {/* Features */}
             {project.features?.length > 0 && (
-              <div>
+              <div style={{ marginBottom: '24px' }}>
                 <ModalSectionLabel color={project.accent}>Key Features</ModalSectionLabel>
-                <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '10px 24px' }}>
+                <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '9px' }}>
                   {project.features.map((f) => (
-                    <li key={f} style={{ display: 'flex', gap: '12px', fontSize: '13.5px', color: 'var(--text-secondary)', lineHeight: 1.55 }}>
-                      <span style={{ flexShrink: 0, marginTop: '7px', width: '5px', height: '5px', background: project.accent }} />
+                    <li key={f} style={{ display: 'flex', gap: '11px', fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                      <span style={{ flexShrink: 0, marginTop: '7px', width: '5px', height: '5px', borderRadius: '50%', background: project.accent }} />
                       <span>{f}</span>
                     </li>
                   ))}
@@ -441,14 +253,13 @@ function ProjectModal({ project, onClose }) {
               </div>
             )}
 
-            {/* Highlights */}
             {project.highlights?.length > 0 && (
-              <div>
+              <div style={{ marginBottom: '24px' }}>
                 <ModalSectionLabel color={project.accent}>Technical Highlights</ModalSectionLabel>
                 <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {project.highlights.map((h) => (
-                    <li key={h} style={{ display: 'flex', gap: '12px', fontSize: '13.5px', color: 'var(--text-secondary)', lineHeight: 1.55 }}>
-                      <span style={{ flexShrink: 0, marginTop: '4px', fontFamily: 'var(--font-mono)', fontSize: '10px', color: project.accent, letterSpacing: '0.08em' }}>›</span>
+                    <li key={h} style={{ display: 'flex', gap: '11px', fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                      <span style={{ flexShrink: 0, marginTop: '3px', fontFamily: 'var(--font-mono)', fontSize: '10px', color: project.accent }}>›</span>
                       <span>{h}</span>
                     </li>
                   ))}
@@ -456,20 +267,18 @@ function ProjectModal({ project, onClose }) {
               </div>
             )}
 
-            {/* Stats */}
-            <div>
+            <div style={{ marginBottom: '24px' }}>
               <ModalSectionLabel color={project.accent}>Stack</ModalSectionLabel>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '18px 24px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '14px 20px' }}>
                 {project.stats.map(([k, v]) => (
                   <div key={k}>
-                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'rgba(255,255,255,0.32)', letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: '4px' }}>{k}</div>
-                    <div style={{ fontSize: '14px', fontWeight: 600, color: '#fff' }}>{v}</div>
+                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--text-tertiary)', letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: '4px' }}>{k}</div>
+                    <div style={{ fontSize: '13.5px', fontWeight: 600, color: 'var(--text-primary)' }}>{v}</div>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Tags */}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
               {project.tags.map((t) => (
                 <span
@@ -477,7 +286,8 @@ function ProjectModal({ project, onClose }) {
                   style={{
                     background: project.accent + '14',
                     border: `1px solid ${project.accent}30`,
-                    padding: '5px 12px',
+                    borderRadius: '999px',
+                    padding: '5px 13px',
                     fontSize: '11px',
                     fontFamily: 'var(--font-mono)',
                     color: project.accent,
@@ -489,100 +299,281 @@ function ProjectModal({ project, onClose }) {
               ))}
             </div>
           </div>
-        </div>
 
-        {/* Footer CTAs */}
-        <div style={{
-          padding: 'clamp(16px, 1.8vw, 22px) clamp(24px, 2.6vw, 36px)',
-          borderTop: '1px solid rgba(255,255,255,0.08)',
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '12px',
-        }}>
-          <a
-            href={project.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '10px',
-              padding: '12px 22px',
-              background: project.accent,
-              border: `1px solid ${project.accent}`,
-              color: '#000',
-              fontFamily: 'var(--font-mono)',
-              fontSize: '12px',
-              fontWeight: 700,
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase',
-              textDecoration: 'none',
-              transition: 'transform 0.2s, box-shadow 0.2s',
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 8px 24px ${project.accent}55` }}
-            onMouseLeave={(e) => { e.currentTarget.style.boxShadow = 'none' }}
-          >
-            Visit live
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></svg>
-          </a>
-
-          {project.github && (
+          {/* CTAs pinned at the panel foot */}
+          <div className="pmodal-ctas">
             <a
-              href={project.github}
+              href={project.link}
               target="_blank"
               rel="noopener noreferrer"
               style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '10px',
-                padding: '12px 22px',
-                background: 'transparent',
-                border: '1px solid rgba(255,255,255,0.22)',
-                color: '#fff',
-                fontFamily: 'var(--font-mono)',
-                fontSize: '12px',
-                fontWeight: 700,
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                textDecoration: 'none',
-                transition: 'background 0.2s, border-color 0.2s',
+                display: 'inline-flex', alignItems: 'center', gap: '10px',
+                padding: '11px 22px', borderRadius: '999px',
+                background: project.accent, border: `1px solid ${project.accent}`,
+                color: '#fff', fontFamily: 'var(--font-mono)', fontSize: '12px', fontWeight: 700,
+                letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none',
+                transition: 'transform 0.25s cubic-bezier(0.22,1,0.36,1), box-shadow 0.25s cubic-bezier(0.22,1,0.36,1)',
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.4)' }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.22)' }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = `0 10px 26px ${project.accent}66` }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none' }}
             >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d={GITHUB_ICON} /></svg>
-              View code
+              Visit live
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></svg>
             </a>
-          )}
+            {project.github && (
+              <a
+                href={project.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '10px',
+                  padding: '11px 22px', borderRadius: '999px',
+                  background: 'rgba(255,255,255,0.7)', border: '1px solid var(--hairline)',
+                  color: 'var(--text-primary)', fontFamily: 'var(--font-mono)', fontSize: '12px', fontWeight: 700,
+                  letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none',
+                  transition: 'transform 0.25s cubic-bezier(0.22,1,0.36,1)',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)' }}
+                onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)' }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d={GITHUB_ICON} /></svg>
+                View code
+              </a>
+            )}
+          </div>
         </div>
       </motion.div>
     </motion.div>
   )
 }
 
-export default function Projects({ variant }) {
-  const isBold = variant === 'raw'
+const easeFluid = [0.22, 1, 0.36, 1]
+
+export default function Projects() {
   const [selected, setSelected] = useState(null)
+  const [active, setActive] = useState(0)
   const [mounted, setMounted] = useState(false)
+  const sectionRef = useRef(null)
+  const cardEls = useRef([])
 
   useEffect(() => { setMounted(true) }, [])
 
-  return (
-    <section id="work" data-section="projects" className="section container grid-box" style={{ position: 'relative' }}>
-      <CornerPlus />
-      <SectionHeader
-        eyebrow="SELECTED WORK"
-        title={<>Real-world systems,<br />not just code.</>}
-        description="Click any project for the full story."
-        marginBottom={0}
-      />
+  // Pinned section: page scroll sets a target progress; a rAF loop eases the
+  // rendered progress toward it (exponential smoothing), and every card's
+  // transform is computed from that continuous value — no stepping.
+  const targetP = useRef(0)
+  const currentP = useRef(0)
+  const lastFrame = useRef(0)
+  const activeRef = useRef(0)
 
-      {/* Rows */}
-      <div style={{ marginTop: '56px', borderTop: '1px solid rgba(255,255,255,.08)' }}>
-        {PROJECTS.map((p, i) => (
-          <ProjectRow key={p.id} project={p} index={i} isBold={isBold} onOpen={setSelected} />
-        ))}
-      </div>
+  const applyTransforms = (pv) => {
+    cardEls.current.forEach((el, i) => {
+      if (!el) return
+      const d = Math.max(-3, Math.min(3, i - pv))
+      // symmetric: the previous card parks as a left peek, the next as a
+      // right peek; both slightly shrunk and dimmed for depth
+      const ad = Math.min(Math.abs(d), 1)
+      const x = d * 106
+      const scale = 1 - 0.14 * ad
+      const opacity = 1 - 0.3 * ad
+      el.style.transform = `translateX(${x}%) scale(${scale})`
+      el.style.opacity = opacity
+      el.style.zIndex = String(100 - Math.round(Math.abs(d) * 10))
+    })
+    const idx = Math.min(PROJECTS.length - 1, Math.max(0, Math.round(pv)))
+    if (idx !== activeRef.current) {
+      activeRef.current = idx
+      setActive(idx)
+    }
+  }
+
+  useEffect(() => {
+    let raf = 0
+    const tick = () => {
+      lastFrame.current = performance.now()
+      const delta = targetP.current - currentP.current
+      if (Math.abs(delta) > 0.0004) {
+        currentP.current += delta * 0.09
+        applyTransforms(currentP.current)
+      }
+      raf = requestAnimationFrame(tick)
+    }
+
+    // Dwell + snap: each card holds the center for a stretch of scroll, then
+    // eases to the next with a smoothstep — centered cards need a push to move.
+    const DWELL = 0.32
+    const shape = (raw) => {
+      const seg = Math.floor(raw)
+      const f = raw - seg
+      const t = Math.min(1, Math.max(0, (f - DWELL) / (1 - 2 * DWELL)))
+      return seg + t * t * (3 - 2 * t)
+    }
+
+    const onScroll = () => {
+      const section = sectionRef.current
+      if (!section) return
+      const range = section.offsetHeight - window.innerHeight
+      if (range <= 0) return
+      const y = window.scrollY - (section.getBoundingClientRect().top + window.scrollY)
+      const v = Math.min(1, Math.max(0, y / range))
+      targetP.current = shape(v * (PROJECTS.length - 1))
+      // rAF throttled (hidden tab)? apply directly so state never goes stale
+      if (performance.now() - lastFrame.current > 250) {
+        currentP.current = targetP.current
+        applyTransforms(currentP.current)
+      }
+    }
+
+    applyTransforms(0)
+    onScroll()
+    raf = requestAnimationFrame(tick)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+    }
+  }, [])
+
+  const goTo = (i) => {
+    const section = sectionRef.current
+    if (!section) return
+    const sectionTop = section.getBoundingClientRect().top + window.scrollY
+    const range = section.offsetHeight - window.innerHeight
+    window.scrollTo({
+      top: sectionTop + (i / (PROJECTS.length - 1)) * range,
+      behavior: 'smooth',
+    })
+  }
+
+  const project = PROJECTS[active]
+
+  return (
+    <>
+      <section
+        id="work"
+        data-section="projects"
+        ref={sectionRef}
+        style={{ height: `${100 + (PROJECTS.length - 1) * 85}vh`, position: 'relative', paddingBlock: 0 }}
+      >
+        <div style={{ position: 'sticky', top: 0, height: '100vh', display: 'flex', alignItems: 'center' }}>
+          <div className="container grid-box" style={{ padding: 'clamp(24px, 3vw, 48px) 0', overflow: 'hidden', width: '100%' }}>
+            <div style={{ paddingInline: 'clamp(20px, 3vw, 48px)' }}>
+              <SectionHeader
+                eyebrow="SELECTED WORK"
+                title="Real-world systems, not just code."
+                align="left"
+                marginBottom={24}
+              />
+            </div>
+
+            {/* Per-slide header: project name left, summary headline right */}
+            <div style={{ paddingInline: 'clamp(20px, 3vw, 48px)', minHeight: '86px' }}>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={project.id}
+                  className="cert-show-head"
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.35, ease: easeFluid }}
+                >
+                  <div>
+                    <span className="mono-label" style={{
+                      display: 'inline-flex', alignItems: 'center', gap: '10px',
+                      color: project.accent, marginBottom: '8px',
+                    }}>
+                      <span style={{ width: '20px', height: '1px', background: project.accent }} />
+                      {project.label} · {project.year}
+                    </span>
+                    <h3 style={{
+                      fontSize: 'clamp(20px, 2vw, 26px)', fontWeight: 700,
+                      color: 'var(--text-primary)', letterSpacing: '-0.02em', lineHeight: 1.15,
+                    }}>
+                      {project.name}
+                    </h3>
+                  </div>
+                  <p className="cert-show-headline">{project.summary}</p>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Card stage — one front card, the next peeking right */}
+            <div style={{ position: 'relative', marginTop: '20px' }}>
+              <div className="proj-stage">
+                {PROJECTS.map((p, i) => (
+                  <div
+                    key={p.id}
+                    ref={el => { cardEls.current[i] = el }}
+                    className="proj-card"
+                    onClick={() => (i === activeRef.current ? setSelected(p) : goTo(i))}
+                  >
+                    <img src={p.image} alt={p.name} loading="lazy" draggable={false} />
+                    <div className="cert-card-cta">
+                      <span>Read Casestudy</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <CarouselArrow dir="left"  disabled={active === 0}                   onClick={() => goTo(active - 1)} />
+              <CarouselArrow dir="right" disabled={active === PROJECTS.length - 1} onClick={() => goTo(active + 1)} />
+            </div>
+
+            {/* Below: tag pills left, status quote right */}
+            <div style={{ paddingInline: 'clamp(20px, 3vw, 48px)' }}>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={project.id}
+                  className="cert-show-foot"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.35, ease: easeFluid, delay: 0.05 }}
+                >
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                    {project.tags.map(t => (
+                      <span key={t} className="tag-capsule">{t}</span>
+                    ))}
+                  </div>
+                  <div className="cert-quote">
+                    <span style={{
+                      fontSize: '22px', lineHeight: 1, color: project.accent,
+                      fontFamily: 'Georgia, serif', flexShrink: 0, marginTop: '2px',
+                    }}>&ldquo;</span>
+                    <p style={{
+                      fontSize: '13.5px', lineHeight: 1.6, color: 'var(--text-secondary)',
+                      fontStyle: 'italic', margin: 0,
+                      display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+                    }}>
+                      {project.description}
+                    </p>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Dots */}
+              <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '20px' }}>
+                {PROJECTS.map((p, i) => (
+                  <button
+                    key={p.id}
+                    aria-label={`Go to ${p.name}`}
+                    onClick={() => goTo(i)}
+                    style={{
+                      width: i === active ? '26px' : '8px', height: '8px',
+                      borderRadius: '999px', border: 'none', cursor: 'pointer',
+                      background: i === active ? 'var(--accent)' : 'rgba(15,23,42,0.18)',
+                      transition: 'all 0.35s cubic-bezier(0.22,1,0.36,1)',
+                      padding: 0,
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Modal — rendered via portal to body */}
       {mounted && createPortal(
@@ -591,6 +582,28 @@ export default function Projects({ variant }) {
         </AnimatePresence>,
         document.body
       )}
-    </section>
+    </>
+  )
+}
+
+function CarouselArrow({ dir, onClick, disabled }) {
+  return (
+    <motion.button
+      aria-label={dir === 'left' ? 'Previous project' : 'Next project'}
+      onClick={onClick}
+      disabled={disabled}
+      whileHover={disabled ? {} : { scale: 1.08 }}
+      whileTap={disabled ? {} : { scale: 0.92 }}
+      className="cert-arrow"
+      style={{
+        [dir]: 'clamp(10px, 2vw, 26px)',
+        opacity: disabled ? 0.25 : 1,
+        cursor: disabled ? 'default' : 'pointer',
+      }}
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        {dir === 'left' ? <path d="M19 12H5M12 19l-7-7 7-7" /> : <path d="M5 12h14M12 5l7 7-7 7" />}
+      </svg>
+    </motion.button>
   )
 }
