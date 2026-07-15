@@ -59,7 +59,7 @@ export default function ClientShell({ children }) {
           exit={{ opacity: 0, transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] } }}
           style={{
             position: 'fixed', inset: 0, zIndex: 9999,
-            background: '#0a0a0a',
+            background: '#eef0f4',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}
         >
@@ -72,7 +72,7 @@ export default function ClientShell({ children }) {
               transition={{ duration: 0.4, ease: "easeInOut" }}
               style={{
                 fontSize: 'clamp(32px, 5vw, 64px)',
-                fontWeight: 600, color: '#fff',
+                fontWeight: 600, color: 'var(--text-primary)',
                 fontFamily: 'var(--font-main)',
                 position: 'absolute',
               }}

@@ -1,0 +1,17 @@
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+  Downloading swc package @next/swc-linux-arm64-gnu... to /sessions/inspiring-trusting-thompson/.cache/next-swc
+unhandledRejection TypeError: fetch failed
+    at ignore-listed frames {
+  [cause]: Error: getaddrinfo EAI_AGAIN registry.npmjs.org
+      at ignore-listed frames {
+    errno: -3001,
+    code: 'EAI_AGAIN',
+    syscall: 'getaddrinfo',
+    hostname: 'registry.npmjs.org'
+  }
+}
+EXIT=1

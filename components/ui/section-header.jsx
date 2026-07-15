@@ -27,17 +27,8 @@ export default function SectionHeader({
     >
       {eyebrow ? (
         <span
-          className={cn('section-header-eyebrow', eyebrowClassName)}
-          style={{
-            fontFamily: 'var(--font-mono)',
-            fontSize: '11px',
-            fontWeight: 600,
-            color: 'rgba(255,255,255,0.4)',
-            letterSpacing: '0.15em',
-            textTransform: 'uppercase',
-            display: 'block',
-            marginBottom: '16px',
-          }}
+          className={cn('mono-label', 'section-header-eyebrow', eyebrowClassName)}
+          style={{ display: 'block', marginBottom: '16px' }}
         >
           {eyebrow}
         </span>
@@ -47,7 +38,7 @@ export default function SectionHeader({
         className={cn('section-header-title', titleClassName)}
         style={{
           fontSize: 'clamp(32px, 4vw, 42px)',
-          color: '#f9fafc',
+          color: 'var(--text-primary)',
           lineHeight: 1.1,
           letterSpacing: '-0.03em',
           marginBottom: description ? '24px' : 0,

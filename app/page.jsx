@@ -1,11 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import Navbar from '../components/Navbar'
 import Hero from '../components/Hero'
 import About from '../components/About'
 import Projects from '../components/Projects'
-import Certificates from '../components/Certificates'
+import Certificates from '../components/CertificatesQuotes'
+// import Certificates from '../components/Certificates'  // showcase-carousel version (kept for fallback)
 import Skills from '../components/Skills'
 import Experience from '../components/Experience'
 import Now from '../components/Now'
@@ -57,54 +59,123 @@ export default function Home() {
   }, [minLoaderTimeDone, imgsDone])
 
   const loaderProgress = ((greetingIndex + 1) / greetings.length) * 100
+  const easeFluid = [0.22, 1, 0.36, 1]
+  const easeCurtain = [0.76, 0, 0.24, 1]
 
   return (
     <>
-      {loading ? (
-        <div
-          style={{
-            position: 'fixed', inset: 0, zIndex: 9999,
-            background: '#0a0a0a',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            flexDirection: 'column', gap: '20px',
-          }}
-        >
-          <span
+      {/* Loader curtain — lifts away to reveal the page underneath */}
+      <AnimatePresence>
+        {loading && (
+          <motion.div
+            key="loader"
+            exit={{
+              y: '-100%',
+              borderBottomLeftRadius: '48px',
+              borderBottomRightRadius: '48px',
+            }}
+            transition={{ duration: 0.9, ease: easeCurtain }}
             style={{
-              fontSize: 'clamp(32px, 5vw, 64px)',
-              fontWeight: 600,
-              color: '#fff',
-              fontFamily: 'var(--font-main)',
-              lineHeight: 1,
+              position: 'fixed', inset: 0, zIndex: 9999,
+              background: '#eef0f4', overflow: 'hidden',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: '0 30px 60px rgba(15,23,42,0.18)',
             }}
           >
-            {greetings[greetingIndex]}
-          </span>
+            {/* Ambient blobs — same color field the site floats on */}
+            <motion.div
+              aria-hidden="true"
+              animate={{ scale: [1, 1.18, 1], x: [0, 36, 0], y: [0, -24, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+              style={{
+                position: 'absolute', width: '48vw', height: '48vw',
+                top: '-14vw', left: '-10vw', borderRadius: '50%',
+                filter: 'blur(60px)', pointerEvents: 'none',
+                background: 'radial-gradient(circle, rgba(247,121,15,0.16), transparent 65%)',
+              }}
+            />
+            <motion.div
+              aria-hidden="true"
+              animate={{ scale: [1, 1.22, 1], x: [0, -30, 0], y: [0, 18, 0] }}
+              transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }}
+              style={{
+                position: 'absolute', width: '52vw', height: '52vw',
+                bottom: '-18vw', right: '-12vw', borderRadius: '50%',
+                filter: 'blur(60px)', pointerEvents: 'none',
+                background: 'radial-gradient(circle, rgba(108,142,255,0.18), transparent 65%)',
+              }}
+            />
 
-          <div
-            style={{
-              width: 'min(360px, 72vw)',
-              height: '3px',
-              background: 'rgba(255,255,255,0.15)',
-              borderRadius: '999px',
-              overflow: 'hidden',
-            }}
-          >
+            {/* Center stack — cycling greeting + progress line */}
+            <div style={{ position: 'relative', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '22px' }}>
+              <span className="mono-label">Vibhav Yadav — Portfolio</span>
+
+              <div
+                style={{
+                  height: 'clamp(48px, 8vw, 84px)', minWidth: 'min(520px, 86vw)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  position: 'relative',
+                }}
+              >
+                <AnimatePresence mode="popLayout">
+                  <motion.span
+                    key={greetingIndex}
+                    initial={{ opacity: 0, y: 16, scale: 0.96, filter: 'blur(10px)' }}
+                    animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+                    exit={{ opacity: 0, y: -16, scale: 0.96, filter: 'blur(10px)' }}
+                    transition={{ duration: 0.24, ease: easeFluid }}
+                    style={{
+                      fontSize: 'clamp(36px, 5.5vw, 68px)',
+                      fontWeight: 600,
+                      color: 'var(--text-primary)',
+                      fontFamily: 'var(--font-main)',
+                      lineHeight: 1,
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {greetings[greetingIndex]}
+                  </motion.span>
+                </AnimatePresence>
+              </div>
+
+              <div
+                style={{
+                  width: 'min(360px, 72vw)', height: '2px',
+                  background: 'rgba(15,23,42,0.1)',
+                  borderRadius: '999px', overflow: 'hidden',
+                }}
+              >
+                <motion.div
+                  animate={{ width: `${loaderProgress}%` }}
+                  transition={{ duration: 0.15, ease: easeFluid }}
+                  style={{
+                    height: '100%', width: 0,
+                    background: 'linear-gradient(to right, #f7790f, #ffb347)',
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Bottom rail — monogram + percent, mirrors the navbar/footer chrome */}
             <div
               style={{
-                width: `${loaderProgress}%`,
-                height: '100%',
-                background: 'linear-gradient(to right, #ff7a18, #ffb347)',
+                position: 'absolute', left: 'clamp(20px, 4vw, 48px)', right: 'clamp(20px, 4vw, 48px)', bottom: 'clamp(18px, 3vw, 36px)',
+                display: 'flex', alignItems: 'baseline', justifyContent: 'space-between',
               }}
-            ></div>
-          </div>
-        </div>
-      ) : (
+            >
+              <span style={{ fontFamily: 'var(--font-main)', fontWeight: 700, fontSize: '18px', color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>VY.</span>
+              <span className="mono-label" style={{ fontVariantNumeric: 'tabular-nums' }}>{String(Math.round(loaderProgress)).padStart(3, '0')}%</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {!loading && (
         <div className="site-content">
           <Navbar />
           <main>
             <Hero />
-            <div aria-hidden="true" style={{ height: 'clamp(44px, 4.5vw, 68px)' }} />
+            <div className="grid-gutter" aria-hidden="true"><CornerPlus /></div>
             <About />
             <div className="grid-gutter" aria-hidden="true"><CornerPlus /></div>
             <Experience />

@@ -44,7 +44,7 @@ export default function NotFound() {
           fontWeight: 700,
           lineHeight: 1,
           letterSpacing: '-0.05em',
-          background: 'linear-gradient(to bottom, #f9fafc, rgba(249,250,252,0.25))',
+          background: 'linear-gradient(to bottom, #0f172a, rgba(15,23,42,0.35))',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           marginBottom: '24px',

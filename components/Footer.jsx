@@ -16,7 +16,7 @@ const REPEL_STRENGTH = 55    // max displacement
 const LERP = 0.18            // how fast dots return to home
 const MORPH_LERP = 0.12      // how fast dots flow to a morph target
 const SCENE_HOLD = 1500      // ms each egg phrase is held
-const ACCENT = '#ff7a18'
+const ACCENT = '#f7790f'
 
 export default function Footer() {
   const canvasRef = useRef(null)
@@ -34,13 +34,14 @@ export default function Footer() {
     const LEETCODE = 'https://leetcode.com/u/vibhav-y/'
     const RESUME = '/resume/general%20cv.pdf'
 
-    // shared styles
-    const banner = 'background:#ff7a18;color:#0a0a0a;font:800 22px/1.6 "Space Grotesk",sans-serif;padding:8px 16px;border-radius:2px'
-    const sub = 'color:#888;font:500 13px/1.8 monospace'
-    const cmd = 'color:#ff7a18;font:700 13px/1.8 monospace'
-    const arrow = 'color:#666;font:13px/1.8 monospace'
+    // shared styles — tuned to the site's liquid-glass theme and readable on
+    // both light and dark DevTools
+    const banner = 'background:linear-gradient(120deg,#f7790f,#f55f16);color:#fff;font:800 22px/1.6 "Space Grotesk",sans-serif;padding:8px 18px;border-radius:999px'
+    const sub = 'color:#94a3b8;font:500 13px/1.8 monospace'
+    const cmd = 'color:#f7790f;font:700 13px/1.8 monospace'
+    const arrow = 'color:#94a3b8;font:13px/1.8 monospace'
     const ok = 'color:#10b981;font:600 13px monospace'
-    const dim = 'color:#555;font:12px monospace'
+    const dim = 'color:#94a3b8;font:12px monospace'
 
     const COMMANDS = [
       ['vibhav.help()       ', 'show this menu'],
@@ -79,7 +80,7 @@ export default function Footer() {
           '%cVibhav Yadav%c — CSE @ Lovely Professional University.\n' +
           '%cI build full-stack products end-to-end: CRDT-based realtime sync,\n' +
           'scalable APIs, and interfaces that feel fast. Currently shipping GitTool.',
-          'color:#fff;font:700 14px monospace', sub, sub
+          'color:#f7790f;font:700 14px monospace', sub, sub
         )
         return 'vibhav.projects() to see the work →'
       },
@@ -108,9 +109,9 @@ export default function Footer() {
           '%c· Exploring  %cElixir / LiveView, LLM tooling, AWS\n' +
           '%c· Focused on %cclean architecture & algorithmic efficiency',
           'color:#10b981;font:700 13px monospace', '',
-          arrow, 'color:#fff;font:13px monospace',
-          arrow, 'color:#fff;font:13px monospace',
-          arrow, 'color:#fff;font:13px monospace'
+          arrow, 'font:13px monospace',
+          arrow, 'font:13px monospace',
+          arrow, 'font:13px monospace'
         )
         return 'Inspired by Derek Sivers’ /now page.'
       },
@@ -149,7 +150,7 @@ export default function Footer() {
       party(seconds) {
         if (typeof window.__vyParty !== 'function') return 'Scroll to the footer first, then try again.'
         window.__vyParty(seconds)
-        console.log('%c🎉  PARTY MODE — particles incoming!', 'color:#ff7a18;font:700 14px monospace')
+        console.log('%c🎉  PARTY MODE — confetti incoming!', 'color:#f7790f;font:700 14px monospace')
         return 'Look down ↓ (try vibhav.party(10) for a longer one)'
       },
       sudo(...args) {
@@ -186,13 +187,14 @@ export default function Footer() {
     let nextSceneAt = 0
     let sceneHold = SCENE_HOLD
     let targets = null       // current target point-array, or null = home
-    let colorMix = 0         // 0 = white, 1 = accent (eased for a smooth tint)
+    let colorMix = 0         // 0 = ink, 1 = accent (eased for a smooth tint)
 
     // Sample any string into an array of {x,y} points, auto-fit to the canvas.
     const sampleText = (text) => {
       const off = document.createElement('canvas')
       off.width = Math.round(width * dpr)
       off.height = Math.round(height * dpr)
+      if (!off.width || !off.height) return []
       const c = off.getContext('2d')
       c.setTransform(dpr, 0, 0, dpr, 0, 0)
       c.fillStyle = '#fff'
@@ -276,11 +278,11 @@ export default function Footer() {
         }
       }
 
-      // Ease the global colour tint toward its goal.
+      // Ease the global colour tint toward its goal (ink → brand accent #f7790f).
       colorMix += ((egg ? 1 : 0) - colorMix) * 0.08
-      const r = Math.round(255 + (255 - 255) * colorMix)
-      const g = Math.round(255 + (122 - 255) * colorMix)
-      const b = Math.round(255 + (24 - 255) * colorMix)
+      const r = Math.round(15 + (247 - 15) * colorMix)
+      const g = Math.round(23 + (121 - 23) * colorMix)
+      const b = Math.round(42 + (15 - 42) * colorMix)
       ctx.fillStyle = `rgb(${r},${g},${b})`
       const radius = PARTICLE_R * (1 + 0.5 * colorMix)
 
@@ -352,10 +354,12 @@ export default function Footer() {
     let partyStart = 0
     let partyDur = 0
     let ocw = 0, och = 0, odpr = 1
-    let field = []           // background drifters: { x, y, vx, vy }
+    let field = []           // background drifters: { x, y, vx, vy, hue }
     let sphere = []          // unit-sphere points: { x, y, z, hue }
     let sphereR = 0
     let lasers = []          // full radiating beams: { ang, t0, hue, life, width }
+    let confetti = []        // beat-synced confetti sticks: { x, y, vx, vy, rot, vr, len, thick, hue, t0, life }
+    let rings = []           // expanding beat rings: { t0, hue }
     let flashT0 = -1e9       // centre-flash timestamp (on kicks)
     let step = 0             // current sequencer step
     let nextStepAt = 0       // perf.now() time of the next step
@@ -364,6 +368,9 @@ export default function Footer() {
     const SPHERE_COUNT = 1400
     const BPM = 124
     const STEP_MS = 60000 / BPM / 4   // 16th-note grid
+    // Brand hues only — orange, periwinkle, mint, amber (same family as the
+    // site's ambient blobs and hero silk), instead of full rainbow cycling.
+    const PARTY_HUES = [27, 226, 174, 38]
 
     // ── Web Audio: a synthesized looping track + beat-synced laser hits ──
     let audioCtx = null
@@ -434,7 +441,8 @@ export default function Footer() {
       lead: ['A4', 0, 0, 'C5', 'E5', 0, 'D5', 0, 'C5', 0, 'A4', 0, 0, 'D5', 'E5', 0],
     }
     // Which steps fire lasers, and how: returns {count,hue,wide} or null.
-    const LEAD_HUE = { A4: 280, C5: 200, D5: 150, E5: 50, G5: 330 }
+    // Lead-note hues mapped into the brand palette (peri / mint / amber / orange).
+    const LEAD_HUE = { A4: 226, C5: 174, D5: 38, E5: 27, G5: 226 }
 
     // Deep rising power-up when the party launches.
     const playWhoosh = () => {
@@ -461,6 +469,8 @@ export default function Footer() {
       octx.setTransform(odpr, 0, 0, odpr, 0, 0)
 
       lasers = []
+      confetti = []
+      rings = []
       flashT0 = -1e9
       step = 0
       nextStepAt = 0
@@ -473,6 +483,7 @@ export default function Footer() {
           y: Math.random() * och,
           vx: (Math.random() - 0.5) * 0.5,
           vy: (Math.random() - 0.5) * 0.5,
+          hue: PARTY_HUES[i % PARTY_HUES.length],
         })
       }
 
@@ -488,7 +499,7 @@ export default function Footer() {
           x: Math.cos(theta) * rr,
           y,
           z: Math.sin(theta) * rr,
-          hue: ((Math.atan2(Math.sin(theta) * rr, Math.cos(theta) * rr) / Math.PI) * 180 + 180),
+          hue: PARTY_HUES[i % PARTY_HUES.length] + (Math.random() * 14 - 7),
         })
       }
     }
@@ -504,32 +515,39 @@ export default function Footer() {
       const cy = och / 2
       const baseAlpha = Math.max(0, Math.min(1, Math.min(elapsed / 400, remain / 700)))
 
-      // ── Black backdrop — fades in so the lasers pop like a real show ──
-      octx.globalAlpha = baseAlpha
-      octx.fillStyle = '#000'
+      // ── Light glass veil — same base tone as the site, so the party feels
+      // like it happens *on* the page rather than cutting to a black rave ──
+      octx.globalAlpha = baseAlpha * 0.94
+      octx.fillStyle = '#eef0f4'
       octx.fillRect(0, 0, ocw, och)
+      octx.globalAlpha = baseAlpha
 
-      // ── Background field — drift + wrap, gentle hue-cycling, one fill ──
+      // ── Background field — drift + wrap in the four brand hues ──
       // A clear circular void around the centre keeps the sphere clean (no
       // particles behind / around it).
       const fdot = Math.max(1.4, Math.min(ocw, och) * 0.0026)
       const clearR = sphereR * 1.45
       const clearR2 = clearR * clearR
-      octx.fillStyle = `hsl(${(t * 30) % 360}, 80%, 65%)`
-      octx.globalAlpha = baseAlpha * 0.8
-      octx.beginPath()
       for (let i = 0; i < field.length; i++) {
         const p = field[i]
         p.x += p.vx
         p.y += p.vy
         if (p.x < 0) p.x += ocw; else if (p.x > ocw) p.x -= ocw
         if (p.y < 0) p.y += och; else if (p.y > och) p.y -= och
-        const dx = p.x - cx, dy = p.y - cy
-        if (dx * dx + dy * dy < clearR2) continue // skip the sphere's zone
-        octx.moveTo(p.x + fdot, p.y)
-        octx.arc(p.x, p.y, fdot, 0, Math.PI * 2)
       }
-      octx.fill()
+      octx.globalAlpha = baseAlpha * 0.55
+      for (let h = 0; h < PARTY_HUES.length; h++) {
+        octx.fillStyle = `hsl(${PARTY_HUES[h]}, 85%, 52%)`
+        octx.beginPath()
+        for (let i = h; i < field.length; i += PARTY_HUES.length) {
+          const p = field[i]
+          const dx = p.x - cx, dy = p.y - cy
+          if (dx * dx + dy * dy < clearR2) continue // skip the sphere's zone
+          octx.moveTo(p.x + fdot, p.y)
+          octx.arc(p.x, p.y, fdot, 0, Math.PI * 2)
+        }
+        octx.fill()
+      }
       octx.globalAlpha = baseAlpha
 
       // ── Centre sphere — rotate Y + fixed tilt, perspective projection ──
@@ -553,7 +571,7 @@ export default function Footer() {
         const sy = cy + y * sphereR * persp
         const depth = (z + 1) / 2     // 0 = back, 1 = front
         const r = Math.max(0.6, (0.9 + 2.2 * persp) * (0.5 + depth))
-        octx.fillStyle = `hsl(${(s.hue + t * 50) % 360}, 95%, ${Math.round(35 + depth * 35)}%)`
+        octx.fillStyle = `hsl(${(s.hue + 360) % 360}, 85%, ${Math.round(36 + depth * 22)}%)`
         octx.globalAlpha = (remain / 700 < 1 ? Math.max(0, remain / 700) : 1) * (0.35 + depth * 0.65)
         octx.beginPath()
         octx.arc(sx, sy, r, 0, Math.PI * 2)
@@ -574,6 +592,25 @@ export default function Footer() {
           })
         }
       }
+      // Confetti burst from the sphere — rounded sticks that arc out and fall.
+      const burstConfetti = (count) => {
+        for (let k = 0; k < count; k++) {
+          const ang = Math.random() * Math.PI * 2
+          const sp = 2.5 + Math.random() * 6
+          confetti.push({
+            x: cx, y: cy,
+            vx: Math.cos(ang) * sp,
+            vy: Math.sin(ang) * sp - 3.2,
+            rot: Math.random() * Math.PI,
+            vr: (Math.random() - 0.5) * 0.3,
+            len: 6 + Math.random() * 9,
+            thick: 2.5 + Math.random() * 2,
+            hue: PARTY_HUES[(Math.random() * PARTY_HUES.length) | 0],
+            t0: now,
+            life: 1100 + Math.random() * 800,
+          })
+        }
+      }
       if (remain > 700) {
         if (nextStepAt === 0) nextStepAt = now
         while (now >= nextStepAt) {
@@ -586,19 +623,22 @@ export default function Footer() {
             if (SONG.bass[s16]) bass(at, N[SONG.bass[s16]])
             if (SONG.lead[s16]) lead(at, N[SONG.lead[s16]])
           }
-          // Lasers locked to the music
-          if (SONG.kick[s16]) { fireBeams(3, (t * 40) % 360, 3.2, 320); flashT0 = now }
-          if (SONG.clap[s16]) fireBeams(2, 0, 2.4, 280) // white-ish backbeat
-          if (SONG.lead[s16]) fireBeams(1, LEAD_HUE[SONG.lead[s16]] ?? 200, 2.2, 260)
+          // Lasers, confetti and rings locked to the music
+          if (SONG.kick[s16]) {
+            fireBeams(3, PARTY_HUES[step % PARTY_HUES.length], 3.2, 320)
+            burstConfetti(16)
+            flashT0 = now
+          }
+          if (SONG.clap[s16]) { fireBeams(2, 226, 2.4, 280); rings.push({ t0: now, hue: 226 }) }
+          if (SONG.lead[s16]) fireBeams(1, LEAD_HUE[SONG.lead[s16]] ?? 226, 2.2, 260)
           step++
           nextStepAt += STEP_MS
         }
       }
 
-      // ── Render beams — full radiating lines from the sphere, fading ──
+      // ── Render beams — saturated brand strokes that read on the light veil ──
       const diag = Math.hypot(ocw, och)
       octx.save()
-      octx.globalCompositeOperation = 'lighter'
       octx.lineCap = 'round'
       for (let li = lasers.length - 1; li >= 0; li--) {
         const L = lasers[li]
@@ -610,23 +650,57 @@ export default function Footer() {
         const x1 = cx + c * sphereR * 1.05, y1 = cy + s * sphereR * 1.05
         const x2 = cx + c * diag, y2 = cy + s * diag
         // soft outer glow
-        octx.globalAlpha = a * 0.3
-        octx.strokeStyle = `hsl(${L.hue}, 100%, 58%)`
+        octx.globalAlpha = a * 0.22
+        octx.strokeStyle = `hsl(${L.hue}, 90%, 60%)`
         octx.lineWidth = L.width * 4
         octx.beginPath(); octx.moveTo(x1, y1); octx.lineTo(x2, y2); octx.stroke()
-        // bright near-white core
-        octx.globalAlpha = a
-        octx.strokeStyle = `hsl(${L.hue}, 100%, 86%)`
+        // deep saturated core
+        octx.globalAlpha = a * 0.85
+        octx.strokeStyle = `hsl(${L.hue}, 95%, 46%)`
         octx.lineWidth = L.width
         octx.beginPath(); octx.moveTo(x1, y1); octx.lineTo(x2, y2); octx.stroke()
       }
-      // centre flash on kicks
+
+      // Expanding beat rings around the sphere.
+      for (let ri = rings.length - 1; ri >= 0; ri--) {
+        const R = rings[ri]
+        const rAge = (now - R.t0) / 650
+        if (rAge >= 1) { rings.splice(ri, 1); continue }
+        octx.globalAlpha = (1 - rAge) * 0.45 * baseAlpha
+        octx.strokeStyle = `hsl(${R.hue}, 90%, 52%)`
+        octx.lineWidth = 2
+        octx.beginPath()
+        octx.arc(cx, cy, sphereR * (1.08 + rAge * 1.9), 0, Math.PI * 2)
+        octx.stroke()
+      }
+
+      // Confetti — rounded sticks with gravity and spin.
+      for (let ci = confetti.length - 1; ci >= 0; ci--) {
+        const C = confetti[ci]
+        const cAge = (now - C.t0) / C.life
+        if (cAge >= 1) { confetti.splice(ci, 1); continue }
+        C.vy += 0.12
+        C.x += C.vx
+        C.y += C.vy
+        C.rot += C.vr
+        octx.globalAlpha = Math.min(1, (1 - cAge) * 1.6) * baseAlpha
+        octx.strokeStyle = `hsl(${C.hue}, 90%, 52%)`
+        octx.lineWidth = C.thick
+        const cdx = Math.cos(C.rot) * C.len / 2
+        const cdy = Math.sin(C.rot) * C.len / 2
+        octx.beginPath()
+        octx.moveTo(C.x - cdx, C.y - cdy)
+        octx.lineTo(C.x + cdx, C.y + cdy)
+        octx.stroke()
+      }
+
+      // centre flash on kicks — warm brand-orange glow
       const fAge = (now - flashT0) / 260
       if (fAge >= 0 && fAge < 1) {
         const fr = sphereR * (1.1 + fAge * 0.6)
         const fg = octx.createRadialGradient(cx, cy, 0, cx, cy, fr)
-        fg.addColorStop(0, `hsla(45, 100%, 90%, ${(1 - fAge) * 0.8 * baseAlpha})`)
-        fg.addColorStop(1, 'hsla(45, 100%, 60%, 0)')
+        fg.addColorStop(0, `hsla(27, 95%, 72%, ${(1 - fAge) * 0.6 * baseAlpha})`)
+        fg.addColorStop(1, 'hsla(27, 95%, 55%, 0)')
         octx.globalAlpha = 1
         octx.fillStyle = fg
         octx.beginPath(); octx.arc(cx, cy, fr, 0, Math.PI * 2); octx.fill()
@@ -735,16 +809,7 @@ export default function Footer() {
         }}
       />
 
-      <p
-        style={{
-          marginTop: '20px',
-          fontFamily: 'var(--font-mono)',
-          fontSize: '11px',
-          letterSpacing: '0.18em',
-          textTransform: 'uppercase',
-          color: 'rgba(255,255,255,0.4)',
-        }}
-      >
+      <p className="mono-label" style={{ marginTop: '20px' }}>
         © {new Date().getFullYear()} · Vibhav Yadav · Built with Next.js
       </p>
 

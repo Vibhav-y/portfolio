@@ -7,7 +7,7 @@ import CornerPlus from './ui/corner-plus'
 const labelStyle = {
   fontFamily: 'var(--font-mono)',
   fontSize: '10px',
-  color: 'rgba(255,255,255,0.4)',
+  color: 'rgba(15,23,42,0.4)',
   textTransform: 'uppercase',
   letterSpacing: '0.16em',
   display: 'block',
@@ -15,7 +15,7 @@ const labelStyle = {
 }
 
 const valueStyle = {
-  color: '#fff',
+  color: 'var(--text-primary)',
   fontSize: '16px',
   fontWeight: 500,
   textDecoration: 'none',
@@ -24,7 +24,7 @@ const valueStyle = {
 const fieldLabel = {
   fontFamily: 'var(--font-mono)',
   fontSize: '10px',
-  color: 'rgba(255,255,255,0.45)',
+  color: 'rgba(15,23,42,0.45)',
   letterSpacing: '0.14em',
   textTransform: 'uppercase',
   marginBottom: '6px',
@@ -33,19 +33,19 @@ const fieldLabel = {
 
 const inputStyle = {
   width: '100%',
-  background: 'rgba(255,255,255,0.03)',
-  border: '1px solid rgba(255,255,255,0.1)',
+  background: 'rgba(15,23,42,0.03)',
+  border: '1px solid rgba(15,23,42,0.1)',
   padding: '12px 14px',
-  color: '#fff',
+  color: 'var(--text-primary)',
   fontSize: '14px',
   fontFamily: 'var(--font-main)',
   outline: 'none',
-  borderRadius: 0,
+  borderRadius: '12px',
 }
 
 const blockDivider = {
   height: '1px',
-  background: 'rgba(255,255,255,0.08)',
+  background: 'rgba(15,23,42,0.08)',
   margin: '20px 0',
 }
 
@@ -88,8 +88,8 @@ export default function Contact() {
           <div className="edi-cell" style={{ display: 'flex', flexDirection: 'column' }}>
             {/* Status banner */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-              <span style={{ width: '10px', height: '10px', background: '#10b981', flexShrink: 0 }} />
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', letterSpacing: '0.14em', textTransform: 'uppercase', color: '#fff', fontWeight: 600 }}>
+              <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: 'var(--status-live)', flexShrink: 0 }} />
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--text-primary)', fontWeight: 600 }}>
                 Open for Opportunities
               </span>
             </div>
@@ -129,7 +129,7 @@ export default function Contact() {
                     rel="noreferrer"
                     style={{ ...valueStyle, fontSize: '15px', transition: 'color .2s' }}
                     onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--accent)' }}
-                    onMouseLeave={(e) => { e.currentTarget.style.color = '#fff' }}
+                    onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-primary)' }}
                   >
                     {s.name}
                   </a>
@@ -179,7 +179,7 @@ export default function Contact() {
                   cursor: 'pointer',
                   transition: 'background .25s ease, color .25s ease',
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--accent)'; e.currentTarget.style.color = '#000' }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--accent)'; e.currentTarget.style.color = '#fff' }}
                 onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--accent)' }}
               >
                 {sent ? 'Opened in your mail client ✓' : 'Send message'}
@@ -192,7 +192,7 @@ export default function Contact() {
 
       <style>{`
         #contact input:focus, #contact textarea:focus { border-color: var(--accent) !important; }
-        #contact input::placeholder, #contact textarea::placeholder { color: rgba(255,255,255,0.3); }
+        #contact input::placeholder, #contact textarea::placeholder { color: rgba(15,23,42,0.3); }
       `}</style>
     </section>
   )

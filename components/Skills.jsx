@@ -5,31 +5,33 @@ import GlassCard from './ui/glass-card'
 import SectionHeader from './ui/section-header'
 import CornerPlus from './ui/corner-plus'
 
+// Category dots use the site's own accent family (hero silk / ambient blobs):
+// periwinkle, orange, mint, amber — no foreign hues.
 const driverCategories = [
   {
-    label: 'Frontend', color: '#6366f1',
+    label: 'Frontend', color: '#6C8EFF',
     skills: [
       { name: 'React', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg' },
       { name: 'JavaScript', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg' },
       { name: 'HTML5', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg' },
       { name: 'CSS3', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg' },
       { name: 'Tailwind', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg' },
-      { name: 'Framer', icon: 'https://cdn.simpleicons.org/framer/ffffff' },
+      { name: 'Framer', icon: 'https://cdn.simpleicons.org/framer/0F172A' },
     ],
   },
   {
-    label: 'Backend', color: '#f97316',
+    label: 'Backend', color: '#f7790f',
     skills: [
       { name: 'Node.js', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg' },
       { name: 'Express', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg' },
       { name: 'Java', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg' },
       { name: 'Python', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg' },
-      { name: 'Socket.io', icon: 'https://cdn.simpleicons.org/socketdotio/ffffff' },
-      { name: 'REST APIs', icon: 'https://cdn.simpleicons.org/openapiinitiative/ffffff' },
+      { name: 'Socket.io', icon: 'https://cdn.simpleicons.org/socketdotio/0F172A' },
+      { name: 'REST APIs', icon: 'https://cdn.simpleicons.org/openapiinitiative/0F172A' },
     ],
   },
   {
-    label: 'Databases', color: '#22c55e',
+    label: 'Databases', color: '#4ECDC4',
     skills: [
       { name: 'MongoDB', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg' },
       { name: 'PostgreSQL', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg' },
@@ -38,7 +40,7 @@ const driverCategories = [
     ],
   },
   {
-    label: 'Tools & DevOps', color: '#a78bfa',
+    label: 'Tools & DevOps', color: '#ffb347',
     skills: [
       { name: 'Git', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg' },
       { name: 'GitHub', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg' },
@@ -48,38 +50,60 @@ const driverCategories = [
   },
 ]
 
-const architecture = [
-  { name: 'RESTful APIs', desc: 'Secure & scalable' },
-  { name: 'WebSockets', desc: 'Real-time sync' },
-  { name: 'Docker', desc: 'Containerization' },
-  { name: 'CRDTs (Yjs)', desc: 'Conflict resolution' },
-]
-
 const exploring = ['Next.js 14', 'Supabase', 'LLM integrations', 'AWS']
 
 const labelStyle = {
-  fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'rgba(255,255,255,0.4)',
-  textTransform: 'uppercase', letterSpacing: '0.15em', display: 'block',
+  fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: 600, color: 'var(--text-tertiary)',
+  textTransform: 'uppercase', letterSpacing: '0.14em', display: 'block',
+}
+
+// Shared nested-cell surface — same recipe as .edi-sheet / --surface-cell.
+const cellCard = {
+  background: 'var(--surface-cell)',
+  border: '1px solid var(--lg-border)',
+  borderRadius: 'var(--r-cell)',
+  boxShadow: 'var(--shadow-cell)',
+}
+
+// On hover, the chip's cursor becomes the skill's own icon: the SVG is drawn
+// onto a small canvas once (browsers need a sized bitmap for custom cursors)
+// and cached as a data-URL cursor per icon.
+const cursorCache = {}
+const iconCursor = (e, src) => {
+  const el = e.currentTarget
+  if (cursorCache[src]) { el.style.cursor = cursorCache[src]; return }
+  const img = new Image()
+  img.crossOrigin = 'anonymous'
+  img.onload = () => {
+    try {
+      const c = document.createElement('canvas')
+      c.width = 28
+      c.height = 28
+      c.getContext('2d').drawImage(img, 0, 0, 28, 28)
+      cursorCache[src] = `url(${c.toDataURL('image/png')}) 14 14, pointer`
+      el.style.cursor = cursorCache[src]
+    } catch { /* tainted canvas or decode failure — keep default cursor */ }
+  }
+  img.src = src
 }
 
 function CategoryBlock({ cat }) {
   return (
     <div className="skills-driver-cell">
       <div className="skills-driver-label">
-        <div style={{ width: '6px', height: '6px', background: cat.color, flexShrink: 0 }} />
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', fontWeight: 700, color: cat.color, letterSpacing: '0.15em', textTransform: 'uppercase' }}>
+        <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: cat.color, flexShrink: 0 }} />
+        <span className="mono-label">
           {cat.label}
         </span>
       </div>
       <div className="skills-driver-chips">
         {cat.skills.map(skill => (
-          <div key={skill.name} style={{
-            display: 'flex', alignItems: 'center', gap: '8px',
-            background: 'rgba(255,255,255,0.03)',
-            border: '1px solid rgba(255,255,255,0.08)',
-            padding: '6px 12px', borderRadius: '0px',
-            fontSize: '14px', fontWeight: 500, color: '#fff',
-          }}>
+          <div
+            key={skill.name}
+            className="tag-capsule"
+            style={{ gap: '8px', padding: '7px 14px' }}
+            onMouseEnter={(e) => iconCursor(e, skill.icon)}
+          >
             <img src={skill.icon} alt={skill.name} width={16} height={16} loading="lazy" style={{ objectFit: 'contain', flexShrink: 0 }} />
             {skill.name}
           </div>
@@ -110,9 +134,9 @@ export default function Skills() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
           as={motion.div} liquid={false}
-          style={{ padding: 'clamp(24px, 2.6vw, 36px)', borderRadius: '0px', border: '1px solid rgba(255,255,255,0.1)' }}
+          style={{ ...cellCard, padding: 'clamp(22px, 2.4vw, 34px)' }}
         >
-          <span style={{ ...labelStyle, marginBottom: '28px' }}>Daily Drivers</span>
+          <span style={{ ...labelStyle, marginBottom: '22px' }}>Daily Drivers</span>
           <div className="skills-drivers-grid">
             {driverCategories.map(cat => (
               <CategoryBlock key={cat.label} cat={cat} />
@@ -130,19 +154,19 @@ export default function Skills() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
             as={motion.div} liquid={false}
-            style={{ padding: 'clamp(22px, 2.2vw, 30px)', borderRadius: '0px', border: '1px solid rgba(255,255,255,0.1)', position: 'relative', overflow: 'hidden', flex: 1 }}
+            style={{ ...cellCard, padding: 'clamp(20px, 2.2vw, 30px)', position: 'relative', overflow: 'hidden', flex: 1 }}
           >
             <div style={{ position: 'relative', zIndex: 1 }}>
               <span style={{ ...labelStyle, marginBottom: '18px' }}>Algorithms</span>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                 <div>
-                  <h3 style={{ fontSize: '30px', color: '#fff', fontWeight: 600, letterSpacing: '-0.02em', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    5<span style={{ color: '#E5C07B' }}>★</span>
+                  <h3 style={{ fontSize: '34px', color: 'var(--text-primary)', fontWeight: 600, letterSpacing: '-0.02em', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    5<span style={{ color: 'var(--accent)' }}>★</span>
                   </h3>
                   <p style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>HackerRank</p>
                 </div>
                 <div>
-                  <h3 style={{ fontSize: '30px', color: '#E5C07B', fontWeight: 600, letterSpacing: '-0.02em', marginBottom: '2px' }}>250+</h3>
+                  <h3 style={{ fontSize: '34px', color: 'var(--text-primary)', fontWeight: 600, letterSpacing: '-0.02em', marginBottom: '2px' }}>250<span style={{ color: 'var(--accent)' }}>+</span></h3>
                   <p style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>LeetCode</p>
                 </div>
               </div>
@@ -159,21 +183,15 @@ export default function Skills() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
             as={motion.div} liquid={false}
-            style={{ padding: 'clamp(22px, 2.2vw, 30px)', borderRadius: '0px', border: '1px solid rgba(255,255,255,0.1)', position: 'relative', overflow: 'hidden', flex: 1 }}
+            style={{ ...cellCard, padding: 'clamp(20px, 2.2vw, 30px)', position: 'relative', overflow: 'hidden', flex: 1 }}
           >
             <div style={{ position: 'relative', zIndex: 1 }}>
               <span style={{ ...labelStyle, marginBottom: '18px' }}>Currently Exploring</span>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '10px' }}>
                 {exploring.map(item => (
-                  <div key={item} style={{
-                    display: 'flex', alignItems: 'center', gap: '10px',
-                    background: 'rgba(34,197,94,0.06)',
-                    border: '1px solid rgba(34,197,94,0.22)',
-                    padding: '10px 14px', borderRadius: '0px',
-                    minWidth: 0,
-                  }}>
-                    <div style={{ width: '6px', height: '6px', background: '#22c55e', flexShrink: 0 }} />
-                    <span style={{ fontSize: '14px', fontWeight: 500, color: '#fff' }}>{item}</span>
+                  <div key={item} className="tag-capsule" style={{ gap: '10px', padding: '7px 14px', minWidth: 0 }}>
+                    <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--status-live)', flexShrink: 0 }} />
+                    <span style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-primary)' }}>{item}</span>
                   </div>
                 ))}
               </div>
@@ -182,25 +200,6 @@ export default function Skills() {
         </div>
       </div>
 
-      {/* Architecture & Systems — full-width bottom bar */}
-      <GlassCard
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: 0.15 }}
-        as={motion.div} liquid={false}
-        style={{ padding: 'clamp(16px, 1.6vw, 22px)', borderRadius: '0px', border: '1px solid rgba(255,255,255,0.1)', marginTop: '16px' }}
-      >
-        <span style={{ ...labelStyle, marginBottom: '14px' }}>Architecture &amp; Systems</span>
-        <div className="skills-arch-grid">
-          {architecture.map(sys => (
-            <div key={sys.name} className="skills-arch-cell">
-              <strong style={{ color: '#fff', fontSize: '16px', display: 'block', marginBottom: '6px' }}>{sys.name}</strong>
-              <span style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>{sys.desc}</span>
-            </div>
-          ))}
-        </div>
-      </GlassCard>
     </section>
   )
 }

@@ -13,6 +13,7 @@ const navLinks = [
   { label: 'Projects', id: 'work' },
   { label: 'Stack', id: 'stack' },
   { label: 'About', id: 'about' },
+  { label: 'Writing', href: '/blog' },
 ]
 
 export default function Navbar() {
@@ -61,12 +62,12 @@ export default function Navbar() {
         top: island ? 'auto' : 0,
         bottom: island ? 'clamp(4px, 0.6vw, 8px)' : 'auto',
         // full-bleed hairline bar in top mode once scrolled
-        background: island ? 'transparent' : (scrolled ? 'rgba(6,6,8,0.85)' : 'rgba(0,0,0,0)'),
+        background: island ? 'transparent' : (scrolled ? 'rgba(255,255,255,0.65)' : 'rgba(255,255,255,0)'),
         backdropFilter: island ? 'none' : (scrolled ? 'blur(12px)' : 'blur(0px)'),
         WebkitBackdropFilter: island ? 'none' : (scrolled ? 'blur(12px)' : 'blur(0px)'),
         borderBottom: island
           ? '1px solid transparent'
-          : (scrolled ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(255,255,255,0)'),
+          : (scrolled ? '1px solid rgba(15,23,42,0.08)' : '1px solid rgba(15,23,42,0)'),
         transition: `background .4s ${ease}, backdrop-filter .4s ${ease}, border-color .4s ${ease}`,
       }}
     >
@@ -82,10 +83,12 @@ export default function Navbar() {
                 gap: 'clamp(14px, 1.6vw, 26px)',
                 maxWidth: 'calc(100vw - 24px)',
                 padding: '10px 14px 10px 20px',
-                borderRadius: 0,
-                background: 'rgba(6,6,8,0.94)',
-                border: '1px solid rgba(255,255,255,0.12)',
-                boxShadow: '0 12px 36px rgba(0,0,0,0.55)',
+                borderRadius: 999,
+                background: 'var(--lg-overlay-heavy)',
+                backdropFilter: 'var(--lg-filter)',
+                WebkitBackdropFilter: 'var(--lg-filter)',
+                border: '1px solid var(--lg-border)',
+                boxShadow: '0 16px 40px rgba(15,23,42,0.14), inset 0 1px 0 rgba(255,255,255,0.8)',
               }
             : {
                 width: '100%',
@@ -105,7 +108,7 @@ export default function Navbar() {
           <a
             href="#home"
             style={{
-              color: '#fff',
+              color: 'var(--text-primary)',
               fontWeight: 800,
               fontSize: '20px',
               letterSpacing: '-0.05em',
@@ -122,9 +125,9 @@ export default function Navbar() {
           {navLinks.map((link) => (
             <a
               key={link.label}
-              href={`#${link.id}`}
+              href={link.href || `#${link.id}`}
               style={{
-                color: 'rgba(255,255,255,0.7)',
+                color: 'rgba(15,23,42,0.7)',
                 textDecoration: 'none',
                 fontWeight: 500,
                 fontSize: '12px',
@@ -133,8 +136,8 @@ export default function Navbar() {
                 textTransform: 'uppercase',
                 transition: 'color 0.2s',
               }}
-              onMouseEnter={(e) => (e.target.style.color = '#fff')}
-              onMouseLeave={(e) => (e.target.style.color = 'rgba(255,255,255,0.7)')}
+              onMouseEnter={(e) => (e.target.style.color = 'var(--text-primary)')}
+              onMouseLeave={(e) => (e.target.style.color = 'rgba(15,23,42,0.7)')}
             >
               {link.label}
             </a>
@@ -151,8 +154,8 @@ export default function Navbar() {
           style={{
             display: 'none',
             background: 'transparent',
-            border: '1px solid rgba(255,255,255,0.18)',
-            color: '#fff',
+            border: '1px solid rgba(15,23,42,0.18)',
+            color: 'var(--text-primary)',
             width: 42,
             height: 42,
             alignItems: 'center',
@@ -203,7 +206,7 @@ export default function Navbar() {
                 background: 'transparent',
                 border: 'none',
                 padding: 0,
-                color: resumeOpen ? 'var(--accent)' : 'rgba(255,255,255,0.85)',
+                color: resumeOpen ? 'var(--accent)' : 'rgba(15,23,42,0.85)',
                 fontSize: '12px',
                 fontWeight: 600,
                 fontFamily: 'var(--font-mono)',
@@ -244,9 +247,13 @@ export default function Navbar() {
               <div
                 style={{
                   minWidth: '230px',
-                  background: 'rgba(6,6,8,0.96)',
-                  border: '1px solid rgba(255,255,255,0.12)',
-                  boxShadow: '0 16px 40px rgba(0,0,0,0.55)',
+                  background: 'rgba(255,255,255,0.85)',
+                  backdropFilter: 'blur(20px) saturate(160%)',
+                  WebkitBackdropFilter: 'blur(20px) saturate(160%)',
+                  border: '1px solid rgba(15,23,42,0.1)',
+                  borderRadius: '16px',
+                  overflow: 'hidden',
+                  boxShadow: '0 16px 40px rgba(15,23,42,0.14)',
                 }}
               >
               {resumes.map((r, i) => (
@@ -258,18 +265,18 @@ export default function Navbar() {
                   style={{
                     display: 'block',
                     padding: '14px 16px',
-                    color: 'rgba(255,255,255,0.85)',
+                    color: 'rgba(15,23,42,0.85)',
                     textDecoration: 'none',
-                    borderTop: i > 0 ? '1px solid rgba(255,255,255,0.06)' : 'none',
+                    borderTop: i > 0 ? '1px solid rgba(15,23,42,0.06)' : 'none',
                     transition: 'background 0.18s ease, color 0.18s ease',
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = 'rgba(255,255,255,0.04)'
+                    e.currentTarget.style.background = 'rgba(15,23,42,0.04)'
                     e.currentTarget.style.color = 'var(--accent)'
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.background = 'transparent'
-                    e.currentTarget.style.color = 'rgba(255,255,255,0.85)'
+                    e.currentTarget.style.color = 'rgba(15,23,42,0.85)'
                   }}
                 >
                   <div
@@ -287,7 +294,7 @@ export default function Navbar() {
                     style={{
                       fontFamily: 'var(--font-mono)',
                       fontSize: '10px',
-                      color: 'rgba(255,255,255,0.4)',
+                      color: 'rgba(15,23,42,0.4)',
                       letterSpacing: '0.08em',
                       marginTop: '4px',
                     }}
@@ -320,7 +327,7 @@ export default function Navbar() {
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.background = 'var(--accent)'
-              e.currentTarget.style.color = '#000'
+              e.currentTarget.style.color = '#fff'
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.background = 'transparent'
@@ -343,7 +350,7 @@ export default function Navbar() {
         style={{
           position: 'fixed',
           inset: 0,
-          background: 'rgba(6,6,8,0.98)',
+          background: 'rgba(238,240,244,0.92)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
           zIndex: 1500,
@@ -369,8 +376,8 @@ export default function Navbar() {
             width: 42,
             height: 42,
             background: 'transparent',
-            border: '1px solid rgba(255,255,255,0.18)',
-            color: '#fff',
+            border: '1px solid rgba(15,23,42,0.18)',
+            color: 'var(--text-primary)',
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -387,17 +394,17 @@ export default function Navbar() {
           {navLinks.map((link) => (
             <a
               key={link.label}
-              href={`#${link.id}`}
+              href={link.href || `#${link.id}`}
               onClick={() => setMobileOpen(false)}
               style={{
-                color: '#fff',
+                color: 'var(--text-primary)',
                 textDecoration: 'none',
                 fontFamily: 'var(--font-main)',
                 fontSize: '28px',
                 fontWeight: 600,
                 letterSpacing: '-0.02em',
                 padding: '14px 0',
-                borderBottom: '1px solid rgba(255,255,255,0.08)',
+                borderBottom: '1px solid rgba(15,23,42,0.08)',
               }}
             >
               {link.label}
@@ -408,7 +415,7 @@ export default function Navbar() {
         <div style={{ marginTop: '32px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <span style={{
             fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '0.18em',
-            textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', marginBottom: '4px',
+            textTransform: 'uppercase', color: 'rgba(15,23,42,0.4)', marginBottom: '4px',
           }}>
             Resume
           </span>
@@ -422,8 +429,8 @@ export default function Navbar() {
               style={{
                 display: 'block',
                 padding: '12px 14px',
-                border: '1px solid rgba(255,255,255,0.12)',
-                color: '#fff',
+                border: '1px solid rgba(15,23,42,0.12)',
+                color: 'var(--text-primary)',
                 textDecoration: 'none',
                 fontFamily: 'var(--font-mono)',
                 fontSize: '12px',
@@ -434,7 +441,7 @@ export default function Navbar() {
             >
               {r.label}
               <div style={{
-                fontSize: '10px', color: 'rgba(255,255,255,0.4)',
+                fontSize: '10px', color: 'rgba(15,23,42,0.4)',
                 fontWeight: 500, marginTop: '4px', letterSpacing: '0.06em',
               }}>
                 {r.sub}
