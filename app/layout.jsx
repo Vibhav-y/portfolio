@@ -32,8 +32,21 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    // suppressHydrationWarning: the head inline script sets data-intro on <html>
+    // before hydration (theme-flash pattern), so its attributes intentionally
+    // differ from the server HTML.
+    <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Decides the home-page intro curtain BEFORE first paint, so nothing
+            flashes. Show it only on a fresh session-open or a hard refresh;
+            skip it for in-session navigations back to "/", crawlers, and no-JS.
+            Runs in <head> (synchronously, pre-body-paint); the result drives
+            CSS (html[data-intro]) and is read by app/page.jsx via __vyIntro. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var d=document.documentElement;var ua=navigator.userAgent||'';var bot=/bot|crawl|spider|slurp|mediapartners|lighthouse|headlesschrome|prerender|facebookexternalhit|embedly|quora|whatsapp|telegram|discord|slackbot|bingpreview|pinterest|applebot|yandex|baidu|duckduckbot/i.test(ua);var reload=false;try{var n=performance.getEntriesByType('navigation')[0];reload=n?n.type==='reload':(performance.navigation&&performance.navigation.type===1);}catch(e){}var seen=false;try{seen=sessionStorage.getItem('vy_intro_seen')==='1';sessionStorage.setItem('vy_intro_seen','1');}catch(e){}var show=!bot&&(reload||!seen);d.setAttribute('data-intro',show?'show':'skip');window.__vyIntro=show;}catch(e){window.__vyIntro=true;document.documentElement.setAttribute('data-intro','show');}})();`,
+          }}
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />

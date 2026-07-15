@@ -18,9 +18,22 @@ const navLinks = [
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
-  const [island, setIsland] = useState(false)
+  const [islandScroll, setIslandScroll] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const [resumeOpen, setResumeOpen] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+
+  // On mobile the bottom "island" collides with the back-to-top button, so the
+  // bar stays pinned to the top there; the island morph is desktop-only.
+  const island = islandScroll && !isMobile
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 768px)')
+    const sync = () => setIsMobile(mq.matches)
+    sync()
+    mq.addEventListener('change', sync)
+    return () => mq.removeEventListener('change', sync)
+  }, [])
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? 'hidden' : ''
@@ -32,7 +45,7 @@ export default function Navbar() {
       const y = window.scrollY
       setScrolled(y > 50)
       // morph into the bottom island once we've scrolled past (most of) the hero
-      setIsland(y > window.innerHeight - 90)
+      setIslandScroll(y > window.innerHeight - 90)
     }
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
@@ -95,7 +108,9 @@ export default function Navbar() {
                 maxWidth: '1300px',
                 justifyContent: 'space-between',
                 gap: '0px',
-                padding: '22px 5vw',
+                // Slimmer at the very top; expands a little once the sticky bar
+                // gains its blurred background on scroll.
+                padding: scrolled ? '18px 5vw' : '13px 5vw',
                 borderRadius: 0,
                 background: 'transparent',
                 border: '1px solid transparent',

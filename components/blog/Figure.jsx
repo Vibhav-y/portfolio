@@ -10,7 +10,7 @@ export default function Figure({ src, alt = '', caption, wide = false, credit })
       {(caption || credit) && (
         <figcaption>
           {caption}
-          {credit && <span className="blog-figure__credit"> — {credit}</span>}
+          {credit && <span className="blog-figure__credit"> · {credit}</span>}
         </figcaption>
       )}
     </figure>

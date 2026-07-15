@@ -90,6 +90,18 @@ body {
   z-index: 1;
 }
 
+/* Intro curtain gating. The curtain ships in the prerendered HTML, but stays
+   hidden until the layout.jsx inline script (run pre-paint) sets
+   data-intro="show" — i.e. only on a fresh session-open or hard refresh.
+   In-session navigations, crawlers, and no-JS clients never render it, so the
+   real content underneath is what shows. */
+#intro-curtain {
+  display: none !important;
+}
+html[data-intro='show'] #intro-curtain {
+  display: flex !important;
+}
+
 .liquid-glass {
   background: var(--lg-overlay-light);
   backdrop-filter: var(--lg-filter);
@@ -475,8 +487,11 @@ code, pre {
     padding-block: 40px;
   }
 
+  /* Only override the inline padding — a `padding: 0 16px` shorthand here would
+     also zero the block padding that .section sets, collapsing the section
+     cards' internal top/bottom spacing (they share this element). */
   .container {
-    padding: 0 16px;
+    padding-inline: 16px;
   }
 
   .lg-card {

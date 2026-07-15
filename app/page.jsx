@@ -18,6 +18,15 @@ import Footer from '../components/Footer'
 import CornerPlus from '../components/ui/corner-plus'
 
 export default function Home() {
+  // The curtain is in the prerendered HTML but hidden by CSS by default. An
+  // inline script in app/layout.jsx decides show/skip BEFORE first paint and
+  // exposes the verdict on window.__vyIntro:
+  //   • show  → first visit in this tab session, or a hard refresh
+  //   • skip  → in-session navigation back to "/", crawlers, or no-JS
+  // We start `loading` true so the first client render matches the server HTML
+  // (no hydration mismatch), then immediately drop it on a "skip" verdict. The
+  // curtain was never painted in that case (CSS hid it pre-paint), so there is
+  // no flash.
   const [loading, setLoading] = useState(true)
   const [greetingIndex, setGreetingIndex] = useState(0)
 
@@ -32,7 +41,13 @@ export default function Home() {
   const [minLoaderTimeDone, setMinLoaderTimeDone] = useState(false)
   const [imgsDone, setImgsDone] = useState(false)
 
+  // Honor the pre-paint verdict from the layout.jsx inline script.
   useEffect(() => {
+    if (window.__vyIntro === false) setLoading(false)
+  }, [])
+
+  useEffect(() => {
+    if (!loading) return
     Promise.all(
       CRITICAL_IMAGES.map(
         src => new Promise(resolve => {
@@ -42,9 +57,10 @@ export default function Home() {
         })
       )
     ).then(() => setImgsDone(true))
-  }, [])
+  }, [loading])
 
   useEffect(() => {
+    if (!loading) return
     if (greetingIndex < greetings.length - 1) {
       const t = setTimeout(() => setGreetingIndex(prev => prev + 1), 110)
       return () => clearTimeout(t)
@@ -69,6 +85,7 @@ export default function Home() {
         {loading && (
           <motion.div
             key="loader"
+            id="intro-curtain"
             exit={{
               y: '-100%',
               borderBottomLeftRadius: '48px',
@@ -170,8 +187,10 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      {!loading && (
-        <div className="site-content">
+      {/* Always rendered so it's present in the static HTML (crawlers and no-JS
+          clients get the real content); the curtain above just covers it while
+          the intro plays, then lifts to reveal it. */}
+      <div className="site-content">
           <Navbar />
           <main>
             <Hero />
@@ -193,8 +212,7 @@ export default function Home() {
             <Footer />
             <div aria-hidden="true" style={{ height: 'clamp(32px, 4vw, 56px)' }} />
           </main>
-        </div>
-      )}
+      </div>
     </>
   )
 }
