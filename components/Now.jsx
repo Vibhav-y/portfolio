@@ -17,7 +17,7 @@ export default function Now() {
             descriptionClassName="now-description"
          />
 
-         <GlassCard liquid={false} style={{ padding: 'clamp(28px, 4vw, 48px)', border: '1px solid rgba(15,23,42,0.1)' }}>
+         <GlassCard liquid={false} style={{ padding: 'clamp(28px, 4vw, 48px)', background: 'var(--surface-cell)', border: '1px solid var(--lg-border)', borderRadius: 'var(--r-cell)', boxShadow: 'var(--shadow-cell)' }}>
          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: 'clamp(24px, 3vw, 40px)', paddingBottom: '20px', borderBottom: '1px solid rgba(15,23,42,0.08)' }}>
             <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: 'var(--accent)', display: 'inline-block' }}></span>
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: 600, color: 'rgba(15,23,42,0.5)', textTransform: 'uppercase', letterSpacing: '0.14em' }}>Updated 2026-03-17</span>

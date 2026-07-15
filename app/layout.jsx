@@ -1,5 +1,6 @@
 import { Geist } from 'next/font/google'
 import './globals.css'
+import TransitionProvider from '../components/PageTransition'
 
 const SITE_URL = 'https://vibhavy.dev'
 const CANONICAL_URL = 'https://vibhavy.dev/'
@@ -40,7 +41,7 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <div className="site-grid-bg" aria-hidden="true" />
-        {children}
+        <TransitionProvider>{children}</TransitionProvider>
       </body>
     </html>
   )

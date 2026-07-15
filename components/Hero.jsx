@@ -221,6 +221,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.62, ease: easeFluid }}
+              className="hero-cta-row"
               style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}
             >
               <Magnetic strength={0.2}>

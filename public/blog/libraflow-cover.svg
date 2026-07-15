@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600" role="img" aria-label="Building LibraFlow">
+  <defs>
+    <linearGradient id="bg3" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#edf0f6"/>
+      <stop offset="1" stop-color="#e4eaf3"/>
+    </linearGradient>
+    <radialGradient id="b3a" cx="20%" cy="25%" r="55%">
+      <stop offset="0" stop-color="#c084fc" stop-opacity="0.26"/>
+      <stop offset="1" stop-color="#c084fc" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="b3b" cx="85%" cy="80%" r="55%">
+      <stop offset="0" stop-color="#f7790f" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#f7790f" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="600" fill="url(#bg3)"/>
+  <rect width="1200" height="600" fill="url(#b3a)"/>
+  <rect width="1200" height="600" fill="url(#b3b)"/>
+  <g fill="none" stroke="#0f172a" stroke-opacity="0.12" stroke-width="2">
+    <polyline points="120,420 260,400 400,360 540,370 680,300 820,260 960,210 1080,150"/>
+  </g>
+  <g fill="#f7790f">
+    <circle cx="260" cy="400" r="4"/><circle cx="400" cy="360" r="4"/><circle cx="540" cy="370" r="4"/>
+    <circle cx="680" cy="300" r="4"/><circle cx="820" cy="260" r="4"/><circle cx="960" cy="210" r="4"/><circle cx="1080" cy="150" r="5"/>
+  </g>
+  <text x="80" y="110" font-family="'Space Grotesk',sans-serif" font-size="26" fill="#a855f7" font-weight="600" letter-spacing="2">BUILD LOG</text>
+  <text x="78" y="180" font-family="'Space Grotesk',sans-serif" font-size="52" fill="#0f172a" font-weight="700">Shipping LibraFlow to 10k readers</text>
+</svg>

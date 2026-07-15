@@ -13,6 +13,7 @@ const navLinks = [
   { label: 'Projects', id: 'work' },
   { label: 'Stack', id: 'stack' },
   { label: 'About', id: 'about' },
+  { label: 'Writing', href: '/blog' },
 ]
 
 export default function Navbar() {
@@ -124,7 +125,7 @@ export default function Navbar() {
           {navLinks.map((link) => (
             <a
               key={link.label}
-              href={`#${link.id}`}
+              href={link.href || `#${link.id}`}
               style={{
                 color: 'rgba(15,23,42,0.7)',
                 textDecoration: 'none',
@@ -393,7 +394,7 @@ export default function Navbar() {
           {navLinks.map((link) => (
             <a
               key={link.label}
-              href={`#${link.id}`}
+              href={link.href || `#${link.id}`}
               onClick={() => setMobileOpen(false)}
               style={{
                 color: 'var(--text-primary)',

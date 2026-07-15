@@ -147,7 +147,7 @@ export default function Home() {
               >
                 <motion.div
                   animate={{ width: `${loaderProgress}%` }}
-                  transition={{ duration: 0.3, ease: easeFluid }}
+                  transition={{ duration: 0.15, ease: easeFluid }}
                   style={{
                     height: '100%', width: 0,
                     background: 'linear-gradient(to right, #f7790f, #ffb347)',
