@@ -58,7 +58,7 @@ export default function MacbookReveal() {
                 position: 'absolute', width: '2800px', height: '2200px',
                 transform: 'translate(-50%, -50%) rotateX(90deg)',
                 background: '#060508',
-                backgroundImage: 'linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px)',
+                backgroundImage: 'linear-gradient(rgba(var(--paper), 0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(var(--paper), 0.015) 1px, transparent 1px)',
                 backgroundSize: '100px 100px',
                 maskImage: 'radial-gradient(ellipse at center, black 30%, transparent 75%)',
                 WebkitMaskImage: 'radial-gradient(ellipse at center, black 30%, transparent 75%)',
@@ -85,7 +85,7 @@ export default function MacbookReveal() {
                 position: 'absolute', width: '2800px', height: '60px',
                 transform: 'translate(-50%, 0) translateZ(800px)',
                 top: '5px', background: 'linear-gradient(180deg, #09070a 0%, #000 100%)',
-                borderTop: '2px solid rgba(255,255,255,0.04)',
+                borderTop: '2px solid rgba(var(--paper), 0.04)',
                 transformStyle: 'preserve-3d',
                 maskImage: 'linear-gradient(90deg, transparent 0%, black 20%, black 80%, transparent 100%)',
                 WebkitMaskImage: 'linear-gradient(90deg, transparent 0%, black 20%, black 80%, transparent 100%)',
@@ -115,7 +115,7 @@ export default function MacbookReveal() {
                 {/* Keyboard Layout */}
                 <div style={{
                   background: '#151517', width: '440px', height: '180px', margin: '0 auto',
-                  borderRadius: '8px', padding: '8px', boxShadow: 'inset 0 4px 12px rgba(0,0,0,0.8), 0 1px 0 rgba(255,255,255,0.06)'
+                  borderRadius: '8px', padding: '8px', boxShadow: 'inset 0 4px 12px rgba(0,0,0,0.8), 0 1px 0 rgba(var(--specular), 0.06)'
                 }}>
                   {[
                     { h: '12px', flex: [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2] },
@@ -136,9 +136,9 @@ export default function MacbookReveal() {
                 {/* Trackpad Line */}
                 <div style={{ display: 'flex', flex: 1, marginTop: '20px', alignItems: 'flex-start' }}>
                   <div style={{ flex: 1, paddingLeft: '14px', paddingTop: '24px' }}>
-                    <span style={{ fontFamily: 'var(--font-main)', fontWeight: 800, fontSize: '24px', letterSpacing: '-0.06em', color: 'transparent', WebkitTextStroke: '1.5px rgba(255,255,255,0.2)', userSelect: 'none', lineHeight: 1 }}>VY.</span>
+                    <span style={{ fontFamily: 'var(--font-main)', fontWeight: 800, fontSize: '24px', letterSpacing: '-0.06em', color: 'transparent', WebkitTextStroke: '1.5px rgba(var(--paper), 0.2)', userSelect: 'none', lineHeight: 1 }}>VY.</span>
                   </div>
-                  <div style={{ width: '180px', height: '110px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px' }} />
+                  <div style={{ width: '180px', height: '110px', background: 'rgba(var(--paper), 0.02)', border: '1px solid rgba(var(--paper), 0.05)', borderRadius: '8px' }} />
                   <div style={{ flex: 1 }} />
                 </div>
               </div>
@@ -172,7 +172,7 @@ export default function MacbookReveal() {
               <div style={{
                 position: 'absolute', inset: 0, transform: 'translateZ(1px)', 
               }}>
-                <div style={{ position: 'absolute', inset: 0, background: '#111113', borderRadius: '16px 16px 0 0', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15)' }} />
+                <div style={{ position: 'absolute', inset: 0, background: '#111113', borderRadius: '16px 16px 0 0', boxShadow: 'inset 0 1px 0 rgba(var(--specular), 0.15)' }} />
                 <div style={{ position: 'absolute', top: '8px', left: '50%', transform: 'translateX(-50%)', width: '6px', height: '6px', borderRadius: '50%', background: '#040404' }} />
 
                 {/* The Monitor Inner Area */}
@@ -188,11 +188,11 @@ export default function MacbookReveal() {
                       
                       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, padding: '12px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <span style={{ color: '#fff', fontWeight: 800, fontSize: '12px' }}>VY.</span>
-                        <div style={{ display: 'flex', gap: '16px' }}>{['Home', 'Projects', 'Stack', 'Experience'].map(l => <span key={l} style={{ color: 'rgba(255,255,255,0.6)', fontSize: '8px' }}>{l}</span>)}</div>
+                        <div style={{ display: 'flex', gap: '16px' }}>{['Home', 'Projects', 'Stack', 'Experience'].map(l => <span key={l} style={{ color: 'rgba(var(--paper), 0.6)', fontSize: '8px' }}>{l}</span>)}</div>
                       </div>
                       
                       <div style={{ position: 'absolute', bottom: '34px', left: '30px' }}>
-                        <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.05em' }}>नमस्ते</span>
+                        <span style={{ color: 'rgba(var(--paper), 0.7)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.05em' }}>नमस्ते</span>
                         <p style={{ color: '#fff', fontWeight: 700, fontSize: '30px', lineHeight: 1.05, marginTop: '4px', letterSpacing: '-0.03em' }}>I'm Vibhav</p>
                         <p style={{ color: '#ff7a18', fontWeight: 700, fontSize: '30px', lineHeight: 1.05, letterSpacing: '-0.03em' }}>Yadav.</p>
                       </div>
@@ -208,9 +208,9 @@ export default function MacbookReveal() {
                 borderRadius: '16px 16px 0 0',
                 transform: 'translateZ(-1px) rotateY(180deg)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1)',
+                boxShadow: 'inset 0 1px 0 rgba(var(--specular), 0.1)',
               }}>
-                <svg width="34" height="42" viewBox="0 0 814 1000" fill="rgba(255,255,255,0.95)" style={{ filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.6))' }}>
+                <svg width="34" height="42" viewBox="0 0 814 1000" fill="rgba(var(--specular), 0.95)" style={{ filter: 'drop-shadow(0 0 8px rgba(var(--specular), 0.6))' }}>
                   <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-43.4-150.3-113.4C27.1 756 0 665.8 0 561Q0 409.3 79 289.9C138.6 197.2 236.7 131 349.4 131c64.8 0 122.6 43.4 164.1 43.4 40.3 0 103.8-46.5 178-46.5c28.2.5 112.7 8.5 168.9 81.4zm-107.4-110.3c24.1-29.8 41.5-71.4 41.5-113s-2.6-43.8-3.8-61c-39.4 2.6-88.9 26.3-121.8 61.7-26.3 29.1-48.2 70.7-48.2 112.9 0 4.5.6 9 1 10.3 2.6.6 6.7 1.3 11 1.3 35.6 0 82.3-24.4 120.3-72.2z"/>
                 </svg>
               </div>
@@ -225,9 +225,9 @@ export default function MacbookReveal() {
           opacity: hintOpacity, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', zIndex: 10,
         }}>
           <div style={{
-            border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(var(--paper), 0.15)', background: 'rgba(var(--paper), 0.05)', backdropFilter: 'blur(10px)',
             borderRadius: '999px', padding: '6px 16px', fontSize: '9px',
-            color: 'rgba(255,255,255,0.6)', fontFamily: 'var(--font-mono)', letterSpacing: '0.15em',
+            color: 'rgba(var(--paper), 0.6)', fontFamily: 'var(--font-mono)', letterSpacing: '0.15em',
           }}>SCROLL TO EXPLORE</div>
         </motion.div>
 

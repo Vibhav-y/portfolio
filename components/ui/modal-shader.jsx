@@ -9,8 +9,10 @@ precision highp float;
 uniform vec2 uRes;
 uniform float uTime;
 uniform vec3 uAccent;
+uniform float uDark;
 
 const vec3 CREAM = vec3(0.992, 0.976, 0.958);
+const vec3 CHAR  = vec3(0.090, 0.088, 0.094);
 
 void main() {
   vec2 uv = (gl_FragCoord.xy - 0.5 * uRes) / min(uRes.x, uRes.y);
@@ -25,12 +27,17 @@ void main() {
   float v1 = 0.5 + 0.5 * sin(p.x * 1.4 + t * 0.4);
   float v2 = 0.5 + 0.5 * cos(p.y * 1.7 - t * 0.3);
 
-  // accent-family palette: soft tint -> stronger ribbon -> deep fold
-  vec3 soft = mix(CREAM, uAccent, 0.28);
-  vec3 mid  = mix(CREAM, uAccent, 0.55);
-  vec3 deep = mix(vec3(0.15, 0.17, 0.25), uAccent, 0.45);
+  // theme base: cream silk in light, charcoal silk in dark (accent desaturated
+  // and dimmed so it reads as embers in the folds, not neon)
+  vec3 base = mix(CREAM, CHAR, uDark);
+  vec3 acc  = mix(uAccent, mix(uAccent, vec3(dot(uAccent, vec3(0.333))), 0.35) * 0.55, uDark);
 
-  vec3 col = mix(CREAM, soft, smoothstep(0.15, 0.9, v1));
+  // accent-family palette: soft tint -> stronger ribbon -> deep fold
+  vec3 soft = mix(base, acc, mix(0.28, 0.5, uDark));
+  vec3 mid  = mix(base, acc, mix(0.55, 0.8, uDark));
+  vec3 deep = mix(mix(vec3(0.15, 0.17, 0.25), vec3(0.16, 0.16, 0.19), uDark), acc, 0.45);
+
+  vec3 col = mix(base, soft, smoothstep(0.15, 0.9, v1));
   col = mix(col, mid,  smoothstep(0.35, 0.95, v1 * v2));
   col = mix(col, deep, 0.4 * smoothstep(0.65, 0.98, v2 * (1.0 - v1)));
 
@@ -80,7 +87,14 @@ export default function ModalShader({ accent }) {
     const uRes = gl.getUniformLocation(prog, 'uRes')
     const uTime = gl.getUniformLocation(prog, 'uTime')
     const uAccent = gl.getUniformLocation(prog, 'uAccent')
+    const uDark = gl.getUniformLocation(prog, 'uDark')
     const [ar, ag, ab] = hexToRgb01(accent)
+
+    const isDark = () => (document.documentElement.getAttribute('data-theme') === 'dark' ? 1 : 0)
+    let darkTarget = isDark()
+    let dark = darkTarget
+    const themeObserver = new MutationObserver(() => { darkTarget = isDark() })
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
 
     let raf = 0
     const resize = () => {
@@ -94,6 +108,8 @@ export default function ModalShader({ accent }) {
       gl.uniform2f(uRes, canvas.width, canvas.height)
       gl.uniform1f(uTime, (performance.now() - start) / 1000)
       gl.uniform3f(uAccent, ar, ag, ab)
+      dark += (darkTarget - dark) * 0.06
+      gl.uniform1f(uDark, dark)
       gl.drawArrays(gl.TRIANGLES, 0, 3)
       raf = requestAnimationFrame(draw)
     }
@@ -102,6 +118,7 @@ export default function ModalShader({ accent }) {
     window.addEventListener('resize', resize)
     return () => {
       cancelAnimationFrame(raf)
+      themeObserver.disconnect()
       window.removeEventListener('resize', resize)
     }
   }, [accent])

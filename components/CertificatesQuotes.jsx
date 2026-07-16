@@ -233,7 +233,7 @@ export default function CertificatesQuotes() {
                 style={{
                   width: i === active ? '26px' : '8px', height: '8px',
                   borderRadius: '999px', border: 'none', cursor: 'pointer',
-                  background: i === active ? 'var(--accent)' : 'rgba(15,23,42,0.18)',
+                  background: i === active ? 'var(--accent)' : 'rgba(var(--ink), 0.18)',
                   transition: 'all 0.35s cubic-bezier(0.22,1,0.36,1)',
                   padding: 0,
                 }}
@@ -256,7 +256,7 @@ export default function CertificatesQuotes() {
               onClick={() => setSelected(null)}
               style={{
                 position: 'fixed', inset: 0, zIndex: 99999,
-                background: 'rgba(238,240,244,0.7)',
+                background: 'rgba(var(--base), 0.7)',
                 backdropFilter: 'blur(20px) saturate(140%)',
                 WebkitBackdropFilter: 'blur(20px) saturate(140%)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -283,12 +283,12 @@ export default function CertificatesQuotes() {
                   style={{
                     position: 'absolute', top: 16, right: 16, zIndex: 3,
                     width: 40, height: 40, borderRadius: '999px',
-                    background: 'rgba(255,255,255,0.85)',
+                    background: 'rgba(var(--paper), 0.85)',
                     backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
                     border: '1px solid var(--hairline)',
                     color: 'var(--text-primary)', cursor: 'pointer',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    boxShadow: '0 10px 24px rgba(15,23,42,0.14)',
+                    boxShadow: '0 10px 24px rgba(var(--shadow-ink), 0.14)',
                   }}
                 >
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" /></svg>
@@ -304,7 +304,7 @@ export default function CertificatesQuotes() {
                     transition={{ duration: 0.5, delay: 0.15, ease: easeFluid }}
                   />
                   <div className="pmodal-meta">
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.9)' }}>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(var(--paper), 0.9)' }}>
                       {selected.issuer} · {selected.issuerSub}
                     </span>
                   </div>

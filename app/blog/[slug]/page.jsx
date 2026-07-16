@@ -6,7 +6,7 @@ import {
   getAdjacentPosts,
   formatDate,
 } from '../../../lib/blog'
-import BlogHeader from '../../../components/blog/BlogHeader'
+import Navbar from '../../../components/Navbar'
 import Footer from '../../../components/Footer'
 import '../../../components/blog/blog.css'
 
@@ -53,7 +53,7 @@ export default async function PostPage({ params }) {
 
   return (
     <div className="site-content">
-      <BlogHeader />
+      <Navbar />
       <main className="blog-post">
         <article>
           <header className="blog-post__head">

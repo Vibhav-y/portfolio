@@ -6,7 +6,7 @@ import CornerPlus from './ui/corner-plus'
 // page's grid/crosshair motif. Encoded as an inline SVG background.
 const PLUS = encodeURIComponent(
   `<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48'>
-     <path d='M24 21 V27 M21 24 H27' stroke='rgba(15,23,42,0.22)' stroke-width='1'/>
+     <path d='M24 21 V27 M21 24 H27' stroke='rgba(var(--ink), 0.22)' stroke-width='1'/>
    </svg>`
 )
 
@@ -81,7 +81,7 @@ export default function FooterGrid() {
             fontSize: '11px',
             letterSpacing: '0.18em',
             textTransform: 'uppercase',
-            color: 'rgba(15,23,42,0.4)',
+            color: 'rgba(var(--ink), 0.4)',
           }}
         >
           © {new Date().getFullYear()} · Vibhav Yadav · Built with Next.js

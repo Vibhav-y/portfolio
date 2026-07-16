@@ -120,14 +120,20 @@ export default function Projects() {
       >
         <div style={{ position: 'sticky', top: 0, height: '100vh', display: 'flex', alignItems: 'center' }}>
           <div className="container grid-box" style={{ padding: 'clamp(24px, 3vw, 48px) 0', overflow: 'hidden', width: '100%' }}>
-            <div style={{ paddingInline: 'clamp(20px, 3vw, 48px)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '20px' }}>
+            <div style={{ paddingInline: 'clamp(20px, 3vw, 48px)', position: 'relative' }}>
               <SectionHeader
                 eyebrow="SELECTED WORK"
                 title="Real-world systems, not just code."
                 align="left"
                 marginBottom={24}
               />
-              <TransitionLink href="/projects" label="Projects." className="proj-viewall">
+              {/* pinned to the eyebrow row so the title keeps the full width */}
+              <TransitionLink
+                href="/projects"
+                label="Projects."
+                className="proj-viewall"
+                style={{ position: 'absolute', top: -6, right: 'clamp(20px, 3vw, 48px)', marginBottom: 0 }}
+              >
                 View all projects
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M5 12h14M12 5l7 7-7 7" />
@@ -230,7 +236,7 @@ export default function Projects() {
                     style={{
                       width: i === active ? '26px' : '8px', height: '8px',
                       borderRadius: '999px', border: 'none', cursor: 'pointer',
-                      background: i === active ? 'var(--accent)' : 'rgba(15,23,42,0.18)',
+                      background: i === active ? 'var(--accent)' : 'rgba(var(--ink), 0.18)',
                       transition: 'all 0.35s cubic-bezier(0.22,1,0.36,1)',
                       padding: 0,
                     }}

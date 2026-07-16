@@ -32,14 +32,14 @@ import {
 
 const PALETTE = ['#f7790f', '#6C8EFF', '#4ECDC4', '#c084fc', '#f43f5e', '#22c55e']
 
-const AXIS = { stroke: 'rgba(15,23,42,0.28)', fontSize: 12, fontFamily: 'IBM Plex Mono, monospace' }
-const GRID = 'rgba(15,23,42,0.08)'
+const AXIS = { stroke: 'rgba(var(--ink), 0.28)', fontSize: 12, fontFamily: 'IBM Plex Mono, monospace' }
+const GRID = 'rgba(var(--ink), 0.08)'
 
 const TOOLTIP_STYLE = {
-  background: 'rgba(255,255,255,0.92)',
-  border: '1px solid rgba(15,23,42,0.1)',
+  background: 'rgba(var(--paper), 0.92)',
+  border: '1px solid rgba(var(--ink), 0.1)',
   borderRadius: 12,
-  boxShadow: '0 10px 26px rgba(15,23,42,0.1)',
+  boxShadow: '0 10px 26px rgba(var(--shadow-ink), 0.1)',
   fontFamily: 'IBM Plex Mono, monospace',
   fontSize: 12,
 }
@@ -122,7 +122,7 @@ export default function Chart({
         <CartesianGrid stroke={GRID} vertical={false} />
         <XAxis dataKey={xKey} tick={AXIS} tickLine={false} axisLine={{ stroke: GRID }} />
         <YAxis tick={AXIS} tickLine={false} axisLine={false} width={44} />
-        <Tooltip contentStyle={TOOLTIP_STYLE} cursor={{ fill: 'rgba(15,23,42,0.04)' }} />
+        <Tooltip contentStyle={TOOLTIP_STYLE} cursor={{ fill: 'rgba(var(--ink), 0.04)' }} />
         {showLegend && <Legend wrapperStyle={{ fontSize: 12, fontFamily: 'IBM Plex Mono, monospace' }} />}
         {s.map((ser) => (
           <Bar

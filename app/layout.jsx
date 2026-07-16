@@ -1,6 +1,7 @@
 import { Geist } from 'next/font/google'
 import './globals.css'
 import TransitionProvider from '../components/PageTransition'
+import ThemeOnboarding from '../components/ThemeOnboarding'
 
 const SITE_URL = 'https://vibhavy.dev'
 const CANONICAL_URL = 'https://vibhavy.dev/'
@@ -42,6 +43,13 @@ export default function RootLayout({ children }) {
             skip it for in-session navigations back to "/", crawlers, and no-JS.
             Runs in <head> (synchronously, pre-body-paint); the result drives
             CSS (html[data-intro]) and is read by app/page.jsx via __vyIntro. */}
+        {/* Theme decided BEFORE first paint (localStorage, else OS preference)
+            so there is no light flash. ThemeOnboarding reads/writes the same key. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('vy_theme'),s='saved';if(t!=='dark'&&t!=='light'){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';s='device';}document.documentElement.setAttribute('data-theme',t);document.documentElement.setAttribute('data-theme-source',s);}catch(e){document.documentElement.setAttribute('data-theme','light');document.documentElement.setAttribute('data-theme-source','device');}})();`,
+          }}
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var d=document.documentElement;var ua=navigator.userAgent||'';var bot=/bot|crawl|spider|slurp|mediapartners|lighthouse|headlesschrome|prerender|facebookexternalhit|embedly|quora|whatsapp|telegram|discord|slackbot|bingpreview|pinterest|applebot|yandex|baidu|duckduckbot/i.test(ua);var reload=false;try{var n=performance.getEntriesByType('navigation')[0];reload=n?n.type==='reload':(performance.navigation&&performance.navigation.type===1);}catch(e){}var seen=false;try{seen=sessionStorage.getItem('vy_intro_seen')==='1';sessionStorage.setItem('vy_intro_seen','1');}catch(e){}var show=!bot&&(reload||!seen);d.setAttribute('data-intro',show?'show':'skip');window.__vyIntro=show;}catch(e){window.__vyIntro=true;document.documentElement.setAttribute('data-intro','show');}})();`,
@@ -55,6 +63,7 @@ export default function RootLayout({ children }) {
       <body>
         <div className="site-grid-bg" aria-hidden="true" />
         <TransitionProvider>{children}</TransitionProvider>
+        <ThemeOnboarding />
       </body>
     </html>
   )
