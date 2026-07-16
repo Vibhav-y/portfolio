@@ -1,5 +1,5 @@
 import { getAllPosts, formatDate } from '../../lib/blog'
-import BlogHeader from '../../components/blog/BlogHeader'
+import Navbar from '../../components/Navbar'
 import Footer from '../../components/Footer'
 import '../../components/blog/blog.css'
 
@@ -23,7 +23,7 @@ export default function BlogIndex() {
 
   return (
     <div className="site-content">
-      <BlogHeader />
+      <Navbar />
       <main className="blog-index">
         <header className="blog-index__head">
           <span className="mono-label">/ WRITING</span>

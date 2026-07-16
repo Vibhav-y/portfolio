@@ -59,7 +59,7 @@ export default function ClientShell({ children }) {
           exit={{ opacity: 0, transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] } }}
           style={{
             position: 'fixed', inset: 0, zIndex: 9999,
-            background: '#eef0f4',
+            background: 'var(--bg-base)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}
         >

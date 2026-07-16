@@ -21,7 +21,7 @@ const experience = [
 ]
 
 const labelStyle = {
-  fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'rgba(15,23,42,0.4)',
+  fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'rgba(var(--ink), 0.4)',
   textTransform: 'uppercase', letterSpacing: '0.16em', display: 'block',
 }
 
@@ -55,7 +55,7 @@ export default function Experience() {
                   {exp.role}
                 </h3>
                 <p style={{ color: 'var(--accent)', fontSize: '15px', fontWeight: 600 }}>@ {exp.company}</p>
-                <p style={{ fontFamily: 'var(--font-mono)', color: 'rgba(15,23,42,0.5)', fontSize: '13px', marginTop: '10px' }}>{exp.period}</p>
+                <p style={{ fontFamily: 'var(--font-mono)', color: 'rgba(var(--ink), 0.5)', fontSize: '13px', marginTop: '10px' }}>{exp.period}</p>
               </div>
 
               {/* Tags — square */}
@@ -63,8 +63,8 @@ export default function Experience() {
                 {exp.tags.map((tag) => (
                   <span key={tag} style={{
                     fontFamily: 'var(--font-mono)', fontSize: '11px',
-                    border: '1px solid rgba(15,23,42,0.14)',
-                    padding: '6px 12px', color: 'rgba(15,23,42,0.8)',
+                    border: '1px solid rgba(var(--ink), 0.14)',
+                    padding: '6px 12px', color: 'rgba(var(--ink), 0.8)',
                   }}>
                     {tag}
                   </span>

@@ -189,7 +189,7 @@ export default function FooterAscii() {
           fontSize: '11px',
           letterSpacing: '0.18em',
           textTransform: 'uppercase',
-          color: 'rgba(15,23,42,0.4)',
+          color: 'rgba(var(--ink), 0.4)',
         }}
       >
         © {new Date().getFullYear()} · Vibhav Yadav · Built with Next.js

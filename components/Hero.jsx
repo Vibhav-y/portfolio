@@ -18,6 +18,7 @@ precision highp float;
 uniform vec2 uRes;
 uniform float uTime;
 uniform vec2 uMouse;
+uniform float uDark;
 
 // light silk palette — rich enough to read as a shader, still airy
 const vec3 CREAM  = vec3(0.990, 0.972, 0.950);
@@ -26,6 +27,15 @@ const vec3 PERI   = vec3(0.580, 0.660, 1.000);
 const vec3 MINT   = vec3(0.560, 0.860, 0.820);
 const vec3 ORANGE = vec3(0.969, 0.440, 0.050);
 const vec3 INKISH = vec3(0.300, 0.360, 0.560);
+
+// dark silk palette — charcoal base, muted ember/indigo folds (desaturated on
+// purpose: saturated hues vibrate against dark surfaces)
+const vec3 D_BASE   = vec3(0.086, 0.084, 0.090);
+const vec3 D_INDIGO = vec3(0.165, 0.180, 0.260);
+const vec3 D_EMBER  = vec3(0.360, 0.220, 0.120);
+const vec3 D_TEAL   = vec3(0.110, 0.200, 0.200);
+const vec3 D_GLOW   = vec3(0.760, 0.450, 0.210);
+const vec3 D_MIST   = vec3(0.300, 0.320, 0.400);
 
 void main() {
   vec2 uv = (gl_FragCoord.xy - 0.5 * uRes) / min(uRes.x, uRes.y);
@@ -43,16 +53,26 @@ void main() {
   float v2 = 0.5 + 0.5 * cos(p.y * 1.8 - t * 0.4);
   float v3 = 0.5 + 0.5 * sin((p.x + p.y) * 1.1 + t);
 
-  vec3 col = mix(CREAM, PERI, smoothstep(0.15, 0.95, v1));
-  col = mix(col, PEACH, smoothstep(0.30, 0.95, v1 * v2));
-  col = mix(col, MINT,  smoothstep(0.45, 1.0, v2 * (1.0 - v1)));
+  vec3 lightCol = mix(CREAM, PERI, smoothstep(0.15, 0.95, v1));
+  lightCol = mix(lightCol, PEACH, smoothstep(0.30, 0.95, v1 * v2));
+  lightCol = mix(lightCol, MINT,  smoothstep(0.45, 1.0, v2 * (1.0 - v1)));
   // deep shading in the folds gives the silk its depth
-  col = mix(col, INKISH, 0.35 * smoothstep(0.62, 0.98, v3 * (1.0 - v2)));
+  lightCol = mix(lightCol, INKISH, 0.35 * smoothstep(0.62, 0.98, v3 * (1.0 - v2)));
   // orange silk highlight
-  col = mix(col, ORANGE, 0.55 * smoothstep(0.68, 0.98, v1 * v2));
-
+  lightCol = mix(lightCol, ORANGE, 0.55 * smoothstep(0.68, 0.98, v1 * v2));
   // gentle edge lift so the card corners stay light
-  col = mix(col, CREAM, 0.6 * smoothstep(1.0, 1.6, length(uv)));
+  lightCol = mix(lightCol, CREAM, 0.6 * smoothstep(1.0, 1.6, length(uv)));
+
+  // dark variant — same ribbon field, but folds glow instead of shade
+  vec3 darkCol = mix(D_BASE, D_INDIGO, smoothstep(0.15, 0.95, v1));
+  darkCol = mix(darkCol, D_EMBER, smoothstep(0.35, 0.95, v1 * v2));
+  darkCol = mix(darkCol, D_TEAL,  0.7 * smoothstep(0.45, 1.0, v2 * (1.0 - v1)));
+  darkCol = mix(darkCol, D_MIST,  0.4 * smoothstep(0.62, 0.98, v3 * (1.0 - v2)));
+  darkCol = mix(darkCol, D_GLOW,  0.45 * smoothstep(0.74, 0.99, v1 * v2));
+  // edges fall back to charcoal so the card melts into the dark page
+  darkCol = mix(darkCol, D_BASE, 0.7 * smoothstep(0.9, 1.6, length(uv)));
+
+  vec3 col = mix(lightCol, darkCol, uDark);
 
   // film grain
   float g = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453);
@@ -97,10 +117,18 @@ function HeroShader() {
     const uRes = gl.getUniformLocation(prog, 'uRes')
     const uTime = gl.getUniformLocation(prog, 'uTime')
     const uMouse = gl.getUniformLocation(prog, 'uMouse')
+    const uDark = gl.getUniformLocation(prog, 'uDark')
 
     let raf = 0
     const mouse = { x: 0.5, y: 0.5 }
     const eased = { x: 0.5, y: 0.5 }
+
+    // theme crossfade — eases toward 1 when <html data-theme="dark">
+    const isDark = () => (document.documentElement.getAttribute('data-theme') === 'dark' ? 1 : 0)
+    let darkTarget = isDark()
+    let dark = darkTarget
+    const themeObserver = new MutationObserver(() => { darkTarget = isDark() })
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 1.5)
@@ -119,6 +147,8 @@ function HeroShader() {
     const draw = () => {
       eased.x += (mouse.x - eased.x) * 0.04
       eased.y += (mouse.y - eased.y) * 0.04
+      dark += (darkTarget - dark) * 0.06
+      gl.uniform1f(uDark, dark)
       gl.uniform2f(uRes, canvas.width, canvas.height)
       gl.uniform1f(uTime, (performance.now() - start) / 1000)
       gl.uniform2f(uMouse, eased.x, eased.y)
@@ -132,6 +162,7 @@ function HeroShader() {
     window.addEventListener('pointermove', onMove, { passive: true })
     return () => {
       cancelAnimationFrame(raf)
+      themeObserver.disconnect()
       window.removeEventListener('resize', resize)
       window.removeEventListener('pointermove', onMove)
     }
@@ -157,7 +188,7 @@ function Rotor() {
         </defs>
         <text style={{
           fontFamily: 'var(--font-mono)', fontSize: '10.5px', letterSpacing: '0.18em',
-          fill: 'rgba(15,23,42,0.55)',
+          fill: 'rgba(var(--ink), 0.55)',
         }}>
           <textPath href="#rotor-circle">{text}</textPath>
         </text>
@@ -209,7 +240,7 @@ export default function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.5, ease: easeFluid }}
               style={{
-                color: 'rgba(15,23,42,0.62)', fontSize: 'clamp(15px, 1.5vw, 17px)',
+                color: 'rgba(var(--ink), 0.62)', fontSize: 'clamp(15px, 1.5vw, 17px)',
                 maxWidth: '460px', lineHeight: 1.65, margin: 0,
               }}
             >
@@ -243,7 +274,7 @@ export default function Hero() {
                     textDecoration: 'none',
                     transition: 'transform 0.25s cubic-bezier(0.22,1,0.36,1), box-shadow 0.25s cubic-bezier(0.22,1,0.36,1)',
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 26px rgba(15,23,42,0.12)' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 26px rgba(var(--shadow-ink), 0.12)' }}
                   onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none' }}
                 >
                   Let&apos;s talk

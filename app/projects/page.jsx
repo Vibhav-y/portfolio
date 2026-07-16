@@ -5,6 +5,7 @@ import { motion, useScroll, useSpring, useInView } from 'framer-motion'
 import { TransitionLink } from '../../components/PageTransition'
 import ModalShader from '../../components/ui/modal-shader'
 import { ALL_PROJECTS } from '../../lib/projects'
+import Navbar from '../../components/Navbar'
 
 const easeFluid = [0.22, 1, 0.36, 1]
 
@@ -235,20 +236,8 @@ export default function ProjectsIndex() {
 
   return (
     <div className="site-content">
-      {/* Slim top bar — logo + back home */}
-      <header className="proj-topbar">
-        <div className="proj-topbar-inner">
-          <TransitionLink href="/" label="Home." style={{ color: 'var(--text-primary)', fontWeight: 800, fontSize: '20px', letterSpacing: '-0.05em', fontFamily: 'var(--font-main)', textDecoration: 'none' }}>
-            VY.
-          </TransitionLink>
-          <TransitionLink href="/" label="Home." className="proj-back">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M19 12H5M12 19l-7-7 7-7" />
-            </svg>
-            Back to home
-          </TransitionLink>
-        </div>
-      </header>
+      {/* Shared site navbar — same experience as the home page */}
+      <Navbar />
 
       <main className="container" style={{ paddingTop: 'clamp(96px, 12vw, 148px)', paddingBottom: 'clamp(48px, 6vw, 88px)' }}>
         {/* Page header */}

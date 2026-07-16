@@ -3,53 +3,14 @@
    Scoped under .blog-* class names so nothing here leaks into the main site.
    ══════════════════════════════════════════════════════════════════════════ */
 
-/* ── Header ─────────────────────────────────────────────────────────────── */
-.blog-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  padding: 16px clamp(20px, 5vw, 64px);
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(14px) saturate(150%);
-  -webkit-backdrop-filter: blur(14px) saturate(150%);
-  border-bottom: 1px solid var(--hairline);
-}
-.blog-header__brand {
-  font-family: var(--font-main);
-  font-weight: 700;
-  font-size: 18px;
-  letter-spacing: -0.02em;
-  color: var(--text-primary);
-  text-decoration: none;
-}
-.blog-header__nav {
-  display: flex;
-  gap: clamp(14px, 3vw, 30px);
-}
-.blog-header__nav a {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  letter-spacing: 0.02em;
-  color: var(--text-secondary);
-  text-decoration: none;
-  transition: color var(--t-quick);
-}
-.blog-header__nav a:hover,
-.blog-header__nav a[aria-current='page'] {
-  color: var(--accent);
-}
-
 /* ── Shared layout width ────────────────────────────────────────────────── */
 .blog-index,
 .blog-post {
   width: 100%;
   max-width: 1100px;
   margin: 0 auto;
-  padding: clamp(40px, 7vw, 88px) clamp(20px, 5vw, 40px) 0;
+  /* top padding clears the fixed site navbar */
+  padding: clamp(96px, 12vw, 148px) clamp(20px, 5vw, 40px) 0;
 }
 
 /* ── Index ──────────────────────────────────────────────────────────────── */
@@ -259,7 +220,7 @@
 }
 .blog-prose > p {
   margin: 0 0 1.35em;
-  color: rgba(15, 23, 42, 0.82);
+  color: rgba(var(--ink), 0.82);
 }
 .blog-prose h2 {
   font-weight: 600;
@@ -304,7 +265,7 @@
 .blog-prose ol {
   margin: 0 0 1.35em;
   padding-left: 1.4em;
-  color: rgba(15, 23, 42, 0.82);
+  color: rgba(var(--ink), 0.82);
 }
 .blog-prose li {
   margin: 0.4em 0;
@@ -329,11 +290,11 @@
 .blog-prose :not(pre) > code {
   font-family: var(--font-mono);
   font-size: 0.86em;
-  background: rgba(15, 23, 42, 0.06);
+  background: rgba(var(--ink), 0.06);
   border: 1px solid var(--hairline);
   border-radius: 6px;
   padding: 0.12em 0.4em;
-  color: #b0430a;
+  color: var(--code-inline);
 }
 
 /* tables (GFM) */
@@ -357,7 +318,7 @@
   color: var(--text-tertiary);
 }
 .blog-prose tbody tr:hover {
-  background: rgba(15, 23, 42, 0.02);
+  background: rgba(var(--ink), 0.02);
 }
 
 /* ── Code blocks (rehype-pretty-code) ──────────────────────────────────── */
@@ -373,7 +334,7 @@
   font-family: var(--font-mono);
   font-size: 11.5px;
   color: var(--text-secondary);
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(var(--paper), 0.85);
   border: 1px solid var(--hairline);
   border-radius: 7px;
   padding: 5px 10px;
@@ -391,7 +352,7 @@
 .blog-code pre {
   overflow-x: auto;
   padding: 20px 22px;
-  background: #f8f9fb;
+  background: var(--code-bg);
   border: 1px solid var(--lg-border);
   border-radius: var(--r-cell);
   font-family: var(--font-mono);
@@ -426,7 +387,7 @@
   font-family: var(--font-mono);
   font-size: 12.5px;
   color: var(--text-secondary);
-  background: #eef0f4;
+  background: var(--bg-base);
   border: 1px solid var(--lg-border);
   border-bottom: none;
   border-radius: var(--r-cell) var(--r-cell) 0 0;

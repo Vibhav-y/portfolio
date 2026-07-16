@@ -224,7 +224,7 @@ export default function Certificates() {
                   style={{
                     width: i === active ? '26px' : '8px', height: '8px',
                     borderRadius: '999px', border: 'none', cursor: 'pointer',
-                    background: i === active ? cert.accent : 'rgba(15,23,42,0.18)',
+                    background: i === active ? cert.accent : 'rgba(var(--ink), 0.18)',
                     transition: 'all 0.35s cubic-bezier(0.22,1,0.36,1)',
                     padding: 0,
                   }}
@@ -247,7 +247,7 @@ export default function Certificates() {
               onClick={() => setSelected(null)}
               style={{
                 position: 'fixed', inset: 0, zIndex: 99999,
-                background: 'rgba(238,240,244,0.72)',
+                background: 'rgba(var(--base), 0.72)',
                 backdropFilter: 'blur(22px) saturate(140%)',
                 WebkitBackdropFilter: 'blur(22px) saturate(140%)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -263,10 +263,10 @@ export default function Certificates() {
                 onClick={e => e.stopPropagation()}
                 style={{
                   maxWidth: '900px', width: '100%',
-                  background: 'rgba(255,255,255,0.92)',
+                  background: 'rgba(var(--paper), 0.92)',
                   border: '1px solid var(--hairline)',
                   borderRadius: 'var(--r-sheet)', overflow: 'hidden',
-                  boxShadow: '0 48px 100px rgba(15,23,42,0.22)',
+                  boxShadow: '0 48px 100px rgba(var(--shadow-ink), 0.22)',
                   position: 'relative'
                 }}
               >
@@ -287,7 +287,7 @@ export default function Certificates() {
                     whileHover={{ scale: 1.04 }}
                     whileTap={{ scale: 0.96 }}
                     style={{
-                      background: 'rgba(15,23,42,0.05)', border: '1px solid var(--hairline)',
+                      background: 'rgba(var(--ink), 0.05)', border: '1px solid var(--hairline)',
                       borderRadius: '999px', padding: '8px 18px', color: 'var(--text-primary)',
                       fontSize: '13px', cursor: 'pointer', fontFamily: 'var(--font-mono)',
                       textTransform: 'uppercase', letterSpacing: '0.1em',

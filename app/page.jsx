@@ -94,9 +94,9 @@ export default function Home() {
             transition={{ duration: 0.9, ease: easeCurtain }}
             style={{
               position: 'fixed', inset: 0, zIndex: 9999,
-              background: '#eef0f4', overflow: 'hidden',
+              background: 'var(--bg-base)', overflow: 'hidden',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              boxShadow: '0 30px 60px rgba(15,23,42,0.18)',
+              boxShadow: '0 30px 60px rgba(var(--shadow-ink), 0.18)',
             }}
           >
             {/* Ambient blobs — same color field the site floats on */}
@@ -158,7 +158,7 @@ export default function Home() {
               <div
                 style={{
                   width: 'min(360px, 72vw)', height: '2px',
-                  background: 'rgba(15,23,42,0.1)',
+                  background: 'rgba(var(--ink), 0.1)',
                   borderRadius: '999px', overflow: 'hidden',
                 }}
               >

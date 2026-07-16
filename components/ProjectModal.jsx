@@ -44,7 +44,7 @@ export default function ProjectModal({ project, onClose }) {
       onClick={onClose}
       style={{
         position: 'fixed', inset: 0, zIndex: 99999,
-        background: 'rgba(238,240,244,0.7)',
+        background: 'rgba(var(--base), 0.7)',
         backdropFilter: 'blur(20px) saturate(140%)',
         WebkitBackdropFilter: 'blur(20px) saturate(140%)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -72,12 +72,12 @@ export default function ProjectModal({ project, onClose }) {
           style={{
             position: 'absolute', top: 16, right: 16, zIndex: 3,
             width: 40, height: 40, borderRadius: '999px',
-            background: 'rgba(255,255,255,0.85)',
+            background: 'rgba(var(--paper), 0.85)',
             backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
             border: '1px solid var(--hairline)',
             color: 'var(--text-primary)', cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 10px 24px rgba(15,23,42,0.14)',
+            boxShadow: '0 10px 24px rgba(var(--shadow-ink), 0.14)',
           }}
         >
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" /></svg>
@@ -102,16 +102,16 @@ export default function ProjectModal({ project, onClose }) {
               style={{
                 width: '78%', aspectRatio: '16 / 9', borderRadius: 'var(--r-cell)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: 'rgba(255,255,255,0.14)',
-                border: '1px solid rgba(255,255,255,0.35)',
+                background: 'rgba(var(--paper), 0.14)',
+                border: '1px solid rgba(var(--paper), 0.35)',
                 backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)',
-                boxShadow: '0 30px 60px rgba(15,23,42,0.28)',
+                boxShadow: '0 30px 60px rgba(var(--shadow-ink), 0.28)',
               }}
             >
               <span style={{
                 fontFamily: 'var(--font-main)', fontWeight: 700,
                 fontSize: 'clamp(28px, 4vw, 48px)', letterSpacing: '-0.02em',
-                color: '#fff', textShadow: '0 4px 18px rgba(15,23,42,0.35)',
+                color: '#fff', textShadow: '0 4px 18px rgba(var(--shadow-ink), 0.35)',
               }}>
                 {project.name}
               </span>
@@ -119,7 +119,7 @@ export default function ProjectModal({ project, onClose }) {
           )}
           <div className="pmodal-meta">
             {(project.year || project.status) && (
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.9)' }}>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(var(--paper), 0.9)' }}>
                 {project.year}
                 {project.status && (
                   <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
@@ -257,7 +257,7 @@ export default function ProjectModal({ project, onClose }) {
                   style={{
                     display: 'inline-flex', alignItems: 'center', gap: '10px',
                     padding: '11px 22px', borderRadius: '999px',
-                    background: 'rgba(255,255,255,0.7)', border: '1px solid var(--hairline)',
+                    background: 'rgba(var(--paper), 0.7)', border: '1px solid var(--hairline)',
                     color: 'var(--text-primary)', fontFamily: 'var(--font-mono)', fontSize: '12px', fontWeight: 700,
                     letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none',
                     transition: 'transform 0.25s cubic-bezier(0.22,1,0.36,1)',

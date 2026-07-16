@@ -2,12 +2,13 @@
 node_modules/
 
 # Build output
-.next/
-out/
-dist/
+.next/*
+out/*
+dist/*
 dist-ssr/
-build/
-
+build/*
+.venv/
+.
 # Coverage and caches
 coverage/
 .turbo/

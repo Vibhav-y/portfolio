@@ -279,10 +279,13 @@ export default function Footer() {
       }
 
       // Ease the global colour tint toward its goal (ink → brand accent #f7790f).
+      // Ink follows the theme's --ink channel so the dots stay visible in dark mode.
       colorMix += ((egg ? 1 : 0) - colorMix) * 0.08
-      const r = Math.round(15 + (247 - 15) * colorMix)
-      const g = Math.round(23 + (121 - 23) * colorMix)
-      const b = Math.round(42 + (15 - 42) * colorMix)
+      const [ir = 15, ig = 23, ib = 42] = getComputedStyle(document.documentElement)
+        .getPropertyValue('--ink').split(',').map((n) => parseFloat(n))
+      const r = Math.round(ir + (247 - ir) * colorMix)
+      const g = Math.round(ig + (121 - ig) * colorMix)
+      const b = Math.round(ib + (15 - ib) * colorMix)
       ctx.fillStyle = `rgb(${r},${g},${b})`
       const radius = PARTICLE_R * (1 + 0.5 * colorMix)
 
@@ -518,7 +521,7 @@ export default function Footer() {
       // ── Light glass veil — same base tone as the site, so the party feels
       // like it happens *on* the page rather than cutting to a black rave ──
       octx.globalAlpha = baseAlpha * 0.94
-      octx.fillStyle = '#eef0f4'
+      octx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--bg-base').trim() || '#eef0f4'
       octx.fillRect(0, 0, ocw, och)
       octx.globalAlpha = baseAlpha
 

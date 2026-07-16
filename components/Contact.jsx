@@ -7,7 +7,7 @@ import CornerPlus from './ui/corner-plus'
 const labelStyle = {
   fontFamily: 'var(--font-mono)',
   fontSize: '10px',
-  color: 'rgba(15,23,42,0.4)',
+  color: 'rgba(var(--ink), 0.4)',
   textTransform: 'uppercase',
   letterSpacing: '0.16em',
   display: 'block',
@@ -24,7 +24,7 @@ const valueStyle = {
 const fieldLabel = {
   fontFamily: 'var(--font-mono)',
   fontSize: '10px',
-  color: 'rgba(15,23,42,0.45)',
+  color: 'rgba(var(--ink), 0.45)',
   letterSpacing: '0.14em',
   textTransform: 'uppercase',
   marginBottom: '6px',
@@ -33,8 +33,8 @@ const fieldLabel = {
 
 const inputStyle = {
   width: '100%',
-  background: 'rgba(15,23,42,0.03)',
-  border: '1px solid rgba(15,23,42,0.1)',
+  background: 'rgba(var(--ink), 0.03)',
+  border: '1px solid rgba(var(--ink), 0.1)',
   padding: '12px 14px',
   color: 'var(--text-primary)',
   fontSize: '14px',
@@ -45,7 +45,7 @@ const inputStyle = {
 
 const blockDivider = {
   height: '1px',
-  background: 'rgba(15,23,42,0.08)',
+  background: 'rgba(var(--ink), 0.08)',
   margin: '20px 0',
 }
 
@@ -192,7 +192,7 @@ export default function Contact() {
 
       <style>{`
         #contact input:focus, #contact textarea:focus { border-color: var(--accent) !important; }
-        #contact input::placeholder, #contact textarea::placeholder { color: rgba(15,23,42,0.3); }
+        #contact input::placeholder, #contact textarea::placeholder { color: rgba(var(--ink), 0.3); }
       `}</style>
     </section>
   )
