@@ -43,12 +43,6 @@ const inputStyle = {
   borderRadius: '12px',
 }
 
-const blockDivider = {
-  height: '1px',
-  background: 'rgba(var(--ink), 0.08)',
-  margin: '20px 0',
-}
-
 const socials = [
   { name: 'LinkedIn', url: 'https://www.linkedin.com/in/vibhav-yadav/' },
   { name: 'GitHub', url: 'https://github.com/Vibhav-y' },
@@ -82,52 +76,39 @@ export default function Contact() {
       />
 
       <div className="edi-sheet">
-        <div className="edi-row edi-row-split">
+        <div className="edi-row edi-row-split contact-layout">
 
           {/* LEFT — Info stack */}
-          <div className="edi-cell" style={{ display: 'flex', flexDirection: 'column' }}>
-            {/* Status banner */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-              <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: 'var(--status-live)', flexShrink: 0 }} />
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--text-primary)', fontWeight: 600 }}>
-                Open for Opportunities
-              </span>
+          <div className="edi-cell contact-details">
+            <div className="contact-availability">
+              <span className="contact-live-dot" />
+              <span>Open for Opportunities</span>
             </div>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.55, marginTop: '10px' }}>
+            <p className="contact-intro">
               Currently seeking full-time roles in software engineering, backend systems, and full-stack development.
             </p>
 
-            <div style={blockDivider} />
-
-            {/* Email */}
-            <div>
-              <span style={labelStyle}>Email</span>
-              <a href="mailto:vibhavydm@gmail.com" style={{ ...valueStyle, borderBottom: '1px solid var(--accent)', paddingBottom: '3px' }}>
-                vibhavydm@gmail.com
-              </a>
+            <div className="contact-facts">
+              <div className="contact-fact contact-fact--email">
+                <span style={labelStyle}>Email</span>
+                <a href="mailto:vibhavydm@gmail.com" style={valueStyle}>vibhavydm@gmail.com</a>
+              </div>
+              <div className="contact-fact">
+                <span style={labelStyle}>Location</span>
+                <p style={valueStyle}>Jalandhar, Punjab, India</p>
+              </div>
             </div>
 
-            <div style={blockDivider} />
-
-            {/* Location */}
-            <div>
-              <span style={labelStyle}>Location</span>
-              <p style={valueStyle}>Jalandhar, Punjab, India</p>
-            </div>
-
-            <div style={blockDivider} />
-
-            {/* Social */}
-            <div>
-              <span style={labelStyle}>Social</span>
-              <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
+            <div className="contact-socials">
+              <span style={{ ...labelStyle, marginBottom: '10px' }}>Elsewhere</span>
+              <div>
                 {socials.map((s) => (
                   <a
                     key={s.name}
                     href={s.url}
                     target="_blank"
                     rel="noreferrer"
-                    style={{ ...valueStyle, fontSize: '15px', transition: 'color .2s' }}
+                    className="contact-social-link"
                     onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--accent)' }}
                     onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-primary)' }}
                   >
@@ -139,18 +120,23 @@ export default function Contact() {
           </div>
 
           {/* RIGHT — Direct message form */}
-          <div className="edi-cell" style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ ...labelStyle, marginBottom: '16px' }}>Direct Message</span>
-            <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '14px', flex: 1 }}>
-              <div>
-                <label style={fieldLabel}>Name</label>
-                <input name="name" type="text" placeholder="John Doe" required style={inputStyle} />
+          <div className="edi-cell contact-form-cell">
+            <div className="contact-form-heading">
+              <span style={labelStyle}>Direct Message</span>
+              <p>Share a little context and I&apos;ll take it from there.</p>
+            </div>
+            <form onSubmit={handleSubmit} className="contact-form">
+              <div className="contact-form-pair">
+                <div>
+                  <label style={fieldLabel}>Name</label>
+                  <input name="name" type="text" placeholder="John Doe" required style={inputStyle} />
+                </div>
+                <div>
+                  <label style={fieldLabel}>Email</label>
+                  <input name="email" type="email" placeholder="john@company.com" required style={inputStyle} />
+                </div>
               </div>
-              <div>
-                <label style={fieldLabel}>Email</label>
-                <input name="email" type="email" placeholder="john@company.com" required style={inputStyle} />
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+              <div className="contact-message-field">
                 <label style={fieldLabel}>Message</label>
                 <textarea
                   name="message"
@@ -162,23 +148,7 @@ export default function Contact() {
               </div>
               <button
                 type="submit"
-                style={{
-                  justifySelf: 'start',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  padding: '12px 22px',
-                  background: 'transparent',
-                  border: '1px solid var(--accent)',
-                  color: 'var(--accent)',
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  letterSpacing: '0.1em',
-                  textTransform: 'uppercase',
-                  cursor: 'pointer',
-                  transition: 'background .25s ease, color .25s ease',
-                }}
+                className="contact-submit"
                 onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--accent)'; e.currentTarget.style.color = '#fff' }}
                 onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--accent)' }}
               >

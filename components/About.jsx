@@ -108,55 +108,36 @@ export default function About() {
         </div>
 
         {/* Row 2: Education | Connect */}
-        <div className="edi-row edi-row-split">
-          <div className="edi-cell">
-          <span style={{ ...labelStyle, marginBottom: '14px' }}>Education</span>
-          <div>
-            {education.map((e, i) => (
-              <div key={e.degree} style={{
-                display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap',
-                padding: '11px 0',
-                borderTop: i > 0 ? '1px solid rgba(var(--ink), 0.08)' : 'none',
-              }}>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: '20px', flexWrap: 'wrap' }}>
-                  <span style={{
-                    fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '0.1em', textTransform: 'uppercase',
-                    color: e.current ? 'var(--accent)' : 'rgba(var(--ink), 0.4)', minWidth: '90px',
-                  }}>
+        <div className="edi-row edi-row-split about-records">
+          <div className="edi-cell about-education">
+            <span style={{ ...labelStyle, marginBottom: '18px' }}>Education</span>
+            <div className="about-education-list">
+              {education.map((e) => (
+                <div key={e.degree} className="about-education-entry">
+                  <span className={`about-education-year${e.current ? ' about-education-year--current' : ''}`}>
                     {e.year}
                   </span>
-                  <h4 style={{ fontSize: '18px', fontWeight: 700, color: e.current ? 'var(--text-primary)' : 'rgba(var(--ink), 0.85)', letterSpacing: '-0.01em' }}>
-                    {e.degree}
-                  </h4>
+                  <div>
+                    <h4 className="about-education-degree">{e.degree}</h4>
+                    <span className="about-education-school">{e.school}</span>
+                  </div>
                 </div>
-                <span style={{ fontSize: '13px', color: 'var(--text-secondary)', textAlign: 'right' }}>{e.school}</span>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
           </div>
 
           {/* Connect */}
-          <div className="edi-cell">
-            <span style={{ ...labelStyle, marginBottom: '14px' }}>Connect</span>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
-              {links.map((link, i) => (
+          <div className="edi-cell about-connect">
+            <span style={{ ...labelStyle, marginBottom: '18px' }}>Connect</span>
+            <p className="about-connect-intro">Find the work, the proof, or a direct way to get in touch.</p>
+            <div className="about-connect-links">
+              {links.map((link) => (
                 <a
                   key={link.name}
                   href={link.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="edi-link"
-                  style={{
-                    display: 'flex', alignItems: 'center', gap: '12px',
-                    padding: '11px 4px',
-                    textDecoration: 'none',
-                    color: 'rgba(var(--ink), 0.85)',
-                    fontSize: '14px', fontWeight: 500,
-                    borderTop: i >= 2 ? '1px solid rgba(var(--ink), 0.08)' : 'none',
-                    borderLeft: i % 2 === 1 ? '1px solid rgba(var(--ink), 0.08)' : 'none',
-                    paddingLeft: i % 2 === 1 ? '18px' : '4px',
-                    transition: 'color 0.2s ease',
-                  }}
+                  className="edi-link about-connect-link"
                   onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--accent)' }}
                   onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(var(--ink), 0.85)' }}
                 >
@@ -166,7 +147,7 @@ export default function About() {
                   {link.name}
                   <span className="edi-arrow">
                     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M7 17L17 7M17 7H8M17 7V16" />
+                      <path d="M7 17L17 7M17 7V16" />
                     </svg>
                   </span>
                 </a>

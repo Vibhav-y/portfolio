@@ -48,7 +48,9 @@ export default function Home() {
     const previousRestoration = window.history.scrollRestoration
     window.history.scrollRestoration = 'manual'
 
-    const shouldStartAtTop = !window.location.hash && window.__vyIntro === true
+    const navigation = performance.getEntriesByType('navigation')[0]
+    const type = navigation?.type
+    const shouldStartAtTop = !window.location.hash && (type === 'navigate' || type === 'reload')
     if (shouldStartAtTop) window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
 
     return () => {

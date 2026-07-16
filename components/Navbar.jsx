@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
-import ThemeToggle from './ThemeToggle'
 
 const resumes = [
   { label: 'General CV',    url: '/resume/general%20cv.pdf', sub: 'Full overview' },
@@ -215,7 +214,6 @@ export default function Navbar() {
             flexShrink: 0,
           }}
         >
-          <ThemeToggle />
           <div
             onMouseEnter={() => setResumeOpen(true)}
             onMouseLeave={() => setResumeOpen(false)}
@@ -435,19 +433,6 @@ export default function Navbar() {
               {link.label}
             </a>
           ))}
-        </div>
-
-        {/* Theme — lives in the drawer so the bar itself stays clean */}
-        <div style={{
-          marginTop: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        }}>
-          <span style={{
-            fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '0.18em',
-            textTransform: 'uppercase', color: 'rgba(var(--ink), 0.4)',
-          }}>
-            Theme
-          </span>
-          <ThemeToggle />
         </div>
 
         <div style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
