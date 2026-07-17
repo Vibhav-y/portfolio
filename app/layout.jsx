@@ -1,7 +1,6 @@
 import { Geist } from 'next/font/google'
 import './globals.css'
 import TransitionProvider from '../components/PageTransition'
-import ThemeOnboarding from '../components/ThemeOnboarding'
 
 const SITE_URL = 'https://vibhavy.dev'
 const CANONICAL_URL = 'https://vibhavy.dev/'
@@ -44,7 +43,7 @@ export default function RootLayout({ children }) {
             Runs in <head> (synchronously, pre-body-paint); the result drives
             CSS (html[data-intro]) and is read by app/page.jsx via __vyIntro. */}
         {/* Theme decided BEFORE first paint (localStorage, else OS preference)
-            so there is no light flash. ThemeOnboarding reads/writes the same key. */}
+            so there is no light flash. ThemeSwitch reads/writes the same key. */}
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('vy_theme'),s='saved';if(t!=='dark'&&t!=='light'){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';s='device';}document.documentElement.setAttribute('data-theme',t);document.documentElement.setAttribute('data-theme-source',s);}catch(e){document.documentElement.setAttribute('data-theme','light');document.documentElement.setAttribute('data-theme-source','device');}})();`,
@@ -63,7 +62,6 @@ export default function RootLayout({ children }) {
       <body>
         <div className="site-grid-bg" aria-hidden="true" />
         <TransitionProvider>{children}</TransitionProvider>
-        <ThemeOnboarding />
       </body>
     </html>
   )
