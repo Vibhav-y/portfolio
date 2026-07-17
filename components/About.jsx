@@ -4,7 +4,8 @@ import { motion } from 'framer-motion'
 import SectionHeader from './ui/section-header'
 import CornerPlus from './ui/corner-plus'
 
-const profileImg = '/1774288544676-1-tjs99i.webp'
+const profileLightImg = '/profile-light.webp'
+const profileDarkImg = '/profile-dark.webp'
 const resumePdf = '/resume/general%20cv.pdf'
 
 const links = [
@@ -59,31 +60,40 @@ export default function About() {
             Photo is first in the DOM so the float-wrap works on mobile;
             on desktop it's re-ordered to the right via grid `order`. */}
         <div className="edi-row about-row">
-          <div className="edi-cell edi-cell--flush about-photo-cell" style={{ position: 'relative', overflow: 'hidden', aspectRatio: '3 / 4', alignSelf: 'stretch' }}>
+          {/* alignSelf start (not stretch) so the 3:4 aspect-ratio governs the
+              height — a stretched cell would be taller than 3:4 and object-fit
+              would crop the subject's shoulders off the sides. */}
+          <div className="edi-cell edi-cell--flush about-photo-cell" style={{ position: 'relative', overflow: 'hidden', aspectRatio: '3 / 4', alignSelf: 'start' }}>
+            {/* Two portraits shot on matching backdrops — both ship, and CSS
+                cross-fades to the one matching the active theme. */}
             <img
-              src={profileImg} alt="Vibhav Yadav" loading="lazy"
-              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 15%', filter: 'grayscale(0.15) contrast(1.05)' }}
+              className="about-photo about-photo--light"
+              src={profileLightImg} alt="Vibhav Yadav" loading="lazy"
+            />
+            <img
+              className="about-photo about-photo--dark"
+              src={profileDarkImg} alt="" aria-hidden="true" loading="lazy"
             />
             <div style={{ position: 'absolute', inset: 0, boxShadow: 'inset 0 0 60px rgba(var(--shadow-ink), 0.25)', pointerEvents: 'none' }} />
           </div>
-          <div className="edi-cell about-text-cell" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '32px' }}>
+          <div className="edi-cell about-text-cell" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '20px' }}>
             <div>
               <span style={{ ...labelStyle, marginBottom: '14px' }}>Profile</span>
-              <h3 style={{ fontSize: 'clamp(24px, 2.3vw, 32px)', lineHeight: 1.12, color: 'var(--text-primary)', fontWeight: 700, letterSpacing: '-0.02em', textTransform: 'uppercase', marginBottom: '16px' }}>
+              <h3 style={{ fontSize: 'clamp(24px, 2.3vw, 32px)', lineHeight: 1.12, color: 'var(--text-primary)', fontWeight: 700, letterSpacing: '-0.02em', textTransform: 'uppercase', marginBottom: '12px' }}>
                 I build systems,<br />not just features.
               </h3>
-              <p style={{ fontSize: '15px', color: 'var(--text-secondary)', lineHeight: 1.7, maxWidth: '560px' }}>
+              <p style={{ fontSize: '15px', color: 'var(--text-secondary)', lineHeight: 1.6, maxWidth: '560px' }}>
                 Computer Science Engineering student at Lovely Professional University. I specialize in robust backend architectures, interactive frontends, and writing optimized scale-ready code.
               </p>
             </div>
             <div className="about-lower">
               {/* separator between Profile and the lower blocks */}
-              <div style={{ height: '1px', background: 'rgba(var(--ink), 0.12)', marginBottom: '28px' }} />
+              <div style={{ height: '1px', background: 'rgba(var(--ink), 0.12)', marginBottom: '20px' }} />
               <div className="about-inner-grid">
                 {/* Developer Heuristics */}
                 <div>
                   <span style={{ ...labelStyle, marginBottom: '14px' }}>Developer Heuristics</span>
-                  <pre style={{ margin: 0, fontFamily: 'var(--font-mono)', fontSize: '13px', color: '#a3a3a3', lineHeight: 1.9 }}>
+                  <pre style={{ margin: 0, fontFamily: 'var(--font-mono)', fontSize: '13px', color: '#a3a3a3', lineHeight: 1.65 }}>
                     <span style={{ color: 'var(--accent)' }}>const</span> rules = [{'\n'}
                     {heuristics.map((h, i) => (
                       <span key={i}>{'  '}<span style={{ color: '#E5C07B' }}>{h}</span>{i < heuristics.length - 1 ? ',' : ''}{'\n'}</span>

@@ -14,98 +14,58 @@ export default function Projects() {
   const [selected, setSelected] = useState(null)
   const [active, setActive] = useState(0)
   const [mounted, setMounted] = useState(false)
-  const sectionRef = useRef(null)
-  const cardEls = useRef([])
+  const stageRef = useRef(null)
 
   useEffect(() => { setMounted(true) }, [])
 
-  // Pinned section: page scroll sets a target progress; a rAF loop eases the
-  // rendered progress toward it (exponential smoothing), and every card's
-  // transform is computed from that continuous value — no stepping.
-  const targetP = useRef(0)
-  const currentP = useRef(0)
-  const lastFrame = useRef(0)
-  const activeRef = useRef(0)
+  // Overlay carousel: the arrows/dots pick a card and each card's transform is
+  // derived from its distance to the active index. A CSS transition on
+  // .proj-card animates the movement — no page-scroll hijacking.
+  const goTo = (i) => setActive(Math.min(PROJECTS.length - 1, Math.max(0, i)))
 
-  const applyTransforms = (pv) => {
-    cardEls.current.forEach((el, i) => {
-      if (!el) return
-      const d = Math.max(-3, Math.min(3, i - pv))
-      // symmetric: the previous card parks as a left peek, the next as a
-      // right peek; both slightly shrunk and dimmed for depth
-      const ad = Math.min(Math.abs(d), 1)
-      const x = d * 106
-      const scale = 1 - 0.14 * ad
-      const opacity = 1 - 0.3 * ad
-      el.style.transform = `translateX(${x}%) scale(${scale})`
-      el.style.opacity = opacity
-      el.style.zIndex = String(100 - Math.round(Math.abs(d) * 10))
-    })
-    const idx = Math.min(PROJECTS.length - 1, Math.max(0, Math.round(pv)))
-    if (idx !== activeRef.current) {
-      activeRef.current = idx
-      setActive(idx)
-    }
-  }
-
+  // Horizontal-scroll support: since the cards are stacked (not a scroll track),
+  // a horizontal trackpad swipe or touch drag steps through them. Vertical
+  // scroll is left untouched so the page scrolls normally over the section.
   useEffect(() => {
-    let raf = 0
-    const tick = () => {
-      lastFrame.current = performance.now()
-      const delta = targetP.current - currentP.current
-      if (Math.abs(delta) > 0.0004) {
-        currentP.current += delta * 0.09
-        applyTransforms(currentP.current)
-      }
-      raf = requestAnimationFrame(tick)
+    const stage = stageRef.current
+    if (!stage) return
+    let cooling = false
+    const step = (dir) => {
+      if (cooling) return
+      cooling = true
+      setActive((a) => Math.min(PROJECTS.length - 1, Math.max(0, a + dir)))
+      setTimeout(() => { cooling = false }, 420)
     }
-
-    // Dwell + snap: each card holds the center for a stretch of scroll, then
-    // eases to the next with a smoothstep — centered cards need a push to move.
-    const DWELL = 0.32
-    const shape = (raw) => {
-      const seg = Math.floor(raw)
-      const f = raw - seg
-      const t = Math.min(1, Math.max(0, (f - DWELL) / (1 - 2 * DWELL)))
-      return seg + t * t * (3 - 2 * t)
-    }
-
-    const onScroll = () => {
-      const section = sectionRef.current
-      if (!section) return
-      const range = section.offsetHeight - window.innerHeight
-      if (range <= 0) return
-      const y = window.scrollY - (section.getBoundingClientRect().top + window.scrollY)
-      const v = Math.min(1, Math.max(0, y / range))
-      targetP.current = shape(v * (PROJECTS.length - 1))
-      // rAF throttled (hidden tab)? apply directly so state never goes stale
-      if (performance.now() - lastFrame.current > 250) {
-        currentP.current = targetP.current
-        applyTransforms(currentP.current)
+    const onWheel = (e) => {
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 10) {
+        e.preventDefault()
+        step(e.deltaX > 0 ? 1 : -1)
       }
     }
-
-    applyTransforms(0)
-    onScroll()
-    raf = requestAnimationFrame(tick)
-    window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onScroll)
+    let startX = 0
+    const onTouchStart = (e) => { startX = e.touches[0].clientX }
+    const onTouchEnd = (e) => {
+      const dx = e.changedTouches[0].clientX - startX
+      if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1)
+    }
+    stage.addEventListener('wheel', onWheel, { passive: false })
+    stage.addEventListener('touchstart', onTouchStart, { passive: true })
+    stage.addEventListener('touchend', onTouchEnd, { passive: true })
     return () => {
-      cancelAnimationFrame(raf)
-      window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', onScroll)
+      stage.removeEventListener('wheel', onWheel)
+      stage.removeEventListener('touchstart', onTouchStart)
+      stage.removeEventListener('touchend', onTouchEnd)
     }
   }, [])
 
-  const goTo = (i) => {
-    const section = sectionRef.current
-    if (!section) return
-    const sectionTop = section.getBoundingClientRect().top + window.scrollY
-    const range = section.offsetHeight - window.innerHeight
-    window.scrollTo({
-      top: sectionTop + (i / (PROJECTS.length - 1)) * range,
-      behavior: 'smooth',
-    })
+  const cardStyle = (i) => {
+    const d = Math.max(-3, Math.min(3, i - active))
+    const ad = Math.min(Math.abs(d), 1)
+    return {
+      transform: `translateX(${d * 106}%) scale(${1 - 0.14 * ad})`,
+      opacity: 1 - 0.3 * ad,
+      zIndex: 100 - Math.round(Math.abs(d) * 10),
+    }
   }
 
   const project = PROJECTS[active]
@@ -115,10 +75,10 @@ export default function Projects() {
       <section
         id="work"
         data-section="projects"
-        ref={sectionRef}
-        style={{ height: `${100 + (PROJECTS.length - 1) * 85}vh`, position: 'relative', paddingBlock: 0 }}
+        className="section"
+        style={{ position: 'relative', paddingBlock: 0 }}
       >
-        <div style={{ position: 'sticky', top: 0, height: '100vh', display: 'flex', alignItems: 'center' }}>
+        <div>
           <div className="container grid-box" style={{ padding: 'clamp(24px, 3vw, 48px) 0', overflow: 'hidden', width: '100%' }}>
             <div style={{ paddingInline: 'clamp(20px, 3vw, 48px)', position: 'relative' }}>
               <SectionHeader
@@ -174,13 +134,13 @@ export default function Projects() {
 
             {/* Card stage — one front card, the next peeking right */}
             <div style={{ position: 'relative', marginTop: '20px' }}>
-              <div className="proj-stage">
+              <div className="proj-stage" ref={stageRef}>
                 {PROJECTS.map((p, i) => (
                   <div
                     key={p.id}
-                    ref={el => { cardEls.current[i] = el }}
                     className="proj-card"
-                    onClick={() => (i === activeRef.current ? setSelected(p) : goTo(i))}
+                    style={cardStyle(i)}
+                    onClick={() => (i === active ? setSelected(p) : goTo(i))}
                   >
                     <CardImage project={p} />
                     <div className="cert-card-cta">

@@ -43,9 +43,13 @@
   /* Nested-radius rule: inner radius ≈ outer radius − padding. Cells sit
      inside sheets (r 24, padding ~24), so they get a much smaller radius —
      matching radii on parent and child reads as unconsidered. */
-  --r-card: 20px;
-  --r-sheet: 24px;
-  --r-cell: 10px;
+  /* Radius scale — sized to the element, not one blanket roundness:
+     sheets (full-width sections) 18 · cards 14 · nested cells 6.
+     Follows radius ~= 5-10% of shortest side, and the nesting rule
+     (inner ~= outer - padding), so nothing reads as uniformly puffy. */
+  --r-card: 14px;
+  --r-sheet: 18px;
+  --r-cell: 6px;
   --r-pill: 9999px;
 
   --status-live: #10b981;
@@ -224,58 +228,8 @@ html[data-theme='dark'] #contact textarea:focus {
   box-shadow: 0 0 0 3px rgba(238, 139, 62, 0.12), inset 0 1px 0 rgba(var(--specular), 0.05);
 }
 
-/* ── Theme welcome panel ── */
-.theme-notice {
-  position: fixed;
-  right: max(18px, env(safe-area-inset-right));
-  bottom: max(18px, env(safe-area-inset-bottom));
-  z-index: 1800;
-  display: flex;
-  align-items: center;
-  gap: 22px;
-  width: min(430px, calc(100vw - 36px));
-  padding: 15px 16px 15px 18px;
-  background:
-    linear-gradient(135deg, rgba(var(--specular), 0.48), transparent 44%),
-    linear-gradient(315deg, rgba(var(--paper), 0.22), transparent 62%),
-    rgba(var(--paper), 0.58);
-  backdrop-filter: blur(32px) saturate(175%);
-  -webkit-backdrop-filter: blur(32px) saturate(175%);
-  border: 1px solid rgba(var(--specular), 0.54);
-  border-radius: var(--r-cell);
-  box-shadow:
-    0 16px 36px rgba(var(--shadow-ink), 0.14),
-    inset 0 1px 0 rgba(var(--specular), 0.78),
-    inset 0 0 0 1px rgba(var(--ink), 0.04);
-  animation: theme-notice-enter 0.5s var(--ease-fluid) both;
-}
-.theme-notice-copy { min-width: 0; }
-.theme-notice-kicker {
-  display: block;
-  margin-bottom: 5px;
-  color: var(--accent);
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-.theme-notice-copy p {
-  margin: 0;
-  color: var(--text-secondary);
-  font-size: 12px;
-  line-height: 1.5;
-}
-.theme-notice-copy strong { color: var(--text-primary); font-weight: 600; }
-.theme-notice-copy p span { display: block; color: var(--text-tertiary); }
-.theme-notice-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
-}
-.theme-notice-switch,
-.theme-notice-close {
+/* Base reset for the glass switch control */
+.theme-notice-switch {
   min-height: 36px;
   border: 0;
   background: transparent;
@@ -389,28 +343,27 @@ html[data-theme='dark'] .theme-notice-switch-orb {
 .theme-notice-switch:hover .theme-notice-switch-icon { color: var(--text-primary); }
 .theme-notice-switch:active .theme-notice-switch-orb { transform: translateX(1px) scale(0.94); }
 html[data-theme='dark'] .theme-notice-switch:active .theme-notice-switch-orb { transform: translateX(65px) scale(0.94); }
-.theme-notice-close { padding: 0 2px; color: var(--text-tertiary); transition: color var(--t-quick); }
-.theme-notice-close:hover { color: var(--accent); }
+/* compact switch — sized for the navbar */
+.theme-notice-switch--compact {
+  width: 76px;
+  min-height: 30px;
+  padding: 2px;
+}
+.theme-notice-switch--compact .theme-notice-switch-orb {
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+}
+.theme-notice-switch--compact .theme-notice-switch-icon { font-size: 11px; }
+.theme-notice-switch--compact .theme-notice-switch-icon--sun { left: 9px; }
+.theme-notice-switch--compact .theme-notice-switch-icon--moon { right: 9px; }
+html[data-theme='dark'] .theme-notice-switch--compact .theme-notice-switch-orb { transform: translateX(46px); }
+html[data-theme='dark'] .theme-notice-switch--compact:active .theme-notice-switch-orb { transform: translateX(45px) scale(0.94); }
+
 @keyframes theme-notice-enter {
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
-}
-
-/* The new root is clipped from the mechanical switch centre, then expands to
-   the furthest viewport corner. Browsers without View Transitions switch at once. */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 560ms;
-  animation-timing-function: var(--ease-fluid);
-}
-::view-transition-old(root) { z-index: 1; }
-::view-transition-new(root) {
-  z-index: 2;
-  animation-name: theme-radial-reveal;
-}
-@keyframes theme-radial-reveal {
-  from { clip-path: circle(0px at var(--theme-x, 50%) var(--theme-y, 50%)); }
-  to { clip-path: circle(var(--theme-radius, 150vmax) at var(--theme-x, 50%) var(--theme-y, 50%)); }
 }
 
 /* ── Shared interaction and focus treatment ── */
@@ -453,23 +406,12 @@ textarea:focus-visible {
   }
 }
 @media (max-width: 560px) {
-  .theme-notice {
-    right: 16px;
-    bottom: max(16px, env(safe-area-inset-bottom));
-    align-items: flex-start;
-    gap: 14px;
-    padding: 14px 14px 14px 16px;
-  }
-  .theme-notice-actions { flex-direction: column; align-items: flex-end; gap: 2px; }
-  .theme-notice-switch { width: 104px; min-height: 40px; }
+  .theme-notice-switch:not(.theme-notice-switch--compact) { width: 104px; min-height: 40px; }
   html[data-theme='dark'] .theme-notice-switch-orb { transform: translateX(62px); }
   .theme-notice-switch:active .theme-notice-switch-orb { transform: translateX(1px) scale(0.94); }
   html[data-theme='dark'] .theme-notice-switch:active .theme-notice-switch-orb { transform: translateX(61px) scale(0.94); }
-  .theme-notice-close { min-height: 28px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(root),
-  ::view-transition-new(root) { animation: none; }
   *, *::before, *::after {
     scroll-behavior: auto !important;
     animation-duration: 0.01ms !important;
@@ -561,7 +503,7 @@ html[data-intro='show'] #intro-curtain {
 
 .lg-sheet {
   border-radius: var(--r-sheet);
-  padding: clamp(24px, 2.8vw, 40px);
+  padding: clamp(20px, 2.5vw, 32px);
   background: var(--lg-overlay-heavy);
 }
 
@@ -767,7 +709,7 @@ h1, h2, h3, h4 {
 .hero-btn {
   background: #f7790f;
   color: #fff;
-  border-radius: 12px;
+  border-radius: 10px;
   padding: 14px 28px;
   font-weight: 600;
   font-size: 15px;
@@ -798,7 +740,7 @@ h1, h2, h3, h4 {
 }
 
 .hero-skill-tile {
-  padding: clamp(20px, 2.4vw, 36px) clamp(16px, 2vw, 32px);
+  padding: clamp(16px, 2vw, 28px) clamp(16px, 1.8vw, 24px);
   border-right: 1px solid var(--hairline);
   border-bottom: 1px solid var(--hairline);
   min-height: clamp(120px, 12vw, 168px);
@@ -891,7 +833,7 @@ code, pre {
 
   .lg-sheet {
     padding: 20px;
-    border-radius: 20px;
+    border-radius: 16px;
   }
 
   .lg-card {
@@ -924,8 +866,8 @@ code, pre {
   }
 
   .lg-sheet {
-    padding: 18px;
-    border-radius: 16px;
+    padding: 16px;
+    border-radius: 14px;
   }
 
   .headline {
@@ -1050,7 +992,7 @@ code, pre {
   gap: clamp(12px, 1.4vw, 20px);
 }
 .edi-cap-cell {
-  padding: clamp(16px, 2vw, 32px) clamp(16px, 1.6vw, 24px);
+  padding: clamp(16px, 1.8vw, 24px) clamp(14px, 1.5vw, 20px);
   background: var(--surface-cell);
   backdrop-filter: var(--blur-cell);
   -webkit-backdrop-filter: var(--blur-cell);
@@ -1079,7 +1021,7 @@ code, pre {
 .edi-row-2 { display: grid; grid-template-columns: 1.7fr 0.8fr; }
 .edi-row-split { display: grid; grid-template-columns: 1fr 1fr; }
 .edi-row-exp { display: grid; grid-template-columns: 0.85fr 1.15fr; }
-.edi-cell { padding: clamp(16px, 2vw, 32px); min-width: 0; }
+.edi-cell { padding: clamp(16px, 1.8vw, 24px); min-width: 0; }
 .edi-cell--flush { padding: 0; }
 .edi-cell + .edi-cell { border-left: 1px solid var(--hairline); }
 .edi-cell pre, .edi-cell code { white-space: pre-wrap; word-break: break-word; max-width: 100%; }
@@ -1094,6 +1036,22 @@ code, pre {
   order: 2;
   border-left: 1px solid var(--hairline);
 }
+
+/* About: the two theme portraits stack in the photo cell and cross-fade.
+   Both are shot on matching backdrops, so only the backdrop appears to swap. */
+.about-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 15%;
+  filter: grayscale(0.15) contrast(1.05);
+  transition: opacity var(--t-fluid);
+}
+.about-photo--dark { opacity: 0; }
+html[data-theme='dark'] .about-photo--light { opacity: 0; }
+html[data-theme='dark'] .about-photo--dark { opacity: 1; }
 
 /* About: inner Heuristics + Mantras two-up */
 .about-inner-grid {
@@ -1584,6 +1542,7 @@ code, pre {
   border: 1px solid var(--lg-border);
   box-shadow: 0 22px 48px rgba(var(--shadow-ink), 0.14);
   will-change: transform, opacity;
+  transition: transform 0.6s var(--ease-fluid), opacity 0.6s var(--ease-fluid);
 }
 .proj-card img {
   width: 100%;
@@ -1663,7 +1622,7 @@ code, pre {
 }
 .pmodal-scroll {
   overflow-y: auto;
-  padding: clamp(16px, 2.2vw, 32px);
+  padding: clamp(16px, 2vw, 24px);
   flex: 1;
   min-height: 0;
 }
@@ -1852,28 +1811,24 @@ code, pre {
   flex-shrink: 0;
   margin-bottom: 24px;
   padding: 9px 16px;
-  border: 1px solid var(--hairline);
+  border: 1px solid var(--accent);
   border-radius: var(--r-pill);
-  background: var(--surface-cell);
-  backdrop-filter: var(--blur-cell);
-  -webkit-backdrop-filter: var(--blur-cell);
+  background: transparent;
   font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text-primary);
+  color: var(--accent);
   text-decoration: none;
   white-space: nowrap;
-  box-shadow: var(--shadow-cell);
-  transition: transform var(--t-quick), box-shadow var(--t-quick), border-color var(--t-quick), color var(--t-quick);
+  transition: transform var(--t-quick), background var(--t-quick), color var(--t-quick);
 }
 .proj-viewall svg { transition: transform var(--t-quick); }
 .proj-viewall:hover {
   transform: translateY(-2px);
-  border-color: var(--accent);
-  color: var(--accent);
-  box-shadow: 0 10px 24px rgba(var(--shadow-ink), 0.10);
+  background: var(--accent);
+  color: #fff;
 }
 .proj-viewall:hover svg { transform: translateX(3px); }
 @media (max-width: 640px) {
@@ -2255,7 +2210,7 @@ code, pre {
 }
 .ptl-stat {
   padding: 12px 14px;
-  border-radius: 12px;
+  border-radius: var(--r-cell);
   background: rgba(var(--paper), 0.55);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -2279,7 +2234,7 @@ code, pre {
 .ptl-card-body {
   position: relative;
   z-index: 1;
-  border-radius: calc(var(--r-sheet) - 8px);
+  border-radius: calc(var(--r-sheet) - 10px);
   background: rgba(var(--paper), 0.68);
   backdrop-filter: blur(18px) saturate(150%);
   -webkit-backdrop-filter: blur(18px) saturate(150%);
@@ -2287,7 +2242,7 @@ code, pre {
   box-shadow:
     inset 0 1px 0 rgba(var(--specular), 0.8),
     0 14px 34px rgba(var(--shadow-ink), 0.10);
-  padding: clamp(16px, 2.2vw, 32px);
+  padding: clamp(16px, 2vw, 24px);
 }
 .ptl-card-title {
   font-size: clamp(24px, 2.6vw, 34px);

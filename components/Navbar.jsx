@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
+import ThemeSwitch from './ThemeSwitch'
 
 const resumes = [
   { label: 'General CV',    url: '/resume/general%20cv.pdf', sub: 'Full overview' },
@@ -214,6 +215,7 @@ export default function Navbar() {
             flexShrink: 0,
           }}
         >
+          <ThemeSwitch compact />
           <div
             onMouseEnter={() => setResumeOpen(true)}
             onMouseLeave={() => setResumeOpen(false)}
@@ -337,6 +339,7 @@ export default function Navbar() {
               gap: '8px',
               padding: '10px 18px',
               border: '1px solid var(--accent)',
+              borderRadius: 'var(--r-pill)',
               color: 'var(--accent)',
               background: 'transparent',
               fontSize: '12px',
@@ -435,6 +438,19 @@ export default function Navbar() {
           ))}
         </div>
 
+        {/* Theme — the full-size slider, in the drawer on mobile */}
+        <div style={{
+          marginTop: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        }}>
+          <span style={{
+            fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '0.18em',
+            textTransform: 'uppercase', color: 'rgba(var(--ink), 0.4)',
+          }}>
+            Theme
+          </span>
+          <ThemeSwitch />
+        </div>
+
         <div style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <span style={{
             fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '0.18em',
@@ -484,6 +500,7 @@ export default function Navbar() {
             gap: '8px',
             padding: '14px 18px',
             border: '1px solid var(--accent)',
+            borderRadius: 'var(--r-pill)',
             color: 'var(--accent)',
             background: 'transparent',
             fontFamily: 'var(--font-mono)',

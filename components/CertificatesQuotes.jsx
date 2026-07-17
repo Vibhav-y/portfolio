@@ -56,83 +56,36 @@ const certs = [
 
 const easeFluid = [0.22, 1, 0.36, 1]
 
-// Scroll-pinned mode: the section pins while page scroll drives the cards.
-// Comment the next line out to fall back to a plain swipe/snap carousel.
-let PIN_SCROLL = false
-PIN_SCROLL = true
-
 export default function CertificatesQuotes() {
   const [selected, setSelected] = useState(null)
   const [active, setActive] = useState(0)
   const [mounted, setMounted] = useState(false)
-  const sectionRef = useRef(null)
   const trackRef = useRef(null)
 
   useEffect(() => { setMounted(true) }, [])
 
-  const setActiveFromProgress = (v) => {
-    setActive(Math.min(certs.length - 1, Math.max(0, Math.round(v * (certs.length - 1)))))
-  }
-
+  // Native horizontal-scroll carousel: swipe / trackpad-scroll the track, and
+  // the active card follows the scroll position. No page-scroll hijacking.
   useEffect(() => {
     const track = trackRef.current
     if (!track) return
-
-    if (PIN_SCROLL) {
-      // The section pins while the page scrolls; that vertical progress drives
-      // the horizontal position of the card track.
-      const onScroll = () => {
-        const section = sectionRef.current
-        if (!section) return
-        const range = section.offsetHeight - window.innerHeight
-        if (range <= 0) return
-        const y = window.scrollY - (section.getBoundingClientRect().top + window.scrollY)
-        const v = Math.min(1, Math.max(0, y / range))
-        track.scrollLeft = v * (track.scrollWidth - track.clientWidth)
-        setActiveFromProgress(v)
-      }
-      onScroll()
-      window.addEventListener('scroll', onScroll, { passive: true })
-      window.addEventListener('resize', onScroll)
-      return () => {
-        window.removeEventListener('scroll', onScroll)
-        window.removeEventListener('resize', onScroll)
-      }
-    }
-
-    // Plain horizontal snap carousel — the track scrolls, the page doesn't pin.
-    const onTrackScroll = () => {
+    const onScroll = () => {
       const range = track.scrollWidth - track.clientWidth
       if (range <= 0) return
-      setActiveFromProgress(track.scrollLeft / range)
+      setActive(Math.min(certs.length - 1, Math.max(0, Math.round((track.scrollLeft / range) * (certs.length - 1)))))
     }
-    onTrackScroll()
-    track.addEventListener('scroll', onTrackScroll, { passive: true })
-    return () => track.removeEventListener('scroll', onTrackScroll)
+    onScroll()
+    track.addEventListener('scroll', onScroll, { passive: true })
+    return () => track.removeEventListener('scroll', onScroll)
   }, [])
 
-  // Arrows/dots move to the position that centers card i (page scroll when
-  // pinned, track scroll otherwise).
+  // Arrows / dots scroll the track horizontally to center card i.
   const goTo = (i) => {
     const clamped = Math.min(certs.length - 1, Math.max(0, i))
-    if (PIN_SCROLL) {
-      const section = sectionRef.current
-      if (!section) return
-      const sectionTop = section.getBoundingClientRect().top + window.scrollY
-      const range = section.offsetHeight - window.innerHeight
-      window.scrollTo({
-        top: sectionTop + (clamped / (certs.length - 1)) * range,
-        behavior: 'smooth',
-      })
-      return
-    }
     const track = trackRef.current
     if (!track) return
     const range = track.scrollWidth - track.clientWidth
-    track.scrollTo({
-      left: (clamped / (certs.length - 1)) * range,
-      behavior: 'smooth',
-    })
+    track.scrollTo({ left: (clamped / (certs.length - 1)) * range, behavior: 'smooth' })
   }
 
   useEffect(() => {
@@ -152,15 +105,9 @@ export default function CertificatesQuotes() {
       <section
         id="certificates"
         className="section"
-        ref={sectionRef}
-        style={PIN_SCROLL
-          ? { height: `${100 + (certs.length - 1) * 85}vh`, position: 'relative' }
-          : { position: 'relative' }}
+        style={{ position: 'relative' }}
       >
-        <div style={PIN_SCROLL
-          ? { position: 'sticky', top: 0, height: '100vh', display: 'flex', alignItems: 'center' }
-          : undefined}
-        >
+        <div>
         <div className="container grid-box" style={{ padding: 'clamp(24px, 3vw, 48px) 0', overflow: 'hidden', width: '100%' }}>
           <div style={{ paddingInline: 'clamp(20px, 3vw, 48px)' }}>
             <SectionHeader
@@ -175,7 +122,7 @@ export default function CertificatesQuotes() {
 
           {/* Quote-card carousel — page-scroll-driven when pinned, swipe/snap otherwise */}
           <div style={{ position: 'relative' }}>
-            <div ref={trackRef} className="certq-track" style={PIN_SCROLL ? { scrollSnapType: 'none', overflowX: 'hidden' } : undefined}>
+            <div ref={trackRef} className="certq-track">
               {certs.map((c, i) => {
                 const isActive = i === active
                 return (
