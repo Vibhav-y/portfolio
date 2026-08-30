@@ -22,6 +22,22 @@ export default function Footer() {
   const canvasRef = useRef(null)
   const overlayRef = useRef(null)
   const mouseRef = useRef({ x: -1e4, y: -1e4 })
+  // The dot colour follows the theme's --ink channel. Reading it per frame is
+  // a forced style recalc, so it is cached here and refreshed only when the
+  // theme attribute actually changes.
+  const inkRef = useRef([15, 23, 42])
+
+  useEffect(() => {
+    const readInk = () => {
+      const v = getComputedStyle(document.documentElement)
+        .getPropertyValue('--ink').split(',').map((n) => parseFloat(n))
+      if (v.length === 3 && v.every(Number.isFinite)) inkRef.current = v
+    }
+    readInk()
+    const obs = new MutationObserver(readInk)
+    obs.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
+    return () => obs.disconnect()
+  }, [])
 
   // Easter egg #1 — an interactive console for anyone who opens DevTools.
   useEffect(() => {
@@ -281,8 +297,7 @@ export default function Footer() {
       // Ease the global colour tint toward its goal (ink → brand accent #f7790f).
       // Ink follows the theme's --ink channel so the dots stay visible in dark mode.
       colorMix += ((egg ? 1 : 0) - colorMix) * 0.08
-      const [ir = 15, ig = 23, ib = 42] = getComputedStyle(document.documentElement)
-        .getPropertyValue('--ink').split(',').map((n) => parseFloat(n))
+      const [ir = 15, ig = 23, ib = 42] = inkRef.current
       const r = Math.round(ir + (247 - ir) * colorMix)
       const g = Math.round(ig + (121 - ig) * colorMix)
       const b = Math.round(ib + (15 - ib) * colorMix)
@@ -737,15 +752,40 @@ export default function Footer() {
     window.__vyParty = (seconds) => { startParty(seconds) }
 
     sampleDots()
-    draw()
+
+    // The particle field is only worth animating while the footer is on
+    // screen. Left running, it costs a canvas repaint every frame for the
+    // entire length of the page.
+    let running = false
+    const startLoop = () => {
+      if (running) return
+      running = true
+      draw()
+    }
+    const stopLoop = () => {
+      running = false
+      cancelAnimationFrame(raf)
+    }
+
+    let onScreen = false
+    const syncLoop = () => {
+      if (onScreen && !document.hidden) startLoop()
+      else stopLoop()
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => { onScreen = entry.isIntersecting; syncLoop() },
+      { rootMargin: '200px' }
+    )
+    io.observe(canvas)
+    document.addEventListener('visibilitychange', syncLoop)
 
     let resizeT
     const onResize = () => {
       clearTimeout(resizeT)
       resizeT = setTimeout(() => {
-        cancelAnimationFrame(raf)
+        stopLoop()
         sampleDots()
-        draw()
+        syncLoop()
       }, 120)
     }
 
@@ -772,7 +812,9 @@ export default function Footer() {
     window.addEventListener('resize', onResize)
     window.addEventListener('keydown', onKey)
     return () => {
-      cancelAnimationFrame(raf)
+      stopLoop()
+      io.disconnect()
+      document.removeEventListener('visibilitychange', syncLoop)
       cancelAnimationFrame(partyRaf)
       clearTimeout(resizeT)
       overlay.style.display = 'none'

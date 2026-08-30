@@ -156,12 +156,41 @@ function HeroShader() {
       raf = requestAnimationFrame(draw)
     }
 
+    // The shader only earns its cost while the hero is actually on screen.
+    // Scrolled past it, or on a backgrounded tab, the loop stops entirely —
+    // otherwise it burns a full GPU frame budget for the whole page.
+    let running = false
+    const startLoop = () => {
+      if (running) return
+      running = true
+      raf = requestAnimationFrame(draw)
+    }
+    const stopLoop = () => {
+      running = false
+      cancelAnimationFrame(raf)
+    }
+
+    let onScreen = true
+    const sync = () => {
+      if (onScreen && !document.hidden) startLoop()
+      else stopLoop()
+    }
+
+    const io = new IntersectionObserver(
+      ([entry]) => { onScreen = entry.isIntersecting; sync() },
+      { rootMargin: '120px' }
+    )
+    io.observe(canvas)
+    document.addEventListener('visibilitychange', sync)
+
     resize()
-    draw()
+    startLoop()
     window.addEventListener('resize', resize)
     window.addEventListener('pointermove', onMove, { passive: true })
     return () => {
-      cancelAnimationFrame(raf)
+      stopLoop()
+      io.disconnect()
+      document.removeEventListener('visibilitychange', sync)
       themeObserver.disconnect()
       window.removeEventListener('resize', resize)
       window.removeEventListener('pointermove', onMove)

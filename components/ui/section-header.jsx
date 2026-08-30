@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import { cn } from '../../lib/utils'
 
 export default function SectionHeader({
@@ -18,13 +17,7 @@ export default function SectionHeader({
   const isCentered = align === 'center'
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-100px' }}
-      transition={{ duration: 0.8 }}
-      style={{ marginBottom, textAlign: isCentered ? 'center' : 'left' }}
-    >
+    <div style={{ marginBottom, textAlign: isCentered ? 'center' : 'left' }}>
       {eyebrow ? (
         <span
           className={cn('mono-label', 'section-header-eyebrow', eyebrowClassName)}
@@ -61,6 +54,6 @@ export default function SectionHeader({
           {description}
         </p>
       ) : null}
-    </motion.div>
+    </div>
   )
 }

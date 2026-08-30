@@ -36,7 +36,7 @@ export default function Now() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                <h3 style={{ fontSize: '18px', color: 'var(--text-primary)', fontFamily: 'monospace', fontWeight: 600 }}>## currently learning</h3>
                <p style={{ color: 'var(--text-secondary)', fontSize: '16px', lineHeight: 1.6 }}>
-                 Elixir + LiveView for real-time collaborative features without the JS complexity. Working through *Programming Elixir 1.6* and building a small kanban board.
+                 The AI stack end to end: embeddings, vector databases, chunking strategies, and how to measure retrieval quality properly. Doing daily DSA practice alongside it.
                </p>
             </div>
             
@@ -44,7 +44,7 @@ export default function Now() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                <h3 style={{ fontSize: '18px', color: 'var(--text-primary)', fontFamily: 'monospace', fontWeight: 600 }}>## current focus</h3>
                <p style={{ color: 'var(--text-secondary)', fontSize: '16px', lineHeight: 1.6 }}>
-                 Bridging the gap between theoretical computer science and production-ready applications. Deeply focused on optimizing system architecture, clean code practices, and algorithmic efficiency.
+                 Learning AI in depth and building RAG pipelines in real projects, from embeddings and vector stores to retrieval quality. After that, back to sharpening DSA and algorithmic problem solving.
                </p>
             </div>
 
