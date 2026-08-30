@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import GlassCard from './ui/glass-card'
 import SectionHeader from './ui/section-header'
 import CornerPlus from './ui/corner-plus'
@@ -129,11 +128,7 @@ export default function Skills() {
 
         {/* Daily Drivers — 2x2 inner grid */}
         <GlassCard
-          initial={{ opacity: 0, scale: 0.97 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          as={motion.div} liquid={false}
+          liquid={false}
           style={{ ...cellCard, padding: 'clamp(22px, 2.4vw, 34px)' }}
         >
           <span style={{ ...labelStyle, marginBottom: '22px' }}>Daily Drivers</span>
@@ -149,11 +144,7 @@ export default function Skills() {
 
           {/* Algorithms */}
           <GlassCard
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            as={motion.div} liquid={false}
+            liquid={false}
             style={{ ...cellCard, padding: 'clamp(20px, 2.2vw, 30px)', position: 'relative', overflow: 'hidden', flex: 1 }}
           >
             <div style={{ position: 'relative', zIndex: 1 }}>
@@ -178,11 +169,7 @@ export default function Skills() {
 
           {/* Currently Exploring */}
           <GlassCard
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            as={motion.div} liquid={false}
+            liquid={false}
             style={{ ...cellCard, padding: 'clamp(20px, 2.2vw, 30px)', position: 'relative', overflow: 'hidden', flex: 1 }}
           >
             <div style={{ position: 'relative', zIndex: 1 }}>

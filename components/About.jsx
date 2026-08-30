@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import SectionHeader from './ui/section-header'
 import CornerPlus from './ui/corner-plus'
 
@@ -46,13 +45,7 @@ export default function About() {
         eyebrowClassName="about-eyebrow"
       />
 
-      <motion.div
-        className="edi-sheet"
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-80px' }}
-        transition={{ duration: 0.7 }}
-      >
+      <div className="edi-sheet">
 
         {/* Row 1: Intro + Photo.
             Desktop → photo is a tall side column (original layout).
@@ -165,7 +158,7 @@ export default function About() {
             </div>
           </div>
         </div>
-      </motion.div>
+      </div>
     </section>
   )
 }

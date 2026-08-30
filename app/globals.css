@@ -27,12 +27,21 @@
 
   /* glass recipe — exactly two surface levels:
      sheet (section shell) and cell (anything nested inside a sheet) */
-  --lg-filter: blur(26px) saturate(160%);
-  --lg-overlay-light: rgba(var(--paper), 0.62);
-  --lg-overlay-heavy: rgba(var(--paper), 0.72);
-  --surface-cell: rgba(var(--paper), 0.72);
-  --surface-solid: rgba(var(--paper), 0.92);
-  --blur-cell: blur(14px) saturate(150%);
+  /* PERF: backdrop-filter is off for in-page surfaces. Sections, cells and
+     capsules used to each spawn their own (often nested) backdrop layer, which
+     forces the compositor to re-snapshot and re-blur the page on every scroll
+     frame — the single biggest cost on mobile and integrated GPUs. Only the
+     few surfaces that genuinely float over moving content (navbar, project
+     modal) still blur; everything else is a slightly more opaque overlay,
+     which over the soft ambient gradient reads almost identically.
+     --lg-filter-overlay is the escape hatch for those real overlays. */
+  --lg-filter: none;
+  --lg-filter-overlay: blur(20px) saturate(150%);
+  --lg-overlay-light: rgba(var(--paper), 0.82);
+  --lg-overlay-heavy: rgba(var(--paper), 0.9);
+  --surface-cell: rgba(var(--paper), 0.86);
+  --surface-solid: rgba(var(--paper), 0.94);
+  --blur-cell: none;
   --lg-border: rgba(var(--ink), 0.08);
   --lg-specular:
     inset 0 1px 0 rgba(var(--specular), 0.85),
@@ -105,17 +114,16 @@ html[data-theme='dark'] {
 /* quiet the ambient color blobs: fewer, dimmer, desaturated — dark surfaces
    carry the depth through elevation, not glow */
 html[data-theme='dark'] .site-grid-bg {
-  opacity: 0.32;
-  filter: blur(8px) saturate(0.7);
+  opacity: 0.26;
 }
 
 /* Dark glass needs a visible tonal stack to refract the ambient field. The
    hero already supplies its own shader, so these layers begin below it. */
 html[data-theme='dark'] {
-  --lg-overlay-light: rgba(31, 31, 37, 0.7);
-  --lg-overlay-heavy: rgba(43, 43, 50, 0.78);
-  --surface-cell: rgba(47, 47, 55, 0.8);
-  --surface-solid: rgba(54, 54, 63, 0.92);
+  --lg-overlay-light: rgba(31, 31, 37, 0.88);
+  --lg-overlay-heavy: rgba(43, 43, 50, 0.92);
+  --surface-cell: rgba(47, 47, 55, 0.92);
+  --surface-solid: rgba(54, 54, 63, 0.96);
   --lg-border: rgba(var(--ink), 0.11);
   --hairline: rgba(var(--ink), 0.1);
   --shadow-cell: 0 14px 32px rgba(0, 0, 0, 0.32), inset 0 1px 0 rgba(var(--specular), 0.05);
@@ -450,7 +458,8 @@ body {
     radial-gradient(44% 36% at 82% 78%, rgba(78, 205, 196, 0.15), transparent 70%),
     radial-gradient(40% 32% at 14% 86%, rgba(247, 121, 15, 0.10), transparent 70%),
     radial-gradient(30% 26% at 50% 45%, rgba(108, 142, 255, 0.08), transparent 70%);
-  filter: blur(6px);
+  /* PERF: no filter here. The gradients are already low-frequency, so the blur
+     was visually free but cost a full-viewport filter layer on every frame. */
 }
 
 /* keep all page content above the backdrop */
@@ -1541,7 +1550,8 @@ html[data-theme='dark'] .about-photo--dark { opacity: 1; }
   background: var(--lg-overlay-heavy);
   border: 1px solid var(--lg-border);
   box-shadow: 0 22px 48px rgba(var(--shadow-ink), 0.14);
-  will-change: transform, opacity;
+  /* PERF: no standing will-change. It pinned every card to its own compositor
+     layer for the life of the page; the browser promotes on demand anyway. */
   transition: transform 0.6s var(--ease-fluid), opacity 0.6s var(--ease-fluid);
 }
 .proj-card img {
@@ -1613,8 +1623,9 @@ html[data-theme='dark'] .about-photo--dark { opacity: 1; }
   flex-direction: column;
   min-height: 0;
   background: var(--surface-solid);
-  backdrop-filter: var(--blur-cell);
-  -webkit-backdrop-filter: var(--blur-cell);
+  /* a real overlay over live content — worth the blur, and only one exists */
+  backdrop-filter: var(--lg-filter-overlay);
+  -webkit-backdrop-filter: var(--lg-filter-overlay);
   border: 1px solid rgba(var(--paper), 0.6);
   border-radius: var(--r-cell);
   box-shadow: 0 20px 44px rgba(var(--shadow-ink), 0.16);

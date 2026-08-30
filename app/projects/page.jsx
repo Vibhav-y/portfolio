@@ -46,12 +46,8 @@ function TimelineItem({ project, index, active, registerRef }) {
         aria-hidden="true"
       />
 
-      <motion.article
+      <article
         ref={cardRef}
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-60px' }}
-        transition={{ duration: 0.7, ease: easeFluid }}
         className={`ptl-card${isPlaceholder ? ' ptl-card--soon' : ''}`}
         style={{ '--card-accent': project.accent }}
       >
@@ -188,7 +184,7 @@ function TimelineItem({ project, index, active, registerRef }) {
             </div>
           </>
         )}
-      </motion.article>
+      </article>
     </div>
   )
 }
@@ -288,13 +284,7 @@ export default function ProjectsIndex() {
         </div>
 
         {/* Foot CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: easeFluid }}
-          style={{ marginTop: 'clamp(56px, 7vw, 96px)', textAlign: 'center' }}
-        >
+        <div style={{ marginTop: 'clamp(56px, 7vw, 96px)', textAlign: 'center' }}>
           <p style={{ fontSize: '15px', color: 'var(--text-secondary)', marginBottom: '20px' }}>
             Want to see how any of these were built, or talk about something new?
           </p>
@@ -304,7 +294,7 @@ export default function ProjectsIndex() {
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
           </TransitionLink>
-        </motion.div>
+        </div>
       </main>
     </div>
   )

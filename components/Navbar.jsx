@@ -20,7 +20,6 @@ const navLinks = [
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
-  const [islandScroll, setIslandScroll] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [resumeOpen, setResumeOpen] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -30,11 +29,6 @@ export default function Navbar() {
   const pathname = usePathname() || '/'
   const onHome = pathname === '/'
   const linkHref = (link) => link.href || (onHome ? `#${link.id}` : `/#${link.id}`)
-
-  // On mobile the bottom "island" collides with the back-to-top button, so the
-  // bar stays pinned to the top there; the island morph is desktop-only and
-  // tied to the home hero.
-  const island = islandScroll && !isMobile && onHome
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 768px)')
@@ -51,10 +45,7 @@ export default function Navbar() {
 
   useEffect(() => {
     const onScroll = () => {
-      const y = window.scrollY
-      setScrolled(y > 50)
-      // morph into the bottom island once we've scrolled past (most of) the hero
-      setIslandScroll(y > window.innerHeight - 90)
+      setScrolled(window.scrollY > 50)
     }
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
@@ -81,50 +72,29 @@ export default function Navbar() {
         display: 'flex',
         justifyContent: 'center',
         pointerEvents: 'none',
-        top: island ? 'auto' : 0,
-        bottom: island ? 'clamp(4px, 0.6vw, 8px)' : 'auto',
-        // full-bleed hairline bar in top mode once scrolled
-        background: island ? 'transparent' : (scrolled ? 'rgba(var(--paper), 0.65)' : 'rgba(var(--paper), 0)'),
-        backdropFilter: island ? 'none' : (scrolled ? 'blur(12px)' : 'blur(0px)'),
-        WebkitBackdropFilter: island ? 'none' : (scrolled ? 'blur(12px)' : 'blur(0px)'),
-        borderBottom: island
-          ? '1px solid transparent'
-          : (scrolled ? '1px solid rgba(var(--ink), 0.08)' : '1px solid rgba(var(--ink), 0)'),
+        top: 0,
+        // full-bleed hairline bar once scrolled
+        background: scrolled ? 'rgba(var(--paper), 0.65)' : 'rgba(var(--paper), 0)',
+        backdropFilter: scrolled ? 'blur(12px)' : 'blur(0px)',
+        WebkitBackdropFilter: scrolled ? 'blur(12px)' : 'blur(0px)',
+        borderBottom: scrolled ? '1px solid rgba(var(--ink), 0.08)' : '1px solid rgba(var(--ink), 0)',
         transition: `background .4s ${ease}, backdrop-filter .4s ${ease}, border-color .4s ${ease}`,
       }}
     >
-      {/* Bar / island */}
+      {/* Bar */}
       <div
         style={{
           pointerEvents: 'auto',
           display: 'flex',
           alignItems: 'center',
-          transition: `gap .5s ${ease}, padding .5s ${ease}, background .4s ${ease}, box-shadow .4s ${ease}, border-color .4s ${ease}, max-width .5s ${ease}`,
-          ...(island
-            ? {
-                gap: 'clamp(14px, 1.6vw, 26px)',
-                maxWidth: 'calc(100vw - 24px)',
-                padding: '10px 14px 10px 20px',
-                borderRadius: 999,
-                background: 'var(--lg-overlay-heavy)',
-                backdropFilter: 'var(--lg-filter)',
-                WebkitBackdropFilter: 'var(--lg-filter)',
-                border: '1px solid var(--lg-border)',
-                boxShadow: '0 16px 40px rgba(var(--shadow-ink), 0.14), inset 0 1px 0 rgba(var(--specular), 0.8)',
-              }
-            : {
-                width: '100%',
-                maxWidth: '1300px',
-                justifyContent: 'space-between',
-                gap: '0px',
-                // Slimmer at the very top; expands a little once the sticky bar
-                // gains its blurred background on scroll. Tighter on mobile.
-                padding: isMobile ? (scrolled ? '8px 5vw' : '6px 5vw') : (scrolled ? '18px 5vw' : '13px 5vw'),
-                borderRadius: 0,
-                background: 'transparent',
-                border: '1px solid transparent',
-                boxShadow: 'none',
-              }),
+          transition: `padding .5s ${ease}`,
+          width: '100%',
+          maxWidth: '1300px',
+          justifyContent: 'space-between',
+          gap: '0px',
+          // Slimmer at the very top; expands a little once the sticky bar
+          // gains its blurred background on scroll. Tighter on mobile.
+          padding: isMobile ? (scrolled ? '6px 5vw' : '5px 5vw') : (scrolled ? '10px 5vw' : '8px 5vw'),
         }}
       >
         {/* Logo */}
@@ -134,7 +104,7 @@ export default function Navbar() {
             style={{
               color: 'var(--text-primary)',
               fontWeight: 800,
-              fontSize: '20px',
+              fontSize: '22px',
               letterSpacing: '-0.05em',
               fontFamily: 'var(--font-main)',
               textDecoration: 'none',
@@ -145,7 +115,7 @@ export default function Navbar() {
         </div>
 
         {/* Center Links */}
-        <div className="nav-links" style={{ gap: island ? 'clamp(14px, 1.8vw, 26px)' : '32px', alignItems: 'center' }}>
+        <div className="nav-links" style={{ gap: '32px', alignItems: 'center' }}>
           {navLinks.map((link) => (
             <a
               key={link.label}
@@ -154,7 +124,7 @@ export default function Navbar() {
                 color: 'rgba(var(--ink), 0.7)',
                 textDecoration: 'none',
                 fontWeight: 500,
-                fontSize: '12px',
+                fontSize: '13.5px',
                 fontFamily: 'var(--font-mono)',
                 letterSpacing: '0.1em',
                 textTransform: 'uppercase',
@@ -211,7 +181,7 @@ export default function Navbar() {
             display: 'flex',
             justifyContent: 'flex-end',
             alignItems: 'center',
-            gap: island ? '14px' : '22px',
+            gap: '22px',
             flexShrink: 0,
           }}
         >
@@ -232,7 +202,7 @@ export default function Navbar() {
                 border: 'none',
                 padding: 0,
                 color: resumeOpen ? 'var(--accent)' : 'rgba(var(--ink), 0.85)',
-                fontSize: '12px',
+                fontSize: '13.5px',
                 fontWeight: 600,
                 fontFamily: 'var(--font-mono)',
                 letterSpacing: '0.1em',
@@ -257,14 +227,11 @@ export default function Navbar() {
               style={{
                 position: 'absolute',
                 right: 0,
-                [island ? 'bottom' : 'top']: '100%',
-                paddingTop: island ? 0 : '10px',
-                paddingBottom: island ? '10px' : 0,
+                top: '100%',
+                paddingTop: '10px',
                 opacity: resumeOpen ? 1 : 0,
                 visibility: resumeOpen ? 'visible' : 'hidden',
-                transform: resumeOpen
-                  ? 'translateY(0)'
-                  : `translateY(${island ? '8px' : '-8px'})`,
+                transform: resumeOpen ? 'translateY(0)' : 'translateY(-8px)',
                 transition: 'opacity .2s ease, transform .25s cubic-bezier(.22,1,.36,1), visibility .2s',
                 pointerEvents: resumeOpen ? 'auto' : 'none',
               }}
@@ -337,12 +304,12 @@ export default function Navbar() {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '8px',
-              padding: '10px 18px',
+              padding: '9px 18px',
               border: '1px solid var(--accent)',
               borderRadius: 'var(--r-pill)',
               color: 'var(--accent)',
               background: 'transparent',
-              fontSize: '12px',
+              fontSize: '13px',
               fontWeight: 700,
               fontFamily: 'var(--font-mono)',
               letterSpacing: '0.1em',

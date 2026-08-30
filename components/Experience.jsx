@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import SectionHeader from './ui/section-header'
 import CornerPlus from './ui/corner-plus'
 
@@ -37,13 +36,7 @@ export default function Experience() {
         marginBottom={32}
       />
 
-      <motion.div
-        className="edi-sheet"
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-80px' }}
-        transition={{ duration: 0.7 }}
-      >
+      <div className="edi-sheet">
         {experience.map((exp) => (
           <div key={exp.id} className="edi-row edi-row-exp training-record">
 
@@ -75,7 +68,7 @@ export default function Experience() {
             </div>
           </div>
         ))}
-      </motion.div>
+      </div>
     </section>
   )
 }
