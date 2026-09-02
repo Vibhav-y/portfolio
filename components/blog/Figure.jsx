@@ -4,7 +4,6 @@ export default function Figure({ src, alt = '', caption, wide = false, credit })
   return (
     <figure className={`blog-figure${wide ? ' blog-figure--wide' : ''}`}>
       <div className="blog-figure__frame">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={src} alt={alt || caption || ''} loading="lazy" />
       </div>
       {(caption || credit) && (

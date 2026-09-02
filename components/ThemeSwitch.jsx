@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 /* The sun/moon orb slider from the theme onboarding card, extracted so it can
    live anywhere (navbar, drawer, onboarding). Flips data-theme — the page
    morphs via CSS transitions — and persists the choice to localStorage. */
-export default function ThemeSwitch({ compact = false }) {
+export default function ThemeSwitch() {
   const [theme, setTheme] = useState('light')
 
   useEffect(() => {
@@ -17,8 +17,9 @@ export default function ThemeSwitch({ compact = false }) {
   }, [])
 
   const toggleTheme = () => {
-    const next = theme === 'dark' ? 'light' : 'dark'
     const root = document.documentElement
+    const current = root.getAttribute('data-theme') || theme
+    const next = current === 'dark' ? 'light' : 'dark'
     // Flip the attribute directly — the theme morphs via the CSS transitions on
     // the glass surfaces and the shaders easing their palette. No wipe.
     root.setAttribute('data-theme', next)
@@ -35,15 +36,18 @@ export default function ThemeSwitch({ compact = false }) {
   return (
     <button
       type="button"
-      className={`theme-notice-switch${compact ? ' theme-notice-switch--compact' : ''}`}
+      className="theme-notice-switch--editorial"
       role="switch"
       aria-checked={isDark}
       aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
       onClick={toggleTheme}
     >
-      <span className="theme-notice-switch-icon theme-notice-switch-icon--sun" aria-hidden="true">☀</span>
-      <span className="theme-notice-switch-icon theme-notice-switch-icon--moon" aria-hidden="true">☾</span>
-      <span className="theme-notice-switch-orb" aria-hidden="true" />
+      <span>{isDark ? 'Light' : 'Dark'}</span>
+      <span className="theme-notice-switch-editorial-rocker" aria-hidden="true">
+        <span className="theme-notice-switch-editorial-face">
+          <span className="theme-notice-switch-editorial-indicator" />
+        </span>
+      </span>
     </button>
   )
 }

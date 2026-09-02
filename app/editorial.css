@@ -1,0 +1,21 @@
+/* Shared foundation for every current route. Page modules only define their
+   content-specific compositions; the visual system lives here. */
+.editorial-page {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  overflow-x: clip;
+  background: var(--site-bg);
+  color: var(--site-ink);
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.editorial-hero {
+  min-height: 100svh;
+  padding-top: 112px;
+  padding-bottom: 64px;
+}
+
+@media (max-width: 760px) {
+  .editorial-hero { min-height: 100svh; padding-top: 125px; padding-bottom: 58px; }
+}

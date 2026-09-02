@@ -1,96 +1,23 @@
+import { ArrowMark } from '../../components/SiteIcons'
+import Link from 'next/link'
 import { getAllPosts, formatDate } from '../../lib/blog'
 import Navbar from '../../components/Navbar'
-import Footer from '../../components/Footer'
-import '../../components/blog/blog.css'
+import styles from './page.module.css'
 
-export const metadata = {
-  title: 'Writing — Vibhav Yadav',
-  description:
-    'Essays and build logs on full-stack engineering — real-time systems, performance, and the craft of shipping products.',
-  alternates: { canonical: 'https://vibhavy.dev/blog' },
-  openGraph: {
-    type: 'website',
-    url: 'https://vibhavy.dev/blog',
-    title: 'Writing — Vibhav Yadav',
-    description:
-      'Essays and build logs on full-stack engineering — real-time systems, performance, and the craft of shipping products.',
-  },
-}
+export const metadata = { title: 'Writing — Vibhav Yadav', description: 'Essays and build logs on full-stack engineering — real-time systems, performance, and the craft of shipping products.', alternates: { canonical: 'https://vibhavy.dev/blog' } }
+
+function Meta({ post }) { return <p className={styles.meta}>{formatDate(post.meta.date)} <span>·</span> {post.meta.readingTime} min read</p> }
 
 export default function BlogIndex() {
   const posts = getAllPosts()
-  const [featured, ...rest] = posts
-
-  return (
-    <div className="site-content">
-      <Navbar />
-      <main className="blog-index">
-        <header className="blog-index__head">
-          <span className="mono-label">/ WRITING</span>
-          <h1>Notes on building things.</h1>
-          <p>
-            Deep-dives, engineering explainers, and build logs — with the code,
-            data, and diagrams that go with them.
-          </p>
-        </header>
-
-        {featured && (
-          <a href={`/blog/${featured.slug}`} className="blog-feature">
-            {featured.meta.cover && (
-              <div className="blog-feature__cover">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={featured.meta.cover} alt="" loading="lazy" />
-              </div>
-            )}
-            <div className="blog-feature__body">
-              <span className="mono-label">FEATURED</span>
-              <h2>{featured.meta.title}</h2>
-              <p>{featured.meta.summary}</p>
-              <div className="blog-card__meta">
-                <span>{formatDate(featured.meta.date)}</span>
-                <span aria-hidden="true">·</span>
-                <span>{featured.meta.readingTime} min read</span>
-              </div>
-            </div>
-          </a>
-        )}
-
-        <ul className="blog-grid">
-          {rest.map((post) => (
-            <li key={post.slug}>
-              <a href={`/blog/${post.slug}`} className="blog-card">
-                {post.meta.cover && (
-                  <div className="blog-card__cover">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={post.meta.cover} alt="" loading="lazy" />
-                  </div>
-                )}
-                <div className="blog-card__body">
-                  <div className="blog-card__tags">
-                    {post.meta.tags.slice(0, 3).map((t) => (
-                      <span key={t}>{t}</span>
-                    ))}
-                  </div>
-                  <h3>{post.meta.title}</h3>
-                  <p>{post.meta.summary}</p>
-                  <div className="blog-card__meta">
-                    <span>{formatDate(post.meta.date)}</span>
-                    <span aria-hidden="true">·</span>
-                    <span>{post.meta.readingTime} min read</span>
-                  </div>
-                </div>
-              </a>
-            </li>
-          ))}
-        </ul>
-
-        {posts.length === 0 && (
-          <p className="blog-empty">No posts yet — check back soon.</p>
-        )}
-      </main>
-      <div className="grid-gutter" aria-hidden="true" />
-      <Footer />
-      <div aria-hidden="true" style={{ height: 'clamp(32px, 4vw, 56px)' }} />
-    </div>
-  )
+  return <div className={`${styles.page} editorial-page`}>
+    <Navbar />
+    <main>
+      <section className={`${styles.hero} editorial-hero`}><div><p className={styles.kicker}>01 · Journal</p><h1>Notes on<br />building things.</h1></div><div className={styles.heroNote}><p>Writing on real-time systems, engineering decisions, and the small details that turn an idea into a product.</p><span>{String(posts.length).padStart(2, '0')} published notes</span></div></section>
+      <section className={styles.archive} aria-label="Writing archive"><div className={styles.archiveHeading}><span>Latest notes</span><span>Read at your own pace</span></div>
+        <div className={styles.articleList}>{posts.map((post, index) => <Link key={post.slug} href={`/blog/${post.slug}`} className={styles.article}><span className={styles.articleNumber}>{String(index + 1).padStart(2, '0')}</span><div className={styles.articleCopy}><div className={styles.tags}>{post.meta.tags.slice(0, 3).map((tag) => <span key={tag}>{tag}</span>)}</div><h2>{post.meta.title}</h2><p>{post.meta.summary}</p></div>{post.meta.cover && <img className={styles.articleImage} src={post.meta.cover} alt="" loading="lazy" />}<div className={styles.articleMeta}><Meta post={post} /><ArrowMark size={18} /></div></Link>)}</div>
+      </section>
+    </main>
+    <footer className={styles.footer}><span>© {new Date().getFullYear()} Vibhav Yadav</span><a href="mailto:vibhavydm@gmail.com">Start a conversation <ArrowMark size={14} /></a></footer>
+  </div>
 }
