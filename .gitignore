@@ -44,3 +44,5 @@ lerna-debug.log*
 
 # TypeScript incremental build info
 *.tsbuildinfo
+
+out

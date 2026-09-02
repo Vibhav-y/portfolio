@@ -65,7 +65,7 @@ export default function NotFound() {
           marginBottom: '40px',
         }}
       >
-        This page doesn't exist — or maybe it wandered off.
+        This page doesn&apos;t exist — or maybe it wandered off.
       </motion.p>
 
       <motion.a
