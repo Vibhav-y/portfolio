@@ -1,38 +1,20 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { MoonMark, SunMark } from './SiteIcons'
+import styles from './ThemeSwitch.module.css'
 
-/* The sun/moon orb slider from the theme onboarding card, extracted so it can
-   live anywhere (navbar, drawer, onboarding). Flips data-theme — the page
-   morphs via CSS transitions — and persists the choice to localStorage. */
+// Namespaced so a v1 build served from the same origin can't read or clobber
+// this value — the two versions keep independent theme preferences.
+export const THEME_STORAGE_KEY = 'vy_theme_v2'
+
 export default function ThemeSwitch() {
   const [theme, setTheme] = useState('light')
 
+  // Two switches can be mounted at once (header + open mobile drawer), so both
+  // mirror the attribute rather than holding independent state.
   useEffect(() => {
-    const preferred = () => {
-      try {
-        const saved = localStorage.getItem('vy_theme')
-        if (saved === 'dark' || saved === 'light') return saved
-      } catch {}
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-    }
-
-    // The pre-paint script in the root layout owns the initial value. If it is
-    // ever missing, something removed it after the fact — older React versions
-    // strip attributes they don't own off <html> while hydrating — so put it
-    // back instead of silently rendering the wrong palette. The observer fires
-    // on a microtask, so the restore lands before the next paint.
-    const sync = () => {
-      const root = document.documentElement
-      let current = root.getAttribute('data-theme')
-      if (current !== 'dark' && current !== 'light') {
-        current = preferred()
-        root.setAttribute('data-theme', current)
-        root.setAttribute('data-theme-source', 'restored')
-      }
-      setTheme(current)
-    }
-
+    const sync = () => setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light')
     sync()
     const observer = new MutationObserver(sync)
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
@@ -41,15 +23,14 @@ export default function ThemeSwitch() {
 
   const toggleTheme = () => {
     const root = document.documentElement
-    const current = root.getAttribute('data-theme') || theme
-    const next = current === 'dark' ? 'light' : 'dark'
-    // Flip the attribute directly — the theme morphs via the CSS transitions on
-    // the glass surfaces and the shaders easing their palette. No wipe.
+    const next = (root.getAttribute('data-theme') || theme) === 'dark' ? 'light' : 'dark'
+    // Flip the attribute directly — the palette morphs via the CSS transitions
+    // already on the surfaces. No wipe, no re-render of the page.
     root.setAttribute('data-theme', next)
     root.setAttribute('data-theme-source', 'saved')
 
     try {
-      localStorage.setItem('vy_theme', next)
+      localStorage.setItem(THEME_STORAGE_KEY, next)
     } catch {}
     setTheme(next)
   }
@@ -59,17 +40,16 @@ export default function ThemeSwitch() {
   return (
     <button
       type="button"
-      className="theme-notice-switch--editorial"
+      className={styles.switch}
       role="switch"
       aria-checked={isDark}
       aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
       onClick={toggleTheme}
     >
-      <span>{isDark ? 'Light' : 'Dark'}</span>
-      <span className="theme-notice-switch-editorial-rocker" aria-hidden="true">
-        <span className="theme-notice-switch-editorial-face">
-          <span className="theme-notice-switch-editorial-indicator" />
-        </span>
+      <span className={styles.track}>
+        <span className={styles.knob} aria-hidden="true" />
+        <SunMark size={13} className={`${styles.icon} ${styles.iconSun}`} />
+        <MoonMark size={13} className={`${styles.icon} ${styles.iconMoon}`} />
       </span>
     </button>
   )
