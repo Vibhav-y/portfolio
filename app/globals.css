@@ -18,6 +18,9 @@
   --text-primary: #171715;
   --text-secondary: rgba(23, 23, 21, 0.68);
   --text-tertiary: rgba(23, 23, 21, 0.48);
+  --prose-body: rgba(23, 23, 21, 0.82);
+  --code-inline-bg: rgba(23, 23, 21, 0.06);
+  --row-hover: rgba(23, 23, 21, 0.03);
   --accent: #d85f28;
   --hairline: rgba(23, 23, 21, 0.12);
   --lg-border: rgba(23, 23, 21, 0.1);
@@ -52,6 +55,9 @@ html[data-theme='dark'] {
   --text-primary: #f1eee8;
   --text-secondary: rgba(241, 238, 232, 0.7);
   --text-tertiary: rgba(241, 238, 232, 0.5);
+  --prose-body: rgba(241, 238, 232, 0.82);
+  --code-inline-bg: rgba(241, 238, 232, 0.07);
+  --row-hover: rgba(241, 238, 232, 0.04);
   --accent: #f0783b;
   --hairline: rgba(241, 238, 232, 0.12);
   --lg-border: rgba(241, 238, 232, 0.11);
@@ -65,8 +71,13 @@ body { min-height: 100vh; overflow-x: clip; background: var(--site-bg); color: v
 a, button { -webkit-tap-highlight-color: transparent; }
 a:focus-visible, button:focus-visible { outline: 2px solid var(--site-accent); outline-offset: 3px; }
 
-.brand-mark { display: block; object-fit: cover; background: #000; filter: grayscale(1) contrast(300%) brightness(1.05); }
-html[data-theme='light'] .brand-mark { filter: grayscale(1) contrast(300%) brightness(1.05) invert(1); }
+.brand-mark {
+  display: block;
+  aspect-ratio: 196 / 140;
+  background-color: currentColor;
+  -webkit-mask: url('/brand-mark.png') center / contain no-repeat;
+  mask: url('/brand-mark.png') center / contain no-repeat;
+}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }

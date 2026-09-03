@@ -8,7 +8,6 @@ dist/*
 dist-ssr/
 build/*
 .venv/
-.
 # Coverage and caches
 coverage/
 .turbo/
