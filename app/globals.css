@@ -24,17 +24,12 @@
   --accent: #d85f28;
   --hairline: rgba(23, 23, 21, 0.12);
   --lg-border: rgba(23, 23, 21, 0.1);
-  --lg-shadow: 0 24px 48px rgba(15, 23, 42, 0.08);
   --shadow-cell: 0 10px 26px rgba(15, 23, 42, 0.06);
   --blur-cell: none;
-  --r-card: 14px;
-  --r-sheet: 18px;
   --r-cell: 6px;
-  --r-pill: 9999px;
   --font-main: 'Space Grotesk', sans-serif;
   --font-mono: 'IBM Plex Mono', monospace;
   --ease-fluid: cubic-bezier(0.22, 1, 0.36, 1);
-  --t-fluid: 0.45s var(--ease-fluid);
   --t-quick: 0.25s var(--ease-fluid);
 }
 
@@ -61,7 +56,6 @@ html[data-theme='dark'] {
   --accent: #f0783b;
   --hairline: rgba(241, 238, 232, 0.12);
   --lg-border: rgba(241, 238, 232, 0.11);
-  --lg-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
   --shadow-cell: 0 14px 32px rgba(0, 0, 0, 0.32);
 }
 

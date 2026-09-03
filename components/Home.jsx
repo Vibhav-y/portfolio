@@ -10,7 +10,7 @@ import {
   useScroll,
   useSpring,
 } from 'framer-motion'
-import { ArrowMark, MailMark, PinMark } from './SiteIcons'
+import { ArrowMark, CodeMark, MailMark, PinMark, PlusMark } from './SiteIcons'
 import ProjectModal from './ProjectModal'
 import Navbar from './Navbar'
 import { FEATURED_PROJECTS } from '../lib/projects'
@@ -129,38 +129,76 @@ function MagneticLink({ href, children, className = '', external = false }) {
   )
 }
 
-function ProjectChapter({ project, index, onOpen }) {
-  const reduceMotion = useReducedMotion()
+function ProjectIndexRow({ project, index, isOpen, onToggle, onOpenCase }) {
+  const headId = `project-row-${project.id}`
+  const panelId = `project-panel-${project.id}`
 
   return (
-    <motion.article
-      className={styles.projectChapter}
-      initial={reduceMotion ? false : { opacity: 0, y: 42 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.16 }}
-      transition={{ duration: 0.82, delay: (index % 2) * 0.08, ease }}
-    >
-      <button className={styles.projectOpenButton} type="button" onClick={() => onOpen(project)} aria-label={`View ${project.name} case study`} />
-      <span className={styles.projectMedia}>
-        <img src={project.image} alt={`${project.name} interface`} loading={index === 0 ? 'eager' : 'lazy'} />
-        <span className={styles.mediaShade} aria-hidden="true" />
-      </span>
-
-      <div className={styles.projectCopy}>
-        <div className={styles.projectHeading}>
-          <h3>{project.name}</h3>
-          <p className={styles.projectSummary}>{project.summary}</p>
-          <span className={styles.caseStudyButton}>
-            <span>View case study</span>
-            <ArrowMark size={16} />
+    <article className={`${styles.indexRow} ${isOpen ? styles.indexRowOpen : ''}`}>
+      <h3 className={styles.indexHeading}>
+        <button
+          id={headId}
+          type="button"
+          className={styles.indexHead}
+          onClick={() => onToggle(project.id)}
+          aria-expanded={isOpen}
+          aria-controls={panelId}
+        >
+          <span className={styles.indexNumber}>{String(index + 1).padStart(2, '0')}</span>
+          <span className={styles.indexName}>{project.name}</span>
+          {/* display:contents on desktop so these sit in the header grid; they
+              reflow onto their own line together on narrow screens. */}
+          <span className={styles.indexMeta}>
+            <span className={styles.indexLabel}>{project.label}</span>
+            <span className={styles.indexYear}>{project.year} · {project.status}</span>
           </span>
-        </div>
-        <div className={styles.projectMeta}>
-          <span>{project.year} · {project.status}</span>
-          <span>{project.tags.slice(0, 4).join(' · ')}</span>
+          <span className={styles.indexToggle}><PlusMark size={17} open={isOpen} /></span>
+        </button>
+      </h3>
+
+      {/* Always rendered, expanded with a CSS grid-row transition rather than an
+          animated height: every project's copy stays in the static HTML (the
+          point of the section) and the reveal never depends on JS frames. */}
+      <div
+        id={panelId}
+        role="region"
+        aria-labelledby={headId}
+        className={styles.indexPanel}
+        inert={!isOpen}
+      >
+        <div className={styles.indexPanelClip}>
+          <div className={styles.indexPanelInner}>
+            <span className={styles.indexMedia}>
+              <img src={project.image} alt={`${project.name} interface`} loading={index === 0 ? 'eager' : 'lazy'} />
+            </span>
+            <div className={styles.indexCopy}>
+              <p className={styles.indexStack}>{project.tags.join(' · ')}</p>
+              <p className={styles.indexBrief}>{project.brief ?? project.summary}</p>
+              {project.highlights?.length > 0 && (
+                <ul className={styles.indexHighlights}>
+                  {project.highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}
+                </ul>
+              )}
+              <div className={styles.indexActions}>
+                <button type="button" className={styles.textLink} onClick={() => onOpenCase(project)}>
+                  <span>Read case study</span><ArrowMark size={15} />
+                </button>
+                {project.link && (
+                  <a className={styles.textLink} href={project.link} target="_blank" rel="noreferrer">
+                    <span>Visit live</span><ArrowMark size={15} />
+                  </a>
+                )}
+                {project.github && (
+                  <a className={styles.textLink} href={project.github} target="_blank" rel="noreferrer">
+                    <span>View code</span><CodeMark size={15} />
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </motion.article>
+    </article>
   )
 }
 
@@ -378,6 +416,9 @@ export default function Home() {
   const progress = useSpring(scrollYProgress, { stiffness: 130, damping: 28, restDelta: 0.001 })
   const [active, setActive] = useState('home')
   const [selected, setSelected] = useState(null)
+  // First project opens by default so a screenshot is on screen without
+  // anyone having to interact; clicking an open row closes it again.
+  const [openProject, setOpenProject] = useState(FEATURED_PROJECTS[0]?.id ?? null)
 
   useEffect(() => {
     const targets = chapters.map(({ id }) => document.getElementById(id)).filter(Boolean)
@@ -421,9 +462,16 @@ export default function Home() {
 
         <section id="work" className={styles.work}>
           <WorkHeader />
-          <div className={styles.projectList}>
+          <div className={styles.projectIndex}>
             {FEATURED_PROJECTS.map((project, index) => (
-              <ProjectChapter key={project.id} project={project} index={index} onOpen={setSelected} />
+              <ProjectIndexRow
+                key={project.id}
+                project={project}
+                index={index}
+                isOpen={openProject === project.id}
+                onToggle={(id) => setOpenProject((current) => current === id ? null : id)}
+                onOpenCase={setSelected}
+              />
             ))}
           </div>
         </section>
