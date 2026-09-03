@@ -9,7 +9,30 @@ export default function ThemeSwitch() {
   const [theme, setTheme] = useState('light')
 
   useEffect(() => {
-    const sync = () => setTheme(document.documentElement.getAttribute('data-theme') || 'light')
+    const preferred = () => {
+      try {
+        const saved = localStorage.getItem('vy_theme')
+        if (saved === 'dark' || saved === 'light') return saved
+      } catch {}
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+
+    // The pre-paint script in the root layout owns the initial value. If it is
+    // ever missing, something removed it after the fact — older React versions
+    // strip attributes they don't own off <html> while hydrating — so put it
+    // back instead of silently rendering the wrong palette. The observer fires
+    // on a microtask, so the restore lands before the next paint.
+    const sync = () => {
+      const root = document.documentElement
+      let current = root.getAttribute('data-theme')
+      if (current !== 'dark' && current !== 'light') {
+        current = preferred()
+        root.setAttribute('data-theme', current)
+        root.setAttribute('data-theme-source', 'restored')
+      }
+      setTheme(current)
+    }
+
     sync()
     const observer = new MutationObserver(sync)
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
