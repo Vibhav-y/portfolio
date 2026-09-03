@@ -44,7 +44,7 @@ export default function NotFound() {
           fontWeight: 700,
           lineHeight: 1,
           letterSpacing: '-0.05em',
-          background: 'linear-gradient(to bottom, #0f172a, rgba(var(--ink), 0.35))',
+          background: 'linear-gradient(to bottom, var(--text-primary), rgba(var(--ink), 0.3))',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           marginBottom: '24px',
@@ -77,14 +77,16 @@ export default function NotFound() {
           display: 'inline-flex',
           alignItems: 'center',
           gap: '8px',
-          background: 'linear-gradient(to right, #ff7a18, #ffb347)',
-          color: '#000',
+          background: 'var(--accent)',
+          // The accent stays orange in both themes, so the label keeps a fixed
+          // near-black — var(--bg-base) would go cream-on-orange in light mode.
+          color: '#171715',
           fontWeight: 600,
           fontSize: '15px',
           padding: '14px 28px',
           borderRadius: '100px',
           textDecoration: 'none',
-          boxShadow: '0 10px 30px rgba(255,122,24,0.25)',
+          boxShadow: 'var(--shadow-cell)',
           transition: 'transform 0.2s, box-shadow 0.2s',
         }}
         whileHover={{ scale: 1.05 }}

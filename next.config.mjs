@@ -27,7 +27,10 @@ const withMDX = createMDX({
       'rehype-slug',
       ['rehype-autolink-headings', { behavior: 'wrap' }],
       'rehype-katex',
-      ['rehype-pretty-code', { theme: 'github-light', keepBackground: false, defaultLang: 'plaintext' }],
+      // Dual themes emit --shiki-light/--shiki-dark custom properties on every
+      // token instead of a baked-in colour, so blog.css can swap the palette
+      // with data-theme. A single theme left dark-mode code near-black on near-black.
+      ['rehype-pretty-code', { theme: { light: 'github-light', dark: 'github-dark' }, keepBackground: false, defaultLang: 'plaintext' }],
     ].map(resolvePlugin),
   },
 })

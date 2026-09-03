@@ -30,7 +30,7 @@ export default function Navbar({ chapters = defaultChapters }) {
 
   return <>
     <header className={styles.header}>
-      <a className={styles.brand} href={onHome ? '#home' : '/'} aria-label="Vibhav Yadav, home"><BrandMark className={styles.brandMark} /><small>Vibhav Yadav</small></a>
+      <a className={styles.brand} href={onHome ? '#home' : '/'} aria-label="Vibhav Yadav, home"><BrandMark className={styles.brandMark} /><span className={styles.brandName}>Vibhav Yadav</span></a>
       <nav className={styles.desktopNav} aria-label="Primary navigation"><a href={sectionHref('work')}>Work</a><a href={sectionHref('about')}>About</a><Link href="/blog">Journal</Link><a href="/resume/general%20cv.pdf" target="_blank" rel="noreferrer">Resume <ArrowMark size={13} /></a><ThemeSwitch /></nav>
       <button className={styles.menuButton} type="button" onClick={() => setMenuOpen((value) => !value)} aria-expanded={menuOpen} aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}>{menuOpen ? <CloseMark size={20} /> : <MenuMark size={20} />}</button>
     </header>
