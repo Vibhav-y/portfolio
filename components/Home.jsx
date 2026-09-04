@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import {
   AnimatePresence,
@@ -47,19 +47,45 @@ const credentials = [
   { year: '2025', title: 'Frontend Developer (React)', issuer: 'HackerRank', image: '/Certificates/frontend-react.webp' },
 ]
 
-function Reveal({ children, className = '', delay = 0, amount = 0.2 }) {
-  const reduceMotion = useReducedMotion()
-  return (
-    <motion.div
-      className={className}
-      initial={false}
-      whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-      viewport={{ once: true, amount }}
-      transition={{ duration: 0.8, delay, ease }}
-    >
-      {children}
-    </motion.div>
-  )
+// useLayoutEffect on the client, useEffect on the server: the hidden state has
+// to be applied before the browser paints, or above-the-fold blocks flash in
+// at full opacity and then jump back down to animate.
+const useArmEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect
+
+// Scroll reveals are armed from JS but performed in CSS. The markup ships
+// visible, so a failed bundle, a disabled script or a paused background tab can
+// never leave the page blank -- the previous framer-motion version passed
+// initial={false}, which made every reveal on the page a no-op.
+function useReveal(delay = 0) {
+  const ref = useRef(null)
+
+  useArmEffect(() => {
+    const el = ref.current
+    if (!el) return
+    if (typeof IntersectionObserver === 'undefined') return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    el.dataset.reveal = 'idle'
+    if (delay) el.style.setProperty('--reveal-delay', `${delay}ms`)
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return
+        el.dataset.reveal = 'in'
+        observer.disconnect()
+      },
+      { rootMargin: '0px 0px -10% 0px', threshold: 0.06 },
+    )
+
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [delay])
+
+  return ref
+}
+
+function Reveal({ children, className = '', delay = 0, as: Tag = 'div', ...rest }) {
+  return <Tag ref={useReveal(delay)} className={className} {...rest}>{children}</Tag>
 }
 
 function SectionHeader({ number, label, title, description, count }) {
@@ -129,12 +155,12 @@ function MagneticLink({ href, children, className = '', external = false }) {
   )
 }
 
-function ProjectIndexRow({ project, index, isOpen, onToggle, onOpenCase }) {
+function ProjectIndexRow({ project, index, isOpen, onToggle, onOpenCase, revealDelay = 0 }) {
   const headId = `project-row-${project.id}`
   const panelId = `project-panel-${project.id}`
 
   return (
-    <article className={`${styles.indexRow} ${isOpen ? styles.indexRowOpen : ''}`}>
+    <article ref={useReveal(revealDelay)} className={`${styles.indexRow} ${isOpen ? styles.indexRowOpen : ''}`}>
       <h3 className={styles.indexHeading}>
         <button
           id={headId}
@@ -270,7 +296,9 @@ function CredentialsShowcase() {
 
           <div className={styles.credentialList}>
             {credentials.map((credential, index) => (
-              <button
+              <Reveal
+                as="button"
+                delay={index * 80}
                 type="button"
                 className={`${styles.credentialRow} ${index === activeIndex ? styles.credentialRowActive : ''}`}
                 key={credential.title}
@@ -283,7 +311,7 @@ function CredentialsShowcase() {
                 <strong>{credential.title}</strong>
                 <p>{credential.issuer}</p>
                 <time>{credential.year}</time>
-              </button>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -442,22 +470,25 @@ export default function Home() {
       </aside>
 
       <main>
+        {/* The hero entrance is pure CSS (see .hero in Home.module.css): keyframes
+            keep running while the tab is backgrounded, so the fold can never be
+            left mid-animation and invisible. */}
         <section id="home" className={styles.hero}>
           <div className={styles.heroCopy}>
-            <motion.p className={styles.kicker} initial={false} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.1, ease }}>Full-stack developer · Based in India</motion.p>
+            <p className={styles.kicker}>Full-stack developer · Based in India</p>
             <h1 aria-label="I enjoy building thoughtful digital products.">
-              {['I enjoy building', 'thoughtful digital', 'products.'].map((line, index) => (
-                <span className={styles.heroLine} key={line}><motion.span initial={false} animate={{ y: 0 }} transition={{ duration: 0.9, delay: 0.14 + index * 0.1, ease }}>{line}</motion.span></span>
+              {['I enjoy building', 'thoughtful digital', 'products.'].map((line) => (
+                <span className={styles.heroLine} key={line}><span>{line}</span></span>
               ))}
             </h1>
-            <motion.p className={styles.heroIntro} initial={false} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.75, delay: 0.5, ease }}>I bring ideas to life through useful web experiences, clean code, and close attention to the details that make a product feel right.</motion.p>
-            <motion.div className={styles.availability} initial={false} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.68 }}><span /> Available for new opportunities</motion.div>
-            <motion.div className={styles.heroLinks} initial={false} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.76, ease }}><MagneticLink href="#work">View my work</MagneticLink><MagneticLink href="#contact">Get in touch</MagneticLink></motion.div>
+            <p className={styles.heroIntro}>I bring ideas to life through useful web experiences, clean code, and close attention to the details that make a product feel right.</p>
+            <p className={styles.availability}><span className={styles.availabilityDot} aria-hidden="true" /> Available for new opportunities</p>
+            <div className={styles.heroLinks}><MagneticLink href="#work">View my work</MagneticLink><MagneticLink href="#contact">Get in touch</MagneticLink></div>
           </div>
-          <motion.div className={styles.portraitFrame} initial={false} animate={{ clipPath: 'inset(0 0 0% 0)', opacity: 1 }} transition={{ duration: 1.15, delay: 0.25, ease }}>
+          <div className={styles.portraitFrame}>
             <img className={styles.portraitLight} src="/profile-light.webp" alt="Vibhav Yadav" /><img className={styles.portraitDark} src="/profile-dark.webp" alt="" aria-hidden="true" /><span className={styles.portraitWash} aria-hidden="true" />
-          </motion.div>
-          <motion.span className={styles.heroSideNote} initial={false} animate={{ opacity: 1 }} transition={{ delay: 1, duration: 0.7 }}>Scroll to explore</motion.span>
+          </div>
+          <span className={styles.heroSideNote}>Scroll to explore<span className={styles.heroSideRule} aria-hidden="true" /></span>
         </section>
 
         <section id="work" className={styles.work}>
@@ -466,6 +497,7 @@ export default function Home() {
             {FEATURED_PROJECTS.map((project, index) => (
               <ProjectIndexRow
                 key={project.id}
+                revealDelay={index * 90}
                 project={project}
                 index={index}
                 isOpen={openProject === project.id}
@@ -477,10 +509,10 @@ export default function Home() {
         </section>
 
         <section id="about" className={styles.about}>
-          <Reveal className={styles.aboutPortrait} amount={0.3}><img src="/profile-light.webp" alt="Vibhav Yadav in profile" loading="lazy" /></Reveal>
-          <Reveal className={styles.aboutCopy} delay={0.05} amount={0.3}><p className={styles.kicker}>03 · About</p><h2>I care about the invisible details.</h2><p>I’m Vibhav, a full-stack developer and Computer Science Engineering student. I enjoy the point where architecture, interface craft, and real user needs become one coherent product.</p><p>My rule is simple: make complexity earn its place. That means clearer systems, faster interactions, and software people can trust without reading a manual.</p><MagneticLink href="/resume/general%20cv.pdf" external>Read my resume</MagneticLink></Reveal>
-          <Reveal className={styles.training} delay={0.1} amount={0.3}><p className={styles.kicker}>Training</p><span className={styles.detailDate}>{training.period}</span><h3>{training.title}</h3><strong>{training.org}</strong><p>{training.body}</p></Reveal>
-          <Reveal className={styles.stack} delay={0.14} amount={0.3}><p className={styles.kicker}>Technical stack</p><div>{stack.map(([label, value]) => <div className={styles.stackRow} key={label}><span>{label}</span><p>{value}</p></div>)}</div></Reveal>
+          <Reveal className={styles.aboutPortrait}><img src="/profile-light.webp" alt="Vibhav Yadav in profile" loading="lazy" /></Reveal>
+          <Reveal className={styles.aboutCopy} delay={0.05}><p className={styles.kicker}>03 · About</p><h2>I care about the invisible details.</h2><p><span className={styles.dropCap}>I</span>’m Vibhav, a full-stack developer and Computer Science Engineering student. I enjoy the point where architecture, interface craft, and real user needs become one coherent product.</p><p>My rule is simple: make complexity earn its place. That means clearer systems, faster interactions, and software people can trust without reading a manual.</p><MagneticLink href="/resume/general%20cv.pdf" external>Read my resume</MagneticLink></Reveal>
+          <Reveal className={styles.training} delay={0.1}><p className={styles.kicker}>Training</p><span className={styles.detailDate}>{training.period}</span><h3>{training.title}</h3><strong>{training.org}</strong><p>{training.body}</p></Reveal>
+          <Reveal className={styles.stack} delay={0.14}><p className={styles.kicker}>Technical stack</p><div>{stack.map(([label, value]) => <div className={styles.stackRow} key={label}><span>{label}</span><p>{value}</p></div>)}</div></Reveal>
         </section>
 
         <section id="credentials" className={styles.credentials}>
