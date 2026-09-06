@@ -1,5 +1,6 @@
 import { Geist } from 'next/font/google'
 import './globals.css'
+import EclipseReveal from '../components/EclipseReveal'
 import TransitionProvider from '../components/PageTransition'
 
 const SITE_URL = 'https://vibhavy.dev'
@@ -37,6 +38,7 @@ export default function RootLayout({ children }) {
     // differ from the server HTML.
     <html lang="en" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: `(function(){var show=location.pathname==='/'&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches;window.__v3Eclipse=show;document.documentElement.setAttribute('data-eclipse',show?'show':'skip');})();` }} />
         {/* Decides the home-page intro curtain BEFORE first paint, so nothing
             flashes. Show it only on a fresh session-open or a hard refresh;
             skip it for in-session navigations back to "/", crawlers, and no-JS.
@@ -46,7 +48,7 @@ export default function RootLayout({ children }) {
             so there is no light flash. ThemeSwitch reads/writes the same key. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('vy_theme'),s='saved';if(t!=='dark'&&t!=='light'){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';s='device';}document.documentElement.setAttribute('data-theme',t);document.documentElement.setAttribute('data-theme-source',s);}catch(e){document.documentElement.setAttribute('data-theme','light');document.documentElement.setAttribute('data-theme-source','device');}})();`,
+            __html: `(function(){try{var t=localStorage.getItem('vy_theme_v3'),s='saved';if(t!=='dark'&&t!=='light'){t='dark';s='default';}document.documentElement.setAttribute('data-theme',t);document.documentElement.setAttribute('data-theme-source',s);}catch(e){document.documentElement.setAttribute('data-theme','dark');document.documentElement.setAttribute('data-theme-source','device');}})();`,
           }}
         />
         <script
@@ -57,9 +59,11 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+        <link rel="icon" href="/favicon.png" type="image/png" />
       </head>
       <body>
+        <EclipseReveal />
         <div className="site-grid-bg" aria-hidden="true" />
         <TransitionProvider>{children}</TransitionProvider>
       </body>

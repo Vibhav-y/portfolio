@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import ThemeSwitch from './ThemeSwitch'
+import BrandMark from './BrandMark'
 
 const resumes = [
   { label: 'General CV',    url: '/resume/general%20cv.pdf', sub: 'Full overview' },
@@ -104,13 +105,16 @@ export default function Navbar() {
             style={{
               color: 'var(--text-primary)',
               fontWeight: 800,
-              fontSize: '22px',
+              fontSize: '15px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '11px',
               letterSpacing: '-0.05em',
               fontFamily: 'var(--font-main)',
               textDecoration: 'none',
             }}
           >
-            VY.
+            <BrandMark className="nav-brand-mark" /><span>Vibhav Yadav</span>
           </a>
         </div>
 

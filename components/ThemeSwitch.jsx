@@ -6,10 +6,10 @@ import { useEffect, useState } from 'react'
    live anywhere (navbar, drawer, onboarding). Flips data-theme — the page
    morphs via CSS transitions — and persists the choice to localStorage. */
 export default function ThemeSwitch({ compact = false }) {
-  const [theme, setTheme] = useState('light')
+  const [theme, setTheme] = useState('dark')
 
   useEffect(() => {
-    const sync = () => setTheme(document.documentElement.getAttribute('data-theme') || 'light')
+    const sync = () => setTheme(document.documentElement.getAttribute('data-theme') || 'dark')
     sync()
     const observer = new MutationObserver(sync)
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
@@ -25,7 +25,7 @@ export default function ThemeSwitch({ compact = false }) {
     root.setAttribute('data-theme-source', 'saved')
 
     try {
-      localStorage.setItem('vy_theme', next)
+      localStorage.setItem('vy_theme_v3', next)
     } catch {}
     setTheme(next)
   }
