@@ -2401,3 +2401,10 @@ html[data-theme='dark'] .about-photo--dark { opacity: 1; }
 
 .brand-mark{display:block;aspect-ratio:196 / 140;background-color:currentColor;-webkit-mask:url('/brand-mark.png') center / contain no-repeat;mask:url('/brand-mark.png') center / contain no-repeat;flex-shrink:0}
 .nav-brand-mark{height:26px;width:auto}
+
+/* Palette sampled from the night-range photograph in the contact section, so
+   the whole site reads as one image: a near-neutral charcoal carrying
+   the photograph's cool undertone, accented with the ice blue of its snow-lit peaks — the one chromatic note on an otherwise
+   neutral page, which leaves the warm-toned portrait as the only warm thing
+   in the hero. */
+:root{--portfolio-bg:#090a0c;--portfolio-panel:#101115;--portfolio-raised:#181a1f;--portfolio-ink:#e8e9ec;--portfolio-muted:#a5a8af;--portfolio-subtle:#787c85;--portfolio-accent:#9db9dc;--portfolio-accent-hi:#bcd0e8;--portfolio-accent-wash:#9db9dc14;--portfolio-glacier:#b2bbc7;--portfolio-border:#d3d8e21c;--portfolio-border-strong:#d3d8e236}
