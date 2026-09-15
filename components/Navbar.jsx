@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
-import ThemeSwitch from './ThemeSwitch'
 import BrandMark from './BrandMark'
 
 const resumes = [
@@ -189,7 +188,6 @@ export default function Navbar() {
             flexShrink: 0,
           }}
         >
-          <ThemeSwitch compact />
           <div
             onMouseEnter={() => setResumeOpen(true)}
             onMouseLeave={() => setResumeOpen(false)}
@@ -419,7 +417,6 @@ export default function Navbar() {
           }}>
             Theme
           </span>
-          <ThemeSwitch />
         </div>
 
         <div style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '12px' }}>

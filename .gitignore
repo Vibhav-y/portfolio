@@ -44,3 +44,6 @@ lerna-debug.log*
 
 # TypeScript incremental build info
 *.tsbuildinfo
+
+# Local screenshots and review artifacts
+/output/

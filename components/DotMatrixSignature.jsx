@@ -19,6 +19,8 @@ export default function DotMatrixSignature() {
     let visible = true
     let disposed = false
     let ink = getComputedStyle(canvas).color
+    // canvas can't resolve CSS variables, so read the self-hosted family name
+    const sansFamily = () => getComputedStyle(document.documentElement).getPropertyValue('--ff-sans').trim() || 'sans-serif'
 
     const sample = () => {
       const rect = canvas.getBoundingClientRect()
@@ -38,7 +40,7 @@ export default function DotMatrixSignature() {
       sourceContext.textBaseline = 'alphabetic'
       const verticalInset = Math.max(8, height * 0.03)
       let size = Math.min(380, width / 3.45, height - verticalInset * 2)
-      sourceContext.font = `500 ${size}px "Space Grotesk", sans-serif`
+      sourceContext.font = `600 ${size}px ${sansFamily()}`
       if ('letterSpacing' in sourceContext) sourceContext.letterSpacing = '-0.065em'
       const metrics = sourceContext.measureText('VIBHAV')
       const glyphHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent
@@ -119,7 +121,7 @@ export default function DotMatrixSignature() {
     const paletteRoot = canvas.closest('[data-palette]')
     if (paletteRoot) paletteObserver.observe(paletteRoot, { attributes:true, attributeFilter:['data-palette'] })
     document.addEventListener('visibilitychange', refresh)
-    document.fonts.ready.then(() => { if (!disposed) { cancelAnimationFrame(frame); sample(); draw() } })
+    document.fonts.load(`600 100px ${sansFamily()}`).then(() => { if (!disposed) { cancelAnimationFrame(frame); sample(); draw() } })
     sample()
     draw()
     resize.observe(canvas)

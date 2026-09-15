@@ -52,7 +52,7 @@ export default function Footer() {
 
     // shared styles — tuned to the site's liquid-glass theme and readable on
     // both light and dark DevTools
-    const banner = 'background:linear-gradient(120deg,#f7790f,#f55f16);color:#fff;font:800 22px/1.6 "Space Grotesk",sans-serif;padding:8px 18px;border-radius:999px'
+    const banner = 'background:linear-gradient(120deg,#f7790f,#f55f16);color:#fff;font:800 22px/1.6 system-ui,sans-serif;padding:8px 18px;border-radius:999px'
     const sub = 'color:#94a3b8;font:500 13px/1.8 monospace'
     const cmd = 'color:#f7790f;font:700 13px/1.8 monospace'
     const arrow = 'color:#94a3b8;font:13px/1.8 monospace'
@@ -216,7 +216,7 @@ export default function Footer() {
       c.fillStyle = '#fff'
       c.textAlign = 'center'
       c.textBaseline = 'alphabetic'
-      const fontAt = (s) => `700 ${s}px "Space Grotesk", Inter, "Arial Black", sans-serif`
+      const fontAt = (s) => `700 ${s}px ${getComputedStyle(document.documentElement).getPropertyValue('--ff-sans').trim() || 'sans-serif'}`
       const maxW = width * 0.88
       const maxH = height * 0.66
 

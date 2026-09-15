@@ -38,8 +38,8 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // .mdx files are imported as modules, not treated as routes.
-  pageExtensions: ['js', 'jsx'],
+  // Include MDX in Next's React compiler rules; posts live outside app/.
+  pageExtensions: ['js', 'jsx', 'mdx'],
 }
 
 export default withMDX(nextConfig)

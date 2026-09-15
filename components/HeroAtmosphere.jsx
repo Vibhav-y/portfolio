@@ -16,14 +16,12 @@ uniform float time;
 uniform vec2 pointer;    // aspect-corrected, origin at centre
 uniform float grip;      // 0 when the cursor has left, eases to 1 on approach
 
-// Same tokens as the site. The map is neutral grey everywhere and chromatic
-// only along the index contours — chroma, not temperature, is what separates
-// the every-fifth lines from the rest.
-const vec3 PANEL   = vec3(.063,.067,.082);  // --portfolio-panel
-const vec3 TROUGH  = vec3(.043,.047,.059);  // low ground, a shade deeper
-const vec3 SLATE   = vec3(.267,.286,.325);  // moonlit rock — low contours
-const vec3 GLACIER = vec3(.698,.733,.780);  // snow-light — high contours
-const vec3 ICE     = vec3(.616,.725,.863);  // --portfolio-accent, snow-lit peak
+// Light survey-map palette matching the shared portfolio surfaces.
+const vec3 PANEL   = vec3(.933,.945,.961);
+const vec3 TROUGH  = vec3(.961,.969,.980);
+const vec3 SLATE   = vec3(.65,.70,.76);
+const vec3 GLACIER = vec3(.44,.53,.62);
+const vec3 ICE     = vec3(.212,.373,.557);
 
 float hash(vec2 p){ return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }
 
@@ -74,25 +72,25 @@ void main(){
   float minor=1.-smoothstep(.55*aa,1.55*aa,di);
   float major=1.-smoothstep(1.15*aa,2.45*aa,di);
   float isIndex=1.-min(1.,abs(mod(lv,5.)));
-  float lines=mix(minor*.34,major*.92,isIndex);
+  float lines=mix(minor*.17,major*.46,isIndex);
 
   // A wide, very slow sweep of light — the map is being surveyed, not lit.
   float sweep=.72+.28*sin((uv.x*.9+uv.y*.45)*1.6-time*.16);
   lines*=sweep;
 
-  // Keep the copy column quiet; let the terrain build toward the portrait.
+  // Keep the terrain subdued across both the copy and portrait.
   float x=gl_FragCoord.x/resolution.x;
-  lines*=mix(.20,1.,smoothstep(.16,.60,x));
+  lines*=mix(.16,.78,smoothstep(.16,.60,x));
   lines*=smoothstep(-.02,.16,gl_FragCoord.y/resolution.y);
 
-  // Lines brighten where the cursor is, so the map answers the hand.
+  // A gentle cursor response keeps the map from competing with the content.
   float halo=peak*grip;
-  lines*=1.+halo*1.15;
+  lines*=1.+halo*.45;
 
   // ── compose ──────────────────────────────────────────────────────────────
   float elev=smoothstep(.25,.85,h);
   vec3 col=mix(TROUGH,PANEL,elev);
-  col+=ICE*halo*.045;
+  col+=ICE*halo*.020;
 
   vec3 lineCol=mix(SLATE,GLACIER,smoothstep(.28,.82,h));
   lineCol=mix(lineCol,ICE,isIndex*.62);

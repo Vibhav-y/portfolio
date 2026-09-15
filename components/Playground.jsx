@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { createPortal } from 'react-dom'
 import { AnimatePresence } from 'framer-motion'
 import ProjectModal from './ProjectModal'
-import { ArrowDown, ArrowUp, Shuffle, Copy, Check, GitBranch, Sparkles, Code2, Braces, MousePointer2, Coffee, MoveUpRight } from 'lucide-react'
+import { ArrowUp, Copy, Check, GitBranch, Braces, Coffee, MoveUpRight } from 'lucide-react'
 import { FEATURED_PROJECTS } from '../lib/projects'
 import s from './Playground.module.css'
 import DotMatrixSignature from './DotMatrixSignature'
@@ -14,7 +14,6 @@ import ToolOrbit from './ToolOrbit'
 import CertificateFolder from './CertificateFolder'
 import HeroAtmosphere from './HeroAtmosphere'
 
-const tools = { Frontend: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion'], Backend: ['Node.js', 'Express', 'PostgreSQL', 'MongoDB', 'Supabase'], 'Beyond the browser': ['Git', 'Electron', 'Python', 'Java', 'Data structures'] }
 
 const certs = [['Oracle', 'Data Platform Foundations', 'image copy 3.webp'], ['NPTEL', 'Cloud Computing', 'image.webp'], ['HackerRank', 'Python (Basic)', 'image copy.webp'], ['HackerRank', 'Frontend Developer (React)', 'image copy 2.webp']]
 
@@ -43,7 +42,6 @@ export default function Playground() {
     })
   }
   const [detailProject, setDetailProject] = useState(null)
-  const [category, setCategory] = useState('Frontend')
   const [copied, setCopied] = useState(false)
   const [copyError, setCopyError] = useState(false)
   const timer = useRef(null)
@@ -68,12 +66,11 @@ export default function Playground() {
         <section className={s.atmosphereHero} aria-labelledby="hero-title">
           <HeroAtmosphere />
           <div className={s.atmosphereCopy}>
-            <span className={s.atmosphereIntro}>VIBHAV YADAV <span>— DEVELOPER & BUILDER</span></span>
-            <h1 id="hero-title">Full-stack.<br/><em>Fully considered.</em></h1>
-            <p>I build thoughtful interfaces and the systems behind them. From real-time workspaces to tools that make a developer’s day easier.</p>
-            <div className={s.atmosphereActions}><a href="#work">Explore my work</a><a href="#contact">Let’s talk</a></div>
+            <h1 id="hero-title">It works on my machine.<br/><em>And on yours, too.</em></h1>
+            <p>CS student at LPU who likes owning the whole stack. Right now I’m building AudienceOS, an AI-native CRM, along with GitTool and Jottr, a desktop Git client and a real-time writing workspace.</p>
+            <div className={s.atmosphereActions}><a href="#work">See projects</a><a href="#contact">Get in touch</a></div>
           </div>
-          <a href="#about" className={s.atmospherePortrait} aria-label="More about Vibhav Yadav"><img src="/profile-glacier-v4.png" alt="Illustrated portrait of Vibhav Yadav" fetchPriority="high"/><span>THE PERSON BEHIND THE WORK</span><svg className={s.portraitSeal} viewBox="0 0 120 120" aria-hidden="true"><defs><path id="portrait-seal-ring" d="M60,60 m-45,0 a45,45 0 1,1 90,0 a45,45 0 1,1 -90,0"/></defs><g className={s.portraitSealRing}><text><textPath href="#portrait-seal-ring" textLength="282.7" lengthAdjust="spacing">VIBHAV YADAV · FULL-STACK · </textPath></text></g><path className={s.portraitSealStar} d="M60 50 Q62 58 70 60 Q62 62 60 70 Q58 62 50 60 Q58 58 60 50Z"/></svg></a>
+          <a href="#about" className={s.atmospherePortrait} aria-label="More about Vibhav Yadav"><img src="/profile-denim-light-v2.png" alt="Illustrated portrait of Vibhav Yadav in a dark denim shirt" width="1086" height="1448" fetchPriority="high"/><span>THE PERSON BEHIND THE WORK</span><div className={s.portraitSeal} aria-hidden="true"><svg viewBox="0 0 120 120"><defs><path id="portrait-seal-ring" d="M60,60 m-45,0 a45,45 0 1,1 90,0 a45,45 0 1,1 -90,0"/></defs><g className={s.portraitSealRing}><text><textPath href="#portrait-seal-ring" textLength="282.7" lengthAdjust="spacing">VIBHAV YADAV · FULL-STACK · </textPath></text></g><path className={s.portraitSealStar} d="M60 50 Q62 58 70 60 Q62 62 60 70 Q58 62 50 60 Q58 58 60 50Z"/></svg></div></a>
           <div className={s.atmosphereFoot}><span>BASED IN INDIA / BUILDING FOR THE WEB</span><a href="/resume/general%20cv.pdf" target="_blank" rel="noreferrer">View résumé</a></div>
         </section>
         <div className={s.disciplineStrip}><span>FROM THE INTERFACE TO THE INFRASTRUCTURE</span><div><span>Product interfaces</span><i/><span>Reliable systems</span><i/><span>Considered details</span></div></div>
