@@ -69,14 +69,12 @@ export default function CertificateFolder({ certificates }) {
           </div>
           <div className={s.keepsake} aria-hidden="true"><span>STAY</span>curious<span>✦ ALWAYS ✦</span></div>
           {navigation('Browse certificates')}
-          <div className={s.stackCaption}><span>FIELD NOTE / 0{active + 1}</span><span>COLLECTED BY VIBHAV</span></div>
         </div>
         <div className={s.selection}>
-          <div className={s.selectionIntro} aria-live="polite"><span className={s.issuer}>{issuer}</span><h3>{title}</h3>
+          <div className={s.selectionIntro} aria-live="polite"><div className="certificates-issuerRow"><span className={s.issuer}>{issuer}</span>{verifyUrl && <a className={s.verifyLink} href={verifyUrl} target="_blank" rel="noreferrer">Verify credential <ArrowUpRight size={16}/></a>}</div><h3>{title}</h3>
             <p className={s.issueDate}>{datePrefix}: {date ? <time dateTime={date}>{dateLabel}</time> : dateLabel}</p>
             <p className={s.description}>{description}</p>
             <ul className={s.skills} aria-label="Relevant skills">{skills.map(skill => <li key={skill}>{skill}</li>)}</ul>
-            {verifyUrl && <a className={s.verifyLink} href={verifyUrl} target="_blank" rel="noreferrer">Verify credential <ArrowUpRight size={16}/></a>}
           </div>
           <div className={s.credentialList} role="tablist" aria-label="Certificates" aria-orientation="vertical">
             {certificates.map(({ issuer: name, title: credential }, index) => <button key={credential} ref={el => { tabs.current[index] = el }} id={`credential-tab-${index}`} role="tab" aria-selected={active === index} aria-controls="credential-panel" tabIndex={active === index ? 0 : -1} onClick={() => select(index)} onKeyDown={e => handleTabKey(e, index)}><span className={s.listNumber}>0{index + 1}</span><span><strong>{credential}</strong><small>{name}</small></span><i aria-hidden="true"/></button>)}
