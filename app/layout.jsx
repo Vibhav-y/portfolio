@@ -1,5 +1,28 @@
+import { Schibsted_Grotesk, Geist_Mono, Caveat } from 'next/font/google'
 import './globals.css'
-import './editorial.css'
+import EclipseReveal from '../components/EclipseReveal'
+import TransitionProvider from '../components/PageTransition'
+
+// Type system: Switzer for headlines, reading and controls, plus a mono
+// for labels. Self-hosted by next/font, exposed as CSS variables and mapped
+// to --font-* tokens in globals.css.
+const uiSans = Schibsted_Grotesk({
+  subsets: ['latin'],
+  style: ['normal', 'italic'],
+  variable: '--ff-sans',
+  display: 'swap',
+})
+const labelMono = Geist_Mono({
+  subsets: ['latin'],
+  variable: '--ff-mono',
+  display: 'swap',
+})
+const personalHand = Caveat({
+  subsets: ['latin'],
+  weight: ['400', '600'],
+  variable: '--ff-hand',
+  display: 'swap',
+})
 
 const SITE_URL = 'https://vibhavy.dev'
 const CANONICAL_URL = 'https://vibhavy.dev/'
@@ -31,23 +54,19 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    // suppressHydrationWarning: the head inline script sets data-eclipse on <html>
+    // before hydration (theme-flash pattern), so its attributes intentionally
+    // differ from the server HTML.
+    <html lang="en" data-theme="light" className={`${uiSans.variable} ${labelMono.variable} ${personalHand.variable}`} suppressHydrationWarning>
       <head>
-        {/* Set the saved theme before first paint to prevent a light-mode flash.
-            Key is namespaced (vy_theme_v2) so v1 on the same origin can't clobber it.
-            Must stay in sync with THEME_STORAGE_KEY in components/ThemeSwitch.jsx. */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('vy_theme_v2'),s='saved';if(t!=='dark'&&t!=='light'){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';s='device';}document.documentElement.setAttribute('data-theme',t);document.documentElement.setAttribute('data-theme-source',s);}catch(e){document.documentElement.setAttribute('data-theme','light');document.documentElement.setAttribute('data-theme-source','device');}})();`,
-          }}
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-        <link rel="icon" href="/favicon.png" type="image/png" />
+        <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&amp;display=swap" />
+        <script dangerouslySetInnerHTML={{ __html: `(function(){var crawler=/bot|crawler|spider|slurp|bingpreview|facebookexternalhit|facebot|twitterbot|linkedinbot|embedly|quora link preview|pinterest|whatsapp|telegrambot|discordbot|applebot|google-inspectiontool|lighthouse|headlesschrome/i.test(navigator.userAgent);var show=!crawler&&location.pathname==='/'&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches;window.__v3Eclipse=show;document.documentElement.setAttribute('data-eclipse',show?'show':'skip');})();` }} />
+        <link rel="icon" href="/favicon.png?v=4" type="image/png" />
       </head>
       <body>
-        {children}
+        <EclipseReveal />
+        <div className="site-grid-bg" aria-hidden="true" />
+        <TransitionProvider>{children}</TransitionProvider>
       </body>
     </html>
   )

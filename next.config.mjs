@@ -27,10 +27,7 @@ const withMDX = createMDX({
       'rehype-slug',
       ['rehype-autolink-headings', { behavior: 'wrap' }],
       'rehype-katex',
-      // Dual themes emit --shiki-light/--shiki-dark custom properties on every
-      // token instead of a baked-in colour, so blog.css can swap the palette
-      // with data-theme. A single theme left dark-mode code near-black on near-black.
-      ['rehype-pretty-code', { theme: { light: 'github-light', dark: 'github-dark' }, keepBackground: false, defaultLang: 'plaintext' }],
+      ['rehype-pretty-code', { theme: 'github-light', keepBackground: false, defaultLang: 'plaintext' }],
     ].map(resolvePlugin),
   },
 })
@@ -41,8 +38,8 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // .mdx files are imported as modules, not treated as routes.
-  pageExtensions: ['js', 'jsx'],
+  // Include MDX in Next's React compiler rules; posts live outside app/.
+  pageExtensions: ['js', 'jsx', 'mdx'],
 }
 
 export default withMDX(nextConfig)

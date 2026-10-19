@@ -2,11 +2,11 @@
 node_modules/
 
 # Build output
-.next/*
-out/*
-dist/*
+.next/
+out/
+dist/
 dist-ssr/
-build/*
+build/
 .venv/
 # Coverage and caches
 coverage/
@@ -14,8 +14,9 @@ coverage/
 
 # Local environment files
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
+!.env.*.example
 *.local
 
 # Logs
@@ -29,6 +30,9 @@ lerna-debug.log*
 
 # Hosting
 .vercel/
+.wrangler/
+.dev.vars
+.dev.vars.*
 
 # Editor directories and files
 .vscode/*
@@ -44,4 +48,5 @@ lerna-debug.log*
 # TypeScript incremental build info
 *.tsbuildinfo
 
-out
+# Local screenshots and review artifacts
+/output/

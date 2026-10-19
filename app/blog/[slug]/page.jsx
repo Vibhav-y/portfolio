@@ -1,5 +1,4 @@
 import 'katex/dist/katex.min.css'
-import Link from 'next/link'
 
 import {
   getAllPosts,
@@ -7,10 +6,7 @@ import {
   getAdjacentPosts,
   formatDate,
 } from '../../../lib/blog'
-import '../../../components/blog/blog.css'
-import { ArrowMark } from '../../../components/SiteIcons'
-import Navbar from '../../../components/Navbar'
-import styles from './page.module.css'
+import BlogShell from '../../../components/blog/BlogShell'
 
 export const dynamicParams = false
 
@@ -54,60 +50,61 @@ export default async function PostPage({ params }) {
   const { default: PostBody } = await import(`../../../content/blog/${slug}.mdx`)
 
   return (
-    <div className={`${styles.page} editorial-page`}>
-      <Navbar />
-      <main>
+    <BlogShell>
+      <main className="blog-post" id="blog-main">
         <article>
-          <header className={`${styles.hero} editorial-hero`}>
-            <div><Link href="/blog" className={styles.back}>← All writing</Link><div className={styles.tags}>
+          <header className="blog-post__head">
+            <a href="/blog" className="blog-post__back">← Back to the notebook</a>
+            <div className="blog-post__tags">
               {meta.tags.map((t) => (
                 <span key={t}>{t}</span>
               ))}
             </div>
             <h1>{meta.title}</h1>
             {meta.summary && <p className="blog-post__summary">{meta.summary}</p>}
-            </div><div className={styles.heroMeta}>
+            <div className="blog-post__byline">
               <span>{meta.author}</span>
               <span aria-hidden="true">·</span>
-              <span>{formatDate(meta.date)}</span>
+              <time dateTime={meta.date}>{formatDate(meta.date)}</time>
               <span aria-hidden="true">·</span>
               <span>{meta.readingTime} min read</span>
             </div>
           </header>
 
           {meta.cover && (
-            <div className={styles.cover}>
+            <div className="blog-post__cover">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={meta.cover} alt="" />
             </div>
           )}
 
-          <div className={styles.reading}><aside>Essay<br />{slug.replaceAll('-', ' ')}</aside><div className="blog-prose">
+          <div className="blog-prose">
             <PostBody />
-          </div></div>
+          </div>
+          <div className="blog-endnote"><span aria-hidden="true">✳</span><p>One more page in the notebook.<br/><em>Thanks for reading.</em></p><a href="mailto:vibhavydm@gmail.com">Have a thought? Say hello ↗</a></div>
         </article>
 
         {(prev || next) && (
-          <nav className={styles.postNav} aria-label="More posts">
+          <nav className="blog-post__nav" aria-label="More posts">
             {prev ? (
-              <Link href={`/blog/${prev.slug}`}>
-                <span>← Newer</span>
+              <a href={`/blog/${prev.slug}`} className="blog-post__navcard">
+                <span className="mono-label">← NEWER</span>
                 <strong>{prev.meta.title}</strong>
-              </Link>
+              </a>
             ) : (
               <span />
             )}
             {next ? (
-              <Link href={`/blog/${next.slug}`}>
-                <span>Older →</span>
+              <a href={`/blog/${next.slug}`} className="blog-post__navcard blog-post__navcard--right">
+                <span className="mono-label">OLDER →</span>
                 <strong>{next.meta.title}</strong>
-              </Link>
+              </a>
             ) : (
               <span />
             )}
           </nav>
         )}
       </main>
-      <footer className={styles.footer}><span>© {new Date().getFullYear()} Vibhav Yadav</span><Link href="/blog">Back to journal <ArrowMark size={14} /></Link></footer>
-    </div>
+    </BlogShell>
   )
 }

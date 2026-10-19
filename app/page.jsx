@@ -1,5 +1,5 @@
-import HomePage from '../components/Home'
+import Playground from '../components/Playground'
 
 export default function Home() {
-  return <HomePage />
+  return <Playground />
 }
