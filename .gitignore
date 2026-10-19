@@ -2,21 +2,21 @@
 node_modules/
 
 # Build output
-.next/*
-out/*
-dist/*
+.next/
+out/
+dist/
 dist-ssr/
-build/*
+build/
 .venv/
-.
 # Coverage and caches
 coverage/
 .turbo/
 
 # Local environment files
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
+!.env.*.example
 *.local
 
 # Logs
@@ -30,6 +30,9 @@ lerna-debug.log*
 
 # Hosting
 .vercel/
+.wrangler/
+.dev.vars
+.dev.vars.*
 
 # Editor directories and files
 .vscode/*

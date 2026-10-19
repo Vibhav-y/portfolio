@@ -6,9 +6,7 @@ import {
   getAdjacentPosts,
   formatDate,
 } from '../../../lib/blog'
-import Navbar from '../../../components/Navbar'
-import Footer from '../../../components/Footer'
-import '../../../components/blog/blog.css'
+import BlogShell from '../../../components/blog/BlogShell'
 
 export const dynamicParams = false
 
@@ -52,12 +50,11 @@ export default async function PostPage({ params }) {
   const { default: PostBody } = await import(`../../../content/blog/${slug}.mdx`)
 
   return (
-    <div className="site-content">
-      <Navbar />
-      <main className="blog-post">
+    <BlogShell>
+      <main className="blog-post" id="blog-main">
         <article>
           <header className="blog-post__head">
-            <a href="/blog" className="blog-post__back">← All writing</a>
+            <a href="/blog" className="blog-post__back">← Back to the notebook</a>
             <div className="blog-post__tags">
               {meta.tags.map((t) => (
                 <span key={t}>{t}</span>
@@ -68,7 +65,7 @@ export default async function PostPage({ params }) {
             <div className="blog-post__byline">
               <span>{meta.author}</span>
               <span aria-hidden="true">·</span>
-              <span>{formatDate(meta.date)}</span>
+              <time dateTime={meta.date}>{formatDate(meta.date)}</time>
               <span aria-hidden="true">·</span>
               <span>{meta.readingTime} min read</span>
             </div>
@@ -84,6 +81,7 @@ export default async function PostPage({ params }) {
           <div className="blog-prose">
             <PostBody />
           </div>
+          <div className="blog-endnote"><span aria-hidden="true">✳</span><p>One more page in the notebook.<br/><em>Thanks for reading.</em></p><a href="mailto:vibhavydm@gmail.com">Have a thought? Say hello ↗</a></div>
         </article>
 
         {(prev || next) && (
@@ -107,9 +105,6 @@ export default async function PostPage({ params }) {
           </nav>
         )}
       </main>
-      <div className="grid-gutter" aria-hidden="true" />
-      <Footer />
-      <div aria-hidden="true" style={{ height: 'clamp(32px, 4vw, 56px)' }} />
-    </div>
+    </BlogShell>
   )
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import s from './EclipseReveal.module.css'
+import { eclipse as s } from '../app/styleNames'
 
 // Pen-down paths traced from the reference's letter shapes. Separate paths
 // represent pen lifts; the underline is written only after the name.

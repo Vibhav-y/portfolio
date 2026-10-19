@@ -7,7 +7,7 @@ import { AnimatePresence } from 'framer-motion'
 import ProjectModal from './ProjectModal'
 import { ArrowUp, Copy, Check, GitBranch, Braces, Coffee, MoveUpRight } from 'lucide-react'
 import { FEATURED_PROJECTS } from '../lib/projects'
-import s from './Playground.module.css'
+import { playground as s } from '../app/styleNames'
 import DotMatrixSignature from './DotMatrixSignature'
 import BrandMark from './BrandMark'
 import ToolOrbit from './ToolOrbit'
@@ -15,7 +15,12 @@ import CertificateFolder from './CertificateFolder'
 import HeroAtmosphere from './HeroAtmosphere'
 
 
-const certs = [['Oracle', 'Data Platform Foundations', 'image copy 3.webp'], ['NPTEL', 'Cloud Computing', 'image.webp'], ['HackerRank', 'Python (Basic)', 'image copy.webp'], ['HackerRank', 'Frontend Developer (React)', 'image copy 2.webp']]
+const certs = [
+  { issuer: 'HackerRank', title: 'Frontend Developer (React)', file: 'image copy 2.webp', date: '2025-11-05', dateLabel: '5 Nov 2025', skills: ['React', 'JavaScript', 'Frontend development'], description: 'Role certification assessing frontend development skills with React.', verifyUrl: 'https://www.hackerrank.com/certificates/8df53bbec066' },
+  { issuer: 'HackerRank', title: 'Python (Basic)', file: 'image copy.webp', date: '2025-11-05', dateLabel: '5 Nov 2025', skills: ['Python', 'Programming fundamentals', 'Problem solving'], description: 'Skill certification covering foundational Python programming.', verifyUrl: 'https://www.hackerrank.com/certificates/27eace2083ff' },
+  { issuer: 'NPTEL', title: 'Cloud Computing', file: 'image.webp', dateLabel: 'Jan–Apr 2025', datePrefix: 'Course period', skills: ['Cloud computing', 'Cloud fundamentals'], description: 'Completed the 12-week IIT Kharagpur course with an Elite certificate.' },
+  { issuer: 'Oracle', title: 'Data Platform Foundations', file: 'image copy 3.webp', date: '2026-03-26', dateLabel: '26 Mar 2026', skills: ['Data platforms', 'Data fundamentals'], description: 'Oracle Data Platform 2025 Certified Foundations Associate credential.' },
+]
 
 export default function Playground() {
   const [expandedProjects, setExpandedProjects] = useState(() => new Set([0]))
@@ -59,7 +64,7 @@ export default function Playground() {
       <a className={s.skip} href="#main">Skip to content</a>
       <header className={s.nav}>
         <a href="#" className={s.logo} aria-label="Vibhav home"><BrandMark className={s.brandMark}/><span className={s.brandName}>Vibhav Yadav</span></a>
-        <nav aria-label="Main navigation"><a href="#work">Work</a><a href="#about">About</a><Link href="/blog">Notes</Link></nav>
+        <nav aria-label="Main navigation"><a href="#work">Work</a><a href="#about">About</a><Link href="/blog">Notes</Link><a href="/resume/general%20cv.pdf" target="_blank" rel="noreferrer">Résumé</a></nav>
         <a href="#contact" className={s.navCta}>Let’s talk</a>
       </header>
       <main id="main">
@@ -70,8 +75,8 @@ export default function Playground() {
             <p>CS student at LPU who likes owning the whole stack. Right now I’m building AudienceOS, an AI-native CRM, along with GitTool and Jottr, a desktop Git client and a real-time writing workspace.</p>
             <div className={s.atmosphereActions}><a href="#work">See projects</a><a href="#contact">Get in touch</a></div>
           </div>
-          <a href="#about" className={s.atmospherePortrait} aria-label="More about Vibhav Yadav"><img src="/profile-denim-light-v2.png" alt="Illustrated portrait of Vibhav Yadav in a dark denim shirt" width="1086" height="1448" fetchPriority="high"/><span>THE PERSON BEHIND THE WORK</span><div className={s.portraitSeal} aria-hidden="true"><svg viewBox="0 0 120 120"><defs><path id="portrait-seal-ring" d="M60,60 m-45,0 a45,45 0 1,1 90,0 a45,45 0 1,1 -90,0"/></defs><g className={s.portraitSealRing}><text><textPath href="#portrait-seal-ring" textLength="282.7" lengthAdjust="spacing">VIBHAV YADAV · FULL-STACK · </textPath></text></g><path className={s.portraitSealStar} d="M60 50 Q62 58 70 60 Q62 62 60 70 Q58 62 50 60 Q58 58 60 50Z"/></svg></div></a>
-          <div className={s.atmosphereFoot}><span>BASED IN INDIA / BUILDING FOR THE WEB</span><a href="/resume/general%20cv.pdf" target="_blank" rel="noreferrer">View résumé</a></div>
+          <a href="#about" className={s.atmospherePortrait} aria-label="More about Vibhav Yadav"><img src="/profile-denim-light-v2.png" alt="The person behind the work — Vibhav Yadav" width="1086" height="1448" fetchPriority="high"/><div className={s.portraitSeal} aria-hidden="true"><svg viewBox="0 0 120 120"><defs><path id="portrait-seal-ring" d="M60,60 m-45,0 a45,45 0 1,1 90,0 a45,45 0 1,1 -90,0"/></defs><g className={s.portraitSealRing}><text><textPath href="#portrait-seal-ring" textLength="282.7" lengthAdjust="spacing">VIBHAV YADAV · FULL-STACK · </textPath></text></g><path className={s.portraitSealStar} d="M60 50 Q62 58 70 60 Q62 62 60 70 Q58 62 50 60 Q58 58 60 50Z"/></svg></div></a>
+          <div className={s.atmosphereFoot}><span>BASED IN INDIA / BUILDING FOR THE WEB</span></div>
         </section>
         <div className={s.disciplineStrip}><span>FROM THE INTERFACE TO THE INFRASTRUCTURE</span><div><span>Product interfaces</span><i/><span>Reliable systems</span><i/><span>Considered details</span></div></div>
         <section id="about" className={`${s.section} ${s.about}`}>
@@ -103,7 +108,7 @@ export default function Playground() {
         </section>
         <section id="experience" className={s.section}><div className={s.sectionHead}><div><span className={s.eyebrow}>04 / EXPERIENCE & LEARNING</span><h2>Learning. Doing. <span className={s.purpleText}>Repeating.</span></h2></div></div><div className={s.journey}><div><span className={s.eyebrow}>JUN — JUL 2025</span><h3>Full-Stack & DSA Training</h3><span className={s.trainingBadge}>W3Grads</span></div><p>Built end-to-end applications with React, Node.js, Express, and MongoDB. Strengthened the foundations in algorithms, databases, and networks — with 5-star HackerRank ratings in Java and Python along the way.</p></div><CertificateFolder certificates={certs}/></section>
         <hr className={s.sectionDivider} aria-hidden="true"/><section id="now" className={`${s.section} ${s.now}`}><span className={s.nowIcon} aria-hidden="true">↳</span><div><span className={s.eyebrow}>ON MY WORKBENCH</span><h3>GitTool, AI systems, and the next rabbit hole.</h3><p>Exploring RAG pipelines and retrieval quality, building better developer tools, and keeping the DSA muscles moving.</p></div><Link href="/blog" className={s.textLink}>Read my notes <MoveUpRight size={18}/></Link></section>
-        <section id="contact" className={s.contact}><div className={s.contactTop}><span className={s.eyebrow}>HAVE SOMETHING IN MIND?</span><span aria-hidden="true">✳</span></div><h2>What are you<br/><em>working on?</em></h2><div className={s.contactActions}><a href="mailto:vibhavydm@gmail.com" className={s.button}>Say hello</a><button onClick={copyEmail} className={s.copyButton}>{copied ? <Check size={17}/> : <Copy size={17}/>}<span aria-live="polite">{copied ? 'Email copied!' : 'vibhavydm@gmail.com'}</span></button></div>{copyError && <p role="status">Copy isn’t available here. Email me at vibhavydm@gmail.com.</p>}<div className={s.dotMatrixWrap}><DotMatrixSignature /></div><footer className={s.footer}><span>© {new Date().getFullYear()} Vibhav Yadav<br/><small>A little logic. A lot of heart.</small></span><div><a href="https://github.com/Vibhav-y" target="_blank" rel="noreferrer">GitHub</a><a href="https://www.linkedin.com/in/vibhav-yadav/" target="_blank" rel="noreferrer">LinkedIn</a><Link href="/blog">Notes</Link></div><a href="#" className={s.backTop} aria-label="Back to top"><ArrowUp size={20}/></a></footer></section>
+        <section id="contact" className={s.contact}><div className={s.contactTop}><span className={s.eyebrow}>HAVE SOMETHING IN MIND?</span></div><h2>What are you<br/><em>working on?</em></h2><div className={s.contactActions}><a href="mailto:vibhavydm@gmail.com" className={s.button}>Say hello</a><button onClick={copyEmail} className={s.copyButton}>{copied ? <Check size={17}/> : <Copy size={17}/>}<span aria-live="polite">{copied ? 'Email copied!' : 'vibhavydm@gmail.com'}</span></button></div>{copyError && <p role="status">Copy isn’t available here. Email me at vibhavydm@gmail.com.</p>}<div className={s.dotMatrixWrap}><DotMatrixSignature /></div><footer className={s.footer}><span>© {new Date().getFullYear()} Vibhav Yadav<br/><small>A little logic. A lot of heart.</small></span><div><a href="https://github.com/Vibhav-y" target="_blank" rel="noreferrer">GitHub</a><a href="https://www.linkedin.com/in/vibhav-yadav/" target="_blank" rel="noreferrer">LinkedIn</a><Link href="/blog">Notes</Link></div><a href="#" className={s.backTop} aria-label="Back to top"><ArrowUp size={20}/></a></footer></section>
       </main>
       {typeof document !== 'undefined' && createPortal(<AnimatePresence>{detailProject && <ProjectModal key={detailProject.id} project={detailProject} onClose={() => setDetailProject(null)}/>}</AnimatePresence>, document.body)}
     </div>

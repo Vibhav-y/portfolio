@@ -7,8 +7,8 @@ import ProjectModal from '../../components/ProjectModal'
 import { ArrowUpRight } from 'lucide-react'
 import { ALL_PROJECTS } from '../../lib/projects'
 import BrandMark from '../../components/BrandMark'
-import theme from '../../components/Playground.module.css'
-import s from './projects.module.css'
+import { playground as theme } from '../styleNames'
+import { projects as s } from '../styleNames'
 
 function ProjectCard({ project, index, onOpen }) {
   const [imageBroken, setImageBroken] = useState(false)

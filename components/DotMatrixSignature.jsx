@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import { useReducedMotion } from 'framer-motion'
-import styles from './Playground.module.css'
+import { playground as styles } from '../app/styleNames'
 
 export default function DotMatrixSignature() {
   const canvasRef = useRef(null)
@@ -36,16 +36,37 @@ export default function DotMatrixSignature() {
       source.height = Math.round(height)
       const sourceContext = source.getContext('2d')
       sourceContext.fillStyle = '#fff'
-      sourceContext.textAlign = 'center'
+      sourceContext.textAlign = 'left'
       sourceContext.textBaseline = 'alphabetic'
       const verticalInset = Math.max(8, height * 0.03)
       let size = Math.min(380, width / 3.45, height - verticalInset * 2)
       sourceContext.font = `600 ${size}px ${sansFamily()}`
-      if ('letterSpacing' in sourceContext) sourceContext.letterSpacing = '-0.065em'
+      // Space visible outlines rather than font advance boxes. Diagonal pairs
+      // need less physical clearance to carry the same visual amount of air.
+      const pairGaps = [0.045, 0.045, 0.05, 0.015, -0.22]
+      const measureLetters = () => Array.from('VIBHAV', letter => ({
+        letter,
+        metrics: sourceContext.measureText(letter),
+      }))
+      let letters = measureLetters()
+      const measureWord = () => letters.reduce((total, { metrics }, index) =>
+        total + metrics.actualBoundingBoxLeft + metrics.actualBoundingBoxRight + (pairGaps[index] || 0) * size, 0)
+      let wordWidth = measureWord()
+      if (wordWidth > width * 0.96) {
+        size *= width * 0.96 / wordWidth
+        sourceContext.font = `600 ${size}px ${sansFamily()}`
+        letters = measureLetters()
+        wordWidth = measureWord()
+      }
+      const startX = (width - wordWidth) / 2
       const metrics = sourceContext.measureText('VIBHAV')
       const glyphHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent
       const baseline = (height - glyphHeight) / 2 + metrics.actualBoundingBoxAscent
-      sourceContext.fillText('VIBHAV', width / 2, baseline)
+      let cursorX = startX
+      letters.forEach(({ letter, metrics }, index) => {
+        sourceContext.fillText(letter, cursorX + metrics.actualBoundingBoxLeft, baseline)
+        cursorX += metrics.actualBoundingBoxLeft + metrics.actualBoundingBoxRight + (pairGaps[index] || 0) * size
+      })
 
       const pixels = sourceContext.getImageData(0, 0, source.width, source.height).data
       const step = width < 600 ? 2.6 : 3.2

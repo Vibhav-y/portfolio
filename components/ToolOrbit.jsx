@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import s from './ToolOrbit.module.css'
+import { orbit as s } from '../app/styleNames'
 
 const groups = {
   Frontend: ['Next.js', 'React', 'JavaScript', 'HTML5', 'CSS3', 'Tailwind'],

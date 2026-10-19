@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import { X } from 'lucide-react'
-import s from './ProjectModal.module.css'
+import { modal as s } from '../app/styleNames'
 
 export default function ProjectModal({ project, onClose }) {
   const dialog = useRef(null)

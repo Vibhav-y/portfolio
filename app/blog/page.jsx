@@ -1,7 +1,6 @@
 import { getAllPosts, formatDate } from '../../lib/blog'
-import Navbar from '../../components/Navbar'
-import Footer from '../../components/Footer'
-import '../../components/blog/blog.css'
+import Link from 'next/link'
+import BlogShell from '../../components/blog/BlogShell'
 
 export const metadata = {
   title: 'Writing — Vibhav Yadav',
@@ -19,78 +18,50 @@ export const metadata = {
 
 export default function BlogIndex() {
   const posts = getAllPosts()
-  const [featured, ...rest] = posts
+  const latest = posts.slice(0, 3)
+  const older = posts.slice(3)
 
   return (
-    <div className="site-content">
-      <Navbar />
-      <main className="blog-index">
+    <BlogShell>
+      <main className="blog-index" id="blog-main">
         <header className="blog-index__head">
-          <span className="mono-label">/ WRITING</span>
-          <h1>Notes on building things.</h1>
-          <p>
-            Deep-dives, engineering explainers, and build logs — with the code,
-            data, and diagrams that go with them.
-          </p>
+          <div><span className="mono-label">THE FIELD NOTES / VIBHAV YADAV</span>
+            <h1>Things learned.<br/><em>Things worth sharing.</em></h1>
+            <p>Build logs, little discoveries, and the occasional rabbit hole. Notes from figuring things out, one project at a time.</p>
+          </div>
+          <aside className="blog-notebook" aria-label="About these notes"><span className="blog-notebook__tape" aria-hidden="true"/><span className="mono-label">A NOTE TO SELF</span><p>Build something.<br/>Learn something.<br/><em>Write it down.</em></p><span className="blog-notebook__signature">stay curious ✳</span></aside>
         </header>
-
-        {featured && (
-          <a href={`/blog/${featured.slug}`} className="blog-feature">
-            {featured.meta.cover && (
-              <div className="blog-feature__cover">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={featured.meta.cover} alt="" loading="lazy" />
-              </div>
-            )}
-            <div className="blog-feature__body">
-              <span className="mono-label">FEATURED</span>
-              <h2>{featured.meta.title}</h2>
-              <p>{featured.meta.summary}</p>
-              <div className="blog-card__meta">
-                <span>{formatDate(featured.meta.date)}</span>
-                <span aria-hidden="true">·</span>
-                <span>{featured.meta.readingTime} min read</span>
-              </div>
-            </div>
-          </a>
-        )}
-
-        <ul className="blog-grid">
-          {rest.map((post) => (
-            <li key={post.slug}>
-              <a href={`/blog/${post.slug}`} className="blog-card">
-                {post.meta.cover && (
-                  <div className="blog-card__cover">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={post.meta.cover} alt="" loading="lazy" />
-                  </div>
-                )}
+        {latest.length > 0 && <section aria-labelledby="latest-notes-title">
+          <div className="blog-shelf-label"><h2 id="latest-notes-title">01 / FRESH FROM THE NOTEBOOK</h2><span>the latest notes ↴</span></div>
+          <ul className="blog-grid blog-grid--latest">
+            {latest.map((post, index) => <li key={post.slug}>
+              <Link href={`/blog/${post.slug}`} className="blog-card">
+                <div className="blog-card__file"><span>NOTE / {(index + 1).toString().padStart(2, '0')}</span><span aria-hidden="true">↗</span></div>
+                {post.meta.cover && <div className="blog-card__cover"><img src={post.meta.cover} alt="" loading="lazy"/></div>}
                 <div className="blog-card__body">
-                  <div className="blog-card__tags">
-                    {post.meta.tags.slice(0, 3).map((t) => (
-                      <span key={t}>{t}</span>
-                    ))}
-                  </div>
-                  <h3>{post.meta.title}</h3>
-                  <p>{post.meta.summary}</p>
-                  <div className="blog-card__meta">
-                    <span>{formatDate(post.meta.date)}</span>
-                    <span aria-hidden="true">·</span>
-                    <span>{post.meta.readingTime} min read</span>
-                  </div>
+                  <div className="blog-card__tags">{post.meta.tags.slice(0, 3).map(tag => <span key={tag}>{tag}</span>)}</div>
+                  <h3>{post.meta.title}</h3><p>{post.meta.summary}</p>
+                  <div className="blog-card__meta"><time dateTime={post.meta.date}>{formatDate(post.meta.date)}</time><span aria-hidden="true"> / </span><span>{post.meta.readingTime} min read</span></div>
+                  <span className="blog-read-link">Open this note ↗</span>
                 </div>
-              </a>
-            </li>
-          ))}
-        </ul>
-
-        {posts.length === 0 && (
-          <p className="blog-empty">No posts yet — check back soon.</p>
-        )}
+              </Link>
+            </li>)}
+          </ul>
+        </section>}
+        {older.length > 0 && <section aria-labelledby="older-notes-title">
+          <div className="blog-shelf-label"><h2 id="older-notes-title">02 / EARLIER NOTES</h2><span>more from the notebook</span></div>
+          <ul className="blog-archive">
+            {older.map((post, index) => <li key={post.slug}>
+              <Link href={`/blog/${post.slug}`} className="blog-archive__row">
+                <span className="blog-archive__number">{(index + 4).toString().padStart(2, '0')}</span>
+                <div className="blog-archive__body"><h3>{post.meta.title}</h3><p>{post.meta.summary}</p><div className="blog-card__meta"><time dateTime={post.meta.date}>{formatDate(post.meta.date)}</time><span aria-hidden="true"> / </span><span>{post.meta.readingTime} min read</span></div></div>
+                <span className="blog-archive__arrow" aria-hidden="true">↗</span>
+              </Link>
+            </li>)}
+          </ul>
+        </section>}
+        {posts.length === 0 && <p className="blog-empty">The first page is still being written. Check back soon.</p>}
       </main>
-      <div className="grid-gutter" aria-hidden="true" />
-      <Footer />
-      <div aria-hidden="true" style={{ height: 'clamp(32px, 4vw, 56px)' }} />
-    </div>
+    </BlogShell>
   )
 }

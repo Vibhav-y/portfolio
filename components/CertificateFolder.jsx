@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { ArrowUpRight, Maximize2, X, ZoomIn, ZoomOut } from 'lucide-react'
-import s from './CertificateFolder.module.css'
+import { ArrowUpRight, ChevronLeft, ChevronRight, Maximize2, X, ZoomIn, ZoomOut } from 'lucide-react'
+import { certificates as s } from '../app/styleNames'
 
 export default function CertificateFolder({ certificates }) {
   const [active, setActive] = useState(0)
@@ -11,7 +11,7 @@ export default function CertificateFolder({ certificates }) {
   const [zoomed, setZoomed] = useState(false)
   const dialog = useRef(null)
   const tabs = useRef([])
-  const [issuer, title, file] = certificates[active]
+  const { issuer, title, file, date, dateLabel, datePrefix = 'Issued', skills, description, verifyUrl } = certificates[active]
   const src = `/Certificates/${encodeURIComponent(file)}`
 
   useEffect(() => {
@@ -39,6 +39,16 @@ export default function CertificateFolder({ certificates }) {
     setZoomed(false)
     if (focus) tabs.current[index]?.focus()
   }
+  function move(direction) {
+    select((active + direction + certificates.length) % certificates.length)
+  }
+  function navigation(label) {
+    return <nav className={s.navigation} aria-label={label}>
+      <button type="button" onClick={() => move(-1)} aria-label="Previous certificate"><ChevronLeft size={18}/><span>Previous</span></button>
+      <span aria-live="polite">{active + 1} / {certificates.length}</span>
+      <button type="button" onClick={() => move(1)} aria-label="Next certificate"><span>Next</span><ChevronRight size={18}/></button>
+    </nav>
+  }
   function handleTabKey(event, index) {
     const last = certificates.length - 1
     const next = { ArrowDown: (index + 1) % certificates.length, ArrowUp: (index + last) % certificates.length, ArrowRight: (index + 1) % certificates.length, ArrowLeft: (index + last) % certificates.length, Home: 0, End: last }[event.key]
@@ -47,26 +57,36 @@ export default function CertificateFolder({ certificates }) {
 
   return (
     <div className={s.archive} id="certificates">
-      <div className={s.heading}><span>THE CREDENTIAL COLLECTION</span><span>0{certificates.length} / SELECTED CERTIFICATES</span></div>
+      <div className={s.heading}><span>THE CURIOSITY SCRAPBOOK</span><span>0{certificates.length} LITTLE MILESTONES & COUNTING</span></div>
       <div className={s.collection}>
         <div className={s.stage} role="tabpanel" id="credential-panel" aria-labelledby={`credential-tab-${active}`}>
+          <div className={s.scribble} aria-hidden="true">a few things picked up along the way <span>↴</span></div>
           <div className={s.stack}>
+            <span className={s.tape} aria-hidden="true"/>
             {outgoing && <div key={outgoing.key} className={s.departingSheet} aria-hidden="true"><img src={`/Certificates/${encodeURIComponent(outgoing.file)}`} alt=""/></div>}
-            {[2, 1].map(offset => { const index = (active + offset) % certificates.length; const [name, credential, document] = certificates[index]; return <button key={offset} type="button" className={s.backSheet} data-layer={offset} onClick={() => select(index)} aria-label={`Show ${name} ${credential} certificate`}><img src={`/Certificates/${encodeURIComponent(document)}`} alt="" loading="lazy"/></button> })}
+            {[2, 1].map(offset => { const index = (active + offset) % certificates.length; const { issuer: name, title: credential, file: document } = certificates[index]; return <button key={offset} type="button" className={s.backSheet} data-layer={offset} onClick={() => select(index)} aria-label={`Show ${name} ${credential} certificate`}><img src={`/Certificates/${encodeURIComponent(document)}`} alt="" loading="lazy"/></button> })}
             <button key={file} className={`${s.frontSheet} ${outgoing ? s.arrivingSheet : ''}`} onClick={openCertificate} aria-label={`Enlarge ${issuer} ${title} certificate`}><img src={src} alt={`${issuer}: ${title} — certificate awarded to Vibhav Yadav`} loading="lazy"/><span><Maximize2 size={14}/> View certificate</span></button>
           </div>
-          <div className={s.stackCaption}><span>0{active + 1} / 0{certificates.length}</span><span>ISSUED TO VIBHAV YADAV</span></div>
+          <div className={s.keepsake} aria-hidden="true"><span>STAY</span>curious<span>✦ ALWAYS ✦</span></div>
+          {navigation('Browse certificates')}
+          <div className={s.stackCaption}><span>FIELD NOTE / 0{active + 1}</span><span>COLLECTED BY VIBHAV</span></div>
         </div>
         <div className={s.selection}>
-          <div className={s.selectionIntro} aria-live="polite"><span className={s.issuer}>{issuer}</span><h3>{title}</h3></div>
+          <div className={s.selectionIntro} aria-live="polite"><span className={s.issuer}>{issuer}</span><h3>{title}</h3>
+            <p className={s.issueDate}>{datePrefix}: {date ? <time dateTime={date}>{dateLabel}</time> : dateLabel}</p>
+            <p className={s.description}>{description}</p>
+            <ul className={s.skills} aria-label="Relevant skills">{skills.map(skill => <li key={skill}>{skill}</li>)}</ul>
+            {verifyUrl && <a className={s.verifyLink} href={verifyUrl} target="_blank" rel="noreferrer">Verify credential <ArrowUpRight size={16}/></a>}
+          </div>
           <div className={s.credentialList} role="tablist" aria-label="Certificates" aria-orientation="vertical">
-            {certificates.map(([name, credential], index) => <button key={credential} ref={el => { tabs.current[index] = el }} id={`credential-tab-${index}`} role="tab" aria-selected={active === index} aria-controls="credential-panel" tabIndex={active === index ? 0 : -1} onClick={() => select(index)} onKeyDown={e => handleTabKey(e, index)}><span className={s.listNumber}>0{index + 1}</span><span><strong>{credential}</strong><small>{name}</small></span><i aria-hidden="true"/></button>)}
+            {certificates.map(({ issuer: name, title: credential }, index) => <button key={credential} ref={el => { tabs.current[index] = el }} id={`credential-tab-${index}`} role="tab" aria-selected={active === index} aria-controls="credential-panel" tabIndex={active === index ? 0 : -1} onClick={() => select(index)} onKeyDown={e => handleTabKey(e, index)}><span className={s.listNumber}>0{index + 1}</span><span><strong>{credential}</strong><small>{name}</small></span><i aria-hidden="true"/></button>)}
           </div>
         </div>
       </div>
-      <dialog ref={dialog} className={s.viewer} aria-labelledby="certificate-viewer-title" onClick={event => { if (event.target === event.currentTarget) dialog.current.close() }}>
+      <dialog ref={dialog} className={s.viewer} aria-labelledby="certificate-viewer-title" onKeyDown={event => { if (!zoomed && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) { event.preventDefault(); move(event.key === 'ArrowLeft' ? -1 : 1) } }} onClick={event => { if (event.target === event.currentTarget) dialog.current.close() }}>
         <div className={s.viewerBar}><div><span>{issuer}</span><h3 id="certificate-viewer-title">{title}</h3></div><div><button onClick={() => setZoomed(!zoomed)} aria-label={zoomed ? 'Fit certificate to screen' : 'Zoom in'} aria-pressed={zoomed}>{zoomed ? <ZoomOut size={20}/> : <ZoomIn size={20}/>}</button><a href={src} target="_blank" rel="noreferrer" aria-label="Open original certificate"><ArrowUpRight size={20}/></a><button onClick={() => dialog.current.close()} aria-label="Close certificate" autoFocus><X size={22}/></button></div></div>
         <div className={`${s.viewerContent} ${zoomed ? s.zoomed : ''}`}><img src={src} alt={`${issuer}: ${title} — certificate awarded to Vibhav Yadav`}/></div>
+        {navigation('Browse enlarged certificates')}
       </dialog>
     </div>
   )
